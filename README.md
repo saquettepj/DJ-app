@@ -2,6 +2,9 @@
 
 Aplicação de IA para criação e controle de música em tempo real através de prompts de texto.
 
+## 🌐 **Demo Online**
+**Acesse:** [https://saquettepj.github.io/DJ-app/](https://saquettepj.github.io/DJ-app/)
+
 ## ⚡ Início Rápido
 
 ### 🐳 Com Docker
@@ -46,3 +49,11 @@ npm run build
 docker-compose up --build
 docker-compose down
 ```
+
+## 🚀 **GitHub Pages**
+
+A aplicação é automaticamente deployada no GitHub Pages através de GitHub Actions.
+
+- **URL**: https://saquettepj.github.io/DJ-app/
+- **Deploy automático** a cada push para `master`
+- **Build otimizado** para produção
