@@ -1,0 +1,437 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+import { css, html, LitElement } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { GoogleGenAI } from '@google/genai';
+
+@customElement('api-key-input')
+export class ApiKeyInput extends LitElement {
+
+  @property({ type: String }) apiKey: string = '';
+  @state() private inputValue: string = '';
+  @state() private isConfigured: boolean = false;
+  @state() private isValidating: boolean = false;
+  @state() private validationError: string = '';
+
+  override connectedCallback() {
+    super.connectedCallback();
+    // Recuperar a API Key salva no localStorage
+    const savedApiKey = localStorage.getItem('gemini_api_key');
+    if (savedApiKey && savedApiKey.trim().length > 20) {
+      this.apiKey = savedApiKey;
+      this.inputValue = savedApiKey;
+      this.isConfigured = true;
+      this.dispatchApiKeyChange(savedApiKey);
+    }
+  }
+
+  static override styles = css`
+    :host {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      font-family: 'Google Sans', sans-serif;
+    }
+
+    .api-key-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .title {
+      color: white;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 16px;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    label {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 16px 20px;
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .save-button {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .save-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .save-button:active {
+      transform: translateY(0);
+    }
+
+    .save-button:disabled {
+      background: rgba(255, 255, 255, 0.2);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .save-button.validating {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    }
+
+    .status-indicator {
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4CAF50;
+    }
+
+    .status-dot.invalid {
+      background: #f44336;
+    }
+
+    .status-dot.empty {
+      background: #ff9800;
+    }
+
+    .status-dot.validating {
+      background: #2196F3;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .error-message {
+      color: #f44336;
+      background: rgba(244, 67, 54, 0.1);
+      border: 1px solid rgba(244, 67, 54, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+  `;
+
+  private async validateApiKey(apiKey: string): Promise<boolean> {
+    try {
+      const ai = new GoogleGenAI({ apiKey: apiKey.trim(), apiVersion: 'v1alpha' });
+      
+      // Usar exatamente a mesma lógica que o LiveMusicHelper usa
+      // para capturar erros de API Key inválida
+      const validationPromise = new Promise<boolean>((resolve, reject) => {
+        let resolved = false;
+        let session: any = null;
+        
+        // Timeout de 10 segundos para dar tempo suficiente
+        const timeout = setTimeout(() => {
+          if (!resolved) {
+            resolved = true;
+            if (session && typeof session.close === 'function') {
+              session.close();
+            }
+            reject(new Error('API Key não respondeu - provavelmente inválida'));
+          }
+        }, 10000);
+        
+        // Usar exatamente os mesmos callbacks do LiveMusicHelper
+        ai.live.music.connect({
+          model: 'lyria-realtime-exp',
+          callbacks: {
+            onmessage: async (e: any) => {
+              if (e.setupComplete && !resolved) {
+                resolved = true;
+                clearTimeout(timeout);
+                if (session && typeof session.close === 'function') {
+                  session.close();
+                }
+                resolve(true);
+              }
+            },
+            onerror: (error: any) => {
+              if (!resolved) {
+                resolved = true;
+                clearTimeout(timeout);
+                if (session && typeof session.close === 'function') {
+                  session.close();
+                }
+                reject(new Error('API Key inválida - erro de conexão'));
+              }
+            },
+            onclose: () => {
+              if (!resolved) {
+                resolved = true;
+                clearTimeout(timeout);
+                reject(new Error('API Key inválida - conexão fechada'));
+              }
+            },
+          },
+        }).then((createdSession) => {
+          session = createdSession;
+          // Não resolver aqui - aguardar o setupComplete no onmessage
+        }).catch((error) => {
+          if (!resolved) {
+            resolved = true;
+            clearTimeout(timeout);
+            reject(error);
+          }
+        });
+      });
+      
+      await validationPromise;
+      return true;
+      
+    } catch (error) {
+      
+      // Usar mensagens de erro mais específicas baseadas no que realmente acontece
+      if (error instanceof Error) {
+        const errorMessage = error.message.toLowerCase();
+        
+        if (errorMessage.includes('api key inválida') || 
+            errorMessage.includes('conexão fechada') ||
+            errorMessage.includes('não respondeu') ||
+            errorMessage.includes('erro de conexão')) {
+          this.validationError = 'API Key inválida ou inexistente. Verifique se a chave está correta.';
+        } else {
+          this.validationError = `Erro na validação: ${error.message}`;
+        }
+      } else {
+        this.validationError = 'API Key inválida ou erro desconhecido.';
+      }
+      
+      return false;
+    }
+  }
+
+  private handleInputChange(e: Event) {
+    const target = e.target as HTMLInputElement;
+    this.inputValue = target.value;
+    this.validationError = ''; // Limpar erro ao digitar
+  }
+
+  private async saveApiKey() {
+    const trimmedKey = this.inputValue.trim();
+    
+    if (trimmedKey && trimmedKey.length > 20) {
+      // Validação básica de formato
+      if (!this.isValidApiKeyFormat(trimmedKey)) {
+        this.validationError = 'Formato da API Key inválido. Deve começar com "AI" e conter apenas letras, números e hífens.';
+        return;
+      }
+      
+      this.isValidating = true;
+      this.validationError = '';
+      
+      // Validar a API Key
+      const isValid = await this.validateApiKey(trimmedKey);
+      
+      if (isValid) {
+        // API Key válida, salvar e continuar
+        this.apiKey = trimmedKey;
+        localStorage.setItem('gemini_api_key', trimmedKey);
+        this.isConfigured = true;
+        this.dispatchApiKeyChange(trimmedKey);
+        
+        // Fazer fade out do card e remover completamente
+        const card = this.shadowRoot?.querySelector('.api-key-card');
+        if (card) {
+          card.classList.add('fade-out');
+          setTimeout(() => {
+            // Remover completamente o componente do DOM
+            if (this.parentNode) {
+              this.parentNode.removeChild(this);
+            }
+          }, 500);
+        }
+      } else {
+        // API Key inválida, mostrar erro
+        this.isValidating = false;
+        this.requestUpdate();
+      }
+    }
+  }
+
+  private isValidApiKeyFormat(apiKey: string): boolean {
+    // API Keys do Google Gemini geralmente começam com "AI" e contêm apenas letras, números e hífens
+    const apiKeyPattern = /^AI[a-zA-Z0-9\-_]{20,}$/;
+    return apiKeyPattern.test(apiKey);
+  }
+
+  private dispatchApiKeyChange(apiKey: string) {
+    const event = new CustomEvent('api-key-changed', {
+      detail: { apiKey },
+      bubbles: true,
+      composed: true
+    });
+    this.dispatchEvent(event);
+  }
+
+  private getStatusInfo() {
+    if (this.isValidating) {
+      return { text: 'Validando API Key...', class: 'validating' };
+    }
+    if (!this.inputValue) {
+      return { text: 'Digite sua chave da API', class: 'empty' };
+    }
+    if (this.inputValue.length < 20) {
+      return { text: 'Chave muito curta', class: 'invalid' };
+    }
+    if (!this.isValidApiKeyFormat(this.inputValue)) {
+      return { text: 'Formato inválido', class: 'invalid' };
+    }
+    return { text: 'Chave válida', class: 'valid' };
+  }
+
+  private canSave() {
+    const trimmedKey = this.inputValue.trim();
+    return trimmedKey.length > 20 && 
+           this.isValidApiKeyFormat(trimmedKey) && 
+           !this.isValidating;
+  }
+
+  override render() {
+    if (this.isConfigured) {
+      return html``;
+    }
+
+    const status = this.getStatusInfo();
+    
+    return html`
+      <div class="api-key-card">
+        <div class="logo">🎵</div>
+        <h1 class="title">PromptDJ MIDI</h1>
+        <p class="subtitle">
+          Configure sua chave da API do Google Gemini para começar a criar música com IA
+        </p>
+        
+        <div class="input-group">
+          <label for="api-key-input">Chave da API Gemini</label>
+          <input
+            id="api-key-input"
+            type="password"
+            .value=${this.inputValue}
+            @input=${this.handleInputChange}
+            placeholder="Cole sua chave da API aqui..."
+            autocomplete="off"
+            ?disabled=${this.isValidating}
+          />
+        </div>
+        
+        <button 
+          class="save-button ${this.isValidating ? 'validating' : ''}" 
+          @click=${this.saveApiKey}
+          ?disabled=${!this.canSave()}
+        >
+          ${this.isValidating ? 'Validando...' : 'Começar a Criar Música'}
+        </button>
+        
+        ${this.validationError ? html`
+          <div class="error-message">
+            ❌ ${this.validationError}
+          </div>
+        ` : ''}
+        
+        <div class="status-indicator">
+          <div class="status-dot ${status.class}"></div>
+          <span>${status.text}</span>
+        </div>
+      </div>
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'api-key-input': ApiKeyInput
+  }
+}
