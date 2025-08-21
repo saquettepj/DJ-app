@@ -56,6 +56,19 @@ export class PromptDjMidi extends LitElement {
     prompt-controller {
       width: 100%;
       height: 100%;
+      min-width: 0;
+      min-height: 0;
+    }
+    
+    #grid > * {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .controls {
@@ -115,12 +128,25 @@ export class PromptDjMidi extends LitElement {
       }
       
       #grid {
-        width: 80vmin;
+        width: 87vmin;
         grid-template-columns: repeat(6, 1fr);
-        gap: 1vmin; /* Diminuído de 2.5vmin para 2vmin (20% menor) */
+        gap: 2.5vmin;
         margin-left: 12vmin;
         padding: 0;
-        padding-bottom: 120px; /* Espaço para controles fixos */
+        padding-bottom: 120px;
+      }
+      
+      #grid > * {
+        width: 120%;
+        height: 120%;
+        aspect-ratio: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: scale(1.2);
+        transform-origin: center;
       }
       
       .controls {
@@ -181,10 +207,23 @@ export class PromptDjMidi extends LitElement {
     /* Desktop responsive - tela menor */
     @media (min-width: 768px) and (max-width: 1200px) {
       #grid {
-        width: 75vmin;
+        width: 80vmin;
         grid-template-columns: repeat(6, 1fr);
         margin-left: 10vmin;
         padding-bottom: 100px; /* Menos espaço para controles menores */
+      }
+      
+      #grid > * {
+        width: 120%;
+        height: 120%;
+        aspect-ratio: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: scale(1.2);
+        transform-origin: center;
       }
       
       .controls {
@@ -196,10 +235,23 @@ export class PromptDjMidi extends LitElement {
     /* Desktop responsive - tela muito pequena */
     @media (min-width: 768px) and (max-width: 900px) {
       #grid {
-        width: 70vmin;
+        width: 75vmin;
         grid-template-columns: repeat(6, 1fr);
         margin-left: 8vmin;
         padding-bottom: 80px; /* Ainda menos espaço */
+      }
+      
+      #grid > * {
+        width: 120%;
+        height: 120%;
+        aspect-ratio: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: scale(1.2);
+        transform-origin: center;
       }
       
       .controls {
@@ -215,6 +267,17 @@ export class PromptDjMidi extends LitElement {
         gap: 6px;
         padding: 12px 20px;
         padding-bottom: 160px;
+      }
+      
+      #grid > * {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       .controls {
@@ -260,6 +323,17 @@ export class PromptDjMidi extends LitElement {
         z-index: 1;
       }
       
+      #grid > * {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
       .controls {
         bottom: 80px;
         padding: 8px;
@@ -289,6 +363,17 @@ export class PromptDjMidi extends LitElement {
         gap: 6px;
         padding: 12px 35px;
         padding-bottom: 180px;
+      }
+      
+      #grid > * {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       .controls {
@@ -321,6 +406,17 @@ export class PromptDjMidi extends LitElement {
         padding: 8px 16px;
         margin-top: 8px;
         padding-bottom: 160px;
+      }
+      
+      #grid > * {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       .controls {
