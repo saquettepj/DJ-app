@@ -17,14 +17,21 @@ export class ApiKeyInput extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    // Recuperar a API Key salva no localStorage
-    const savedApiKey = localStorage.getItem('gemini_api_key');
-    if (savedApiKey && savedApiKey.trim().length > 20) {
-      this.apiKey = savedApiKey;
-      this.inputValue = savedApiKey;
-      this.isConfigured = true;
-      this.dispatchApiKeyChange(savedApiKey);
+    // Carregar a última chave que funcionou
+    this.loadLastWorkingKey();
+  }
+
+  private loadLastWorkingKey() {
+    const lastWorkingKey = localStorage.getItem('gemini_last_working_key');
+    if (lastWorkingKey && lastWorkingKey.trim().length > 20) {
+      this.inputValue = lastWorkingKey;
+      this.requestUpdate();
     }
+  }
+
+  private saveLastWorkingKey(apiKey: string) {
+    // Salvar apenas a última chave que funcionou
+    localStorage.setItem('gemini_last_working_key', apiKey);
   }
 
   static override styles = css`
@@ -457,9 +464,9 @@ export class ApiKeyInput extends LitElement {
       const isValid = await this.validateApiKey(trimmedKey);
       
       if (isValid) {
-        // API Key válida, salvar e continuar
+        // API Key válida, salvar no histórico e continuar
+        this.saveLastWorkingKey(trimmedKey);
         this.apiKey = trimmedKey;
-        localStorage.setItem('gemini_api_key', trimmedKey);
         this.isConfigured = true;
         this.dispatchApiKeyChange(trimmedKey);
         

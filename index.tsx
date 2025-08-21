@@ -37,18 +37,6 @@ function main() {
   const apiKeyInput = new ApiKeyInput();
   document.body.appendChild(apiKeyInput);
 
-  // Tentar inicializar com API Key salva no localStorage
-  const savedApiKey = localStorage.getItem('gemini_api_key');
-  if (savedApiKey && savedApiKey.trim().length > 20 && initializeAI(savedApiKey)) {
-    // Se temos uma API Key válida, inicializar os componentes
-    initializeComponents(initialPrompts);
-    
-    // Adicionar a sidebar após inicializar os componentes
-    const sidebar = new Sidebar();
-    sidebar.currentTheme = currentTheme;
-    document.body.appendChild(sidebar);
-  }
-
   // Listener para mudanças na API Key
   apiKeyInput.addEventListener('api-key-changed', ((e: Event) => {
     const customEvent = e as CustomEvent<{ apiKey: string }>;

@@ -64,33 +64,11 @@ export class RandomButton extends LitElement {
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
-    .last-prompt {
-      position: absolute;
-      right: -80px;
-      top: 70%;
-      transform: translateY(-50%);
-      font-size: 9px;
-      padding: 2px 6px;
-      background: rgba(76, 175, 80, 0.2);
-      border: 1px solid #4CAF50;
-      border-radius: 4px;
-      color: #4CAF50;
-      animation: fadeIn 0.5s ease-in;
-      white-space: nowrap;
-      max-width: 120px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-60%); }
-      to { opacity: 1; transform: translateY(-50%); }
-    }
   `;
 
   @property({ type: Boolean }) public isActive = false;
   @state() private timeUntilNext = 0;
   @state() private isGenerating = false;
-  @state() private lastGeneratedPrompt = '';
 
   private intervalId: number | null = null;
   private timerId: number | null = null;
@@ -285,11 +263,6 @@ export class RandomButton extends LitElement {
           ${this.formatTime(this.timeUntilNext)}
         </div>
       ` : ''}
-      ${this.lastGeneratedPrompt ? html`
-        <div class="last-prompt">
-          🎵 ${this.lastGeneratedPrompt}
-        </div>
-      ` : ''}
     `;
   }
 
@@ -303,17 +276,6 @@ export class RandomButton extends LitElement {
     this.requestUpdate();
   }
 
-  public setLastGeneratedPrompt(prompt: string) {
-    this.lastGeneratedPrompt = prompt;
-    this.requestUpdate();
-    
-    // Limpar o prompt após 5 segundos
-    setTimeout(() => {
-      this.lastGeneratedPrompt = '';
-      this.requestUpdate();
-    }, 5000);
-  }
-
   public resetTimer() {
     if (this.isActive) {
       this.timeUntilNext = 120; // Reset para 2 minutos
@@ -325,7 +287,6 @@ export class RandomButton extends LitElement {
     this.isActive = false;
     this.timeUntilNext = 0;
     this.stopTimer();
-    this.lastGeneratedPrompt = '';
     this.requestUpdate();
   }
 }
