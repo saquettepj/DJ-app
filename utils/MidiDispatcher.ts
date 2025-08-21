@@ -38,10 +38,9 @@ export class MidiDispatcher extends EventTarget {
         if (input.id !== this.activeMidiInputId) return;
 
         const { data } = event;
-        if (!data) {
-          console.error('MIDI message has no data');
-          return;
-        }
+            if (!data) {
+      return;
+    }
 
         const statusByte = data[0];
         const channel = statusByte & 0x0f;

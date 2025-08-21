@@ -384,7 +384,6 @@ export class PromptDjMidi extends LitElement {
     const prompt = this.prompts.get(promptId);
 
     if (!prompt) {
-      console.error('prompt not found', promptId);
       return;
     }
 
@@ -490,35 +489,27 @@ export class PromptDjMidi extends LitElement {
   }
 
   private handleNextClicked() {
-    console.log('Next button clicked!');
-    
     if (this.isNextGenerating) {
-      console.log('Already generating, ignoring click');
       return;
     }
     
     this.isNextGenerating = true;
-    console.log('Setting loading state');
     
     // Sempre gerar nova combinação aleatória
     this.randomPromptGenerator.forceGenerate(this.prompts);
-    console.log('forceGenerate called');
     
     // Só resetar o timer se o aleatório estiver ativo
     if (this.randomPromptGenerator.isActive()) {
-      console.log('Random is active, resetting timer');
       // Resetar o timer para 2 minutos
       const randomButton = this.shadowRoot?.querySelector('random-button') as any;
       if (randomButton && randomButton.resetTimer) {
         randomButton.resetTimer();
-        console.log('Timer reset');
       }
     }
     
     // Resetar o loading após um delay
     setTimeout(() => {
       this.isNextGenerating = false;
-      console.log('Loading state reset');
     }, 2000); // 2 segundos de loading
   }
 

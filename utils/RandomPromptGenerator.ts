@@ -56,7 +56,6 @@ export class RandomPromptGenerator extends EventTarget {
         this.dispatchEvent(new CustomEvent('prompt-generated', { detail: newPrompts.join(', ') }));
       }
     } catch (error) {
-      console.error('Erro ao gerar prompts aleatórios:', error);
       this.dispatchEvent(new CustomEvent('generation-error', { detail: error.message }));
     } finally {
       this.isGenerating = false;
@@ -119,7 +118,6 @@ export class RandomPromptGenerator extends EventTarget {
       
       return selectedPrompts;
     } catch (error) {
-      console.error('Erro na geração com IA:', error);
       return [];
     }
   }

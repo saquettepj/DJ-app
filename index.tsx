@@ -264,7 +264,7 @@ function handleVolumeChange(volume: number) {
   // Aplicar o volume ao LiveMusicHelper
   if (liveMusicHelper) {
     liveMusicHelper.setVolume(volume);
-    console.log('Volume alterado para:', volume);
+    
   }
 }
 
