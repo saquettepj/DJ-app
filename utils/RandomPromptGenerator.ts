@@ -159,7 +159,7 @@ export class RandomPromptGenerator extends EventTarget {
       }
       
       // Gerar peso aleatório com 20% de chance de estar desativado
-      const randomWeight = Math.random() < (this.currentTheme === 'rpg' ? 0.5 : 0.4) ? 0 : Math.random();
+      const randomWeight = Math.random() < (this.currentTheme === 'rpg' ? 0.6 : 0.5) ? 0 : Math.random();
       
       // Usar o CC original do index.tsx (0 a 15)
       const randomCC = index;
