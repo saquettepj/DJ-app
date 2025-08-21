@@ -108,7 +108,7 @@ export class PromptController extends LitElement {
     @media (min-width: 768px) {
       .prompt {
         padding: 0;
-        transform: scale(0.85);
+        transform: scale(0.765); /* Diminuído de 0.85 para 0.765 (10% menor) */
         transform-origin: center;
       }
       

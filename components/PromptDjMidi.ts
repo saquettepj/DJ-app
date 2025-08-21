@@ -51,7 +51,6 @@ export class PromptDjMidi extends LitElement {
       margin-top: 0;
       margin-left: 0;
       box-sizing: border-box;
-      padding-bottom: 200px; /* Espaço para os controles fixos */
     }
     
     prompt-controller {
@@ -117,28 +116,28 @@ export class PromptDjMidi extends LitElement {
       
       #grid {
         width: 80vmin;
-        height: 80vmin;
         grid-template-columns: repeat(4, 1fr);
-        gap: 2.5vmin;
-        margin-top: 8vmin;
+        gap: 1vmin; /* Diminuído de 2.5vmin para 2vmin (20% menor) */
         margin-left: 12vmin;
         padding: 0;
-        padding-bottom: 0;
+        padding-bottom: 120px; /* Espaço para controles fixos */
       }
       
       .controls {
-        position: relative;
-        bottom: auto;
-        left: auto;
-        right: auto;
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
         flex-direction: row;
         gap: 0;
-        padding: 0;
+        padding: 16px;
         background: transparent;
         backdrop-filter: none;
-        border-top: none;
-        margin-top: 2vmin;
-        margin-left: 11.5vmin;
+        border-radius: 0;
+        border: none;
+        z-index: 1000;
+        margin: 0;
+        margin-left: 6.5vmin;
       }
       
       .main-buttons {
@@ -185,10 +184,12 @@ export class PromptDjMidi extends LitElement {
         width: 75vmin;
         height: 75vmin;
         margin-left: 10vmin;
+        padding-bottom: 100px; /* Menos espaço para controles menores */
       }
       
       .controls {
-        margin-left: 10vmin;
+        bottom: 15px;
+        padding: 12px;
       }
     }
     
@@ -198,10 +199,12 @@ export class PromptDjMidi extends LitElement {
         width: 70vmin;
         height: 70vmin;
         margin-left: 8vmin;
+        padding-bottom: 80px; /* Ainda menos espaço */
       }
       
       .controls {
-        margin-left: 8vmin;
+        bottom: 10px;
+        padding: 10px;
       }
     }
     
