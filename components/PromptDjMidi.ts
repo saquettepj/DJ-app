@@ -536,6 +536,17 @@ export class PromptDjMidi extends LitElement {
 
 
   private playPause() {
+    // Se estiver pausando, parar também o modo aleatório
+    if (this.playbackState === 'playing') {
+      this.randomPromptGenerator.stopGenerating();
+      
+      // Desativar visualmente o botão aleatório
+      const randomButton = this.shadowRoot?.querySelector('random-button') as any;
+      if (randomButton && randomButton.forceDeactivate) {
+        randomButton.forceDeactivate();
+      }
+    }
+    
     this.dispatchEvent(new CustomEvent('play-pause'));
   }
 
@@ -556,6 +567,11 @@ export class PromptDjMidi extends LitElement {
   }
 
   private handleRandomActivated() {
+    // Se não estiver tocando (stopped ou paused), ativar o play automaticamente quando ativar o aleatório
+    if (this.playbackState === 'stopped' || this.playbackState === 'paused') {
+      this.dispatchEvent(new CustomEvent('play-pause'));
+    }
+    
     // Usar o tema atual definido na propriedade
     this.randomPromptGenerator.setTheme(this.currentTheme);
     this.randomPromptGenerator.startGenerating(this.prompts);
@@ -595,6 +611,11 @@ export class PromptDjMidi extends LitElement {
     }
     
     this.isNextGenerating = true;
+    
+    // Se não estiver tocando (stopped ou paused), ativar o play automaticamente
+    if (this.playbackState === 'stopped' || this.playbackState === 'paused') {
+      this.dispatchEvent(new CustomEvent('play-pause'));
+    }
     
     // Sempre gerar nova combinação aleatória
     this.randomPromptGenerator.forceGenerate(this.prompts);
