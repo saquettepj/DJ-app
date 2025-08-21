@@ -28,6 +28,7 @@ export class ToastMessage extends LitElement {
       border: 2px solid #fff;
       box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
       text-wrap: pretty;
+      z-index: 9999;
     }
     button {
       border-radius: 100px;

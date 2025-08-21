@@ -68,7 +68,7 @@ export class PromptDjMidi extends LitElement {
       align-items: center;
       justify-content: center;
       gap: 12px;
-      padding: 16px;
+      padding: 8px;
       background: rgba(0, 0, 0, 0.9);
       backdrop-filter: blur(10px);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -79,7 +79,7 @@ export class PromptDjMidi extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 8px;
     }
     
     play-pause-button {
@@ -167,27 +167,27 @@ export class PromptDjMidi extends LitElement {
       #grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 6px;
-        padding: 12px;
+        padding: 12px 20px;
         padding-bottom: 160px;
       }
       
       .controls {
         bottom: 70px;
-        padding: 12px;
+        padding: 6px;
       }
       
       .main-buttons {
-        gap: 12px;
+        gap: 6px;
       }
       
       play-pause-button {
-        width: 50px;
-        height: 50px;
+        width: 81px;
+        height: 81px;
       }
       
       random-button, clear-button {
-        width: 40px;
-        height: 40px;
+        width: 69px;
+        height: 69px;
       }
     }
     
@@ -204,7 +204,7 @@ export class PromptDjMidi extends LitElement {
       #grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
-        padding: 16px;
+        padding: 16px 20px;
         margin-top: 16px;
         padding-bottom: 200px;
         min-height: calc(100vh - 200px);
@@ -214,23 +214,23 @@ export class PromptDjMidi extends LitElement {
       
       .controls {
         bottom: 80px;
-        padding: 16px;
+        padding: 8px;
         position: fixed;
         z-index: 1000;
       }
       
       .main-buttons {
-        gap: 16px;
+        gap: 8px;
       }
       
       play-pause-button {
-        width: 60px;
-        height: 60px;
+        width: 82px;
+        height: 82px;
       }
       
       random-button, clear-button {
-        width: 50px;
-        height: 50px;
+        width: 69px;
+        height: 69px;
       }
     }
     
@@ -239,27 +239,27 @@ export class PromptDjMidi extends LitElement {
       #grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
-        padding: 12px;
+        padding: 12px 18px;
         padding-bottom: 180px;
       }
       
       .controls {
         bottom: 70px;
-        padding: 12px;
+        padding: 6px;
       }
       
       .main-buttons {
-        gap: 12px;
+        gap: 6px;
       }
       
       play-pause-button {
-        width: 50px;
-        height: 50px;
+        width: 70px;
+        height: 70px;
       }
       
       random-button, clear-button {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
       }
     }
     
@@ -268,28 +268,28 @@ export class PromptDjMidi extends LitElement {
       #grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 4px;
-        padding: 8px;
+        padding: 8px 16px;
         margin-top: 8px;
         padding-bottom: 160px;
       }
       
       .controls {
         bottom: 60px;
-        padding: 8px;
+        padding: 4px;
       }
       
       .main-buttons {
-        gap: 8px;
+        gap: 4px;
       }
       
       play-pause-button {
-        width: 45px;
-        height: 45px;
+        width: 64px;
+        height: 64px;
       }
       
       random-button, clear-button {
-        width: 35px;
-        height: 35px;
+        width: 60px;
+        height: 60px;
       }
     }
   `;

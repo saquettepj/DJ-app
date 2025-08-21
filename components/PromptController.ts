@@ -79,6 +79,15 @@ export class PromptController extends LitElement {
       color: #fff;
       box-sizing: border-box;
       width: 100%;
+      user-select: none;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none;     /* IE/Edge */
+      -moz-user-select: none;    /* Firefox */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-drag: none;
+      pointer-events: auto;
+      caret-color: transparent;
     }
     
     #text:not(:focus) {
@@ -99,6 +108,8 @@ export class PromptController extends LitElement {
     @media (min-width: 768px) {
       .prompt {
         padding: 0;
+        transform: scale(0.85);
+        transform-origin: center;
       }
       
       weight-knob {
@@ -128,7 +139,9 @@ export class PromptController extends LitElement {
     /* Mobile landscape */
     @media (max-width: 767px) and (orientation: landscape) {
       .prompt {
-        padding: 6px;
+        padding: 5px;
+        transform: scale(0.9);
+        transform-origin: center;
       }
       
       weight-knob {
@@ -153,7 +166,9 @@ export class PromptController extends LitElement {
     /* Mobile portrait */
     @media (max-width: 767px) and (orientation: portrait) {
       .prompt {
-        padding: 8px;
+        padding: 7px;
+        transform: scale(0.9);
+        transform-origin: center;
       }
       
       weight-knob {
@@ -178,7 +193,9 @@ export class PromptController extends LitElement {
     /* Small mobile */
     @media (max-width: 480px) {
       .prompt {
-        padding: 6px;
+        padding: 5px;
+        transform: scale(0.9);
+        transform-origin: center;
       }
       
       weight-knob {
@@ -204,6 +221,8 @@ export class PromptController extends LitElement {
     @media (max-width: 360px) {
       .prompt {
         padding: 4px;
+        transform: scale(0.9);
+        transform-origin: center;
       }
       
       weight-knob {
@@ -330,13 +349,12 @@ export class PromptController extends LitElement {
   }
 
   private onFocus() {
-    // .select() for contenteditable doesn't work.
+    // Não mostrar cursor nem seleção ao receber foco
+    // Apenas permitir edição quando o usuário começar a digitar
     const selection = window.getSelection();
-    if (!selection) return;
-    const range = document.createRange();
-    range.selectNodeContents(this.textInput);
-    selection.removeAllRanges();
-    selection.addRange(range);
+    if (selection) {
+      selection.removeAllRanges();
+    }
   }
 
   private updateWeight() {
