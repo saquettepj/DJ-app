@@ -187,6 +187,8 @@ const DEFAULT_PROMPTS = [
   { color: '#d8ff3e', text: 'Neo Soul' },
   { color: '#5200ff', text: 'Trip Hop' },
   { color: '#d9b2ff', text: 'Thrash' },
+  { color: '#ff6b35', text: 'Ambient' },
+  { color: '#4ecdc4', text: 'Synthwave' },
 ];
 
 const RPG_PROMPTS = [
@@ -206,6 +208,8 @@ const RPG_PROMPTS = [
   { color: '#800080', text: 'Soul Demon' },
   { color: '#87CEEB', text: 'Angelical Cry' },
   { color: '#DDA0DD', text: 'Choral' },
+  { color: '#FF6347', text: 'Dragon Lair' },
+  { color: '#00FA9A', text: 'Enchanted Garden' },
 ];
 
 function handleThemeChange(theme: ThemeMode) {

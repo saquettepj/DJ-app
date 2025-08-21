@@ -86,7 +86,9 @@ export class RandomPromptGenerator extends EventTarget {
           'Horror Scream',
           'Heroic legend',
           'Angelical Cry',
-          'Choral'
+          'Choral',
+          'Dragon Lair',
+          'Enchanted Garden'
         ];
       } else {
         // Prompts Basic exatamente como definidos no index.tsx
@@ -106,7 +108,9 @@ export class RandomPromptGenerator extends EventTarget {
           'K Pop',
           'Neo Soul',
           'Trip Hop',
-          'Thrash'
+          'Thrash',
+          'Ambient',
+          'Synthwave'
         ];
       }
       
@@ -141,17 +145,17 @@ export class RandomPromptGenerator extends EventTarget {
         const rpgColors = [
           '#8B0000', '#4B0082', '#00CED1', '#FFD700', '#32CD32', '#20B2AA',
           '#FF8C00', '#DC143C', '#8A2BE2', '#FF1493', '#2F4F4F', '#8B4513',
-          '#DC143C', '#800080', '#87CEEB', '#DDA0DD'
+          '#DC143C', '#800080', '#87CEEB', '#DDA0DD', '#FF6347', '#00FA9A'
         ];
-        color = rpgColors[index] || '#9900ff'; // fallback se index > 15
+        color = rpgColors[index] || '#9900ff'; // fallback se index > 17
       } else {
         // Cores Basic do index.tsx
         const basicColors = [
           '#9900ff', '#5200ff', '#ff25f6', '#2af6de', '#ffdd28', '#2af6de',
           '#9900ff', '#3dffab', '#d8ff3e', '#d9b2ff', '#3dffab', '#ffdd28',
-          '#ff25f6', '#d8ff3e', '#5200ff', '#d9b2ff'
+          '#ff25f6', '#d8ff3e', '#5200ff', '#d9b2ff', '#ff6b35', '#4ecdc4'
         ];
-        color = basicColors[index] || '#9900ff'; // fallback se index > 15
+        color = basicColors[index] || '#9900ff'; // fallback se index > 17
       }
       
       // Gerar peso aleatório com 20% de chance de estar desativado

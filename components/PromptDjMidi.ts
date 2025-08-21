@@ -116,7 +116,7 @@ export class PromptDjMidi extends LitElement {
       
       #grid {
         width: 80vmin;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 1vmin; /* Diminuído de 2.5vmin para 2vmin (20% menor) */
         margin-left: 12vmin;
         padding: 0;
@@ -183,6 +183,7 @@ export class PromptDjMidi extends LitElement {
       #grid {
         width: 75vmin;
         height: 75vmin;
+        grid-template-columns: repeat(6, 1fr);
         margin-left: 10vmin;
         padding-bottom: 100px; /* Menos espaço para controles menores */
       }
@@ -198,6 +199,7 @@ export class PromptDjMidi extends LitElement {
       #grid {
         width: 70vmin;
         height: 70vmin;
+        grid-template-columns: repeat(6, 1fr);
         margin-left: 8vmin;
         padding-bottom: 80px; /* Ainda menos espaço */
       }
@@ -211,7 +213,7 @@ export class PromptDjMidi extends LitElement {
     /* Mobile landscape */
     @media (max-width: 767px) and (orientation: landscape) {
       #grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 6px;
         padding: 12px 20px;
         padding-bottom: 160px;

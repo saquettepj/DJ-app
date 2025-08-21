@@ -49,6 +49,7 @@ export class ApiKeyInput extends LitElement {
       font-family: 'Google Sans', sans-serif;
       padding: 20px;
       box-sizing: border-box;
+      overflow: hidden;
     }
 
     .api-key-card {
@@ -62,6 +63,8 @@ export class ApiKeyInput extends LitElement {
       backdrop-filter: blur(20px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
       box-sizing: border-box;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
     }
 
     .logo {
@@ -216,6 +219,7 @@ export class ApiKeyInput extends LitElement {
     @media (max-width: 767px) {
       :host {
         padding: 16px;
+        overflow: hidden;
       }
       
       .api-key-card {
@@ -223,6 +227,8 @@ export class ApiKeyInput extends LitElement {
         border-radius: 16px;
         max-width: none;
         width: 100%;
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
       }
       
       .logo {
@@ -268,15 +274,251 @@ export class ApiKeyInput extends LitElement {
       }
     }
     
+    /* Mobile landscape - orientação horizontal */
+    @media (max-width: 767px) and (orientation: landscape) {
+      :host {
+        padding: 8px;
+        align-items: flex-start;
+        padding-top: 10px;
+        height: 100vh;
+        overflow-y: auto;
+      }
+      
+      .api-key-card {
+        padding: 16px 14px;
+        border-radius: 12px;
+        max-width: 380px;
+        margin: 0 auto;
+        max-height: calc(100vh - 20px);
+        overflow-y: auto;
+      }
+      
+      .logo {
+        font-size: 28px;
+        margin-bottom: 8px;
+      }
+      
+      .title {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+      
+      .subtitle {
+        font-size: 11px;
+        margin-bottom: 12px;
+        line-height: 1.2;
+      }
+      
+      .input-group {
+        margin-bottom: 12px;
+      }
+      
+      input {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+      
+      .save-button {
+        padding: 10px 12px;
+        font-size: 14px;
+        margin-top: 4px;
+      }
+      
+      .status-indicator {
+        margin-top: 10px;
+        font-size: 11px;
+      }
+      
+      .error-message {
+        padding: 6px;
+        margin-top: 8px;
+        font-size: 11px;
+      }
+    }
+    
+    /* Mobile landscape - tela muito pequena */
+    @media (max-width: 767px) and (orientation: landscape) and (max-height: 500px) {
+      :host {
+        padding: 6px;
+        padding-top: 8px;
+      }
+      
+      .api-key-card {
+        padding: 12px 10px;
+        border-radius: 10px;
+        max-width: 320px;
+        max-height: calc(100vh - 16px);
+      }
+      
+      .logo {
+        font-size: 24px;
+        margin-bottom: 6px;
+      }
+      
+      .title {
+        font-size: 16px;
+        margin-bottom: 3px;
+      }
+      
+      .subtitle {
+        font-size: 10px;
+        margin-bottom: 10px;
+        line-height: 1.1;
+      }
+      
+      .input-group {
+        margin-bottom: 8px;
+      }
+      
+      input {
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+      
+      .save-button {
+        padding: 8px 10px;
+        font-size: 13px;
+        margin-top: 3px;
+      }
+      
+      .status-indicator {
+        margin-top: 8px;
+        font-size: 10px;
+      }
+      
+      .error-message {
+        padding: 5px;
+        margin-top: 6px;
+        font-size: 10px;
+      }
+    }
+    
+    /* Mobile landscape - tela extra pequena */
+    @media (max-width: 767px) and (orientation: landscape) and (max-height: 400px) {
+      :host {
+        padding: 4px;
+        padding-top: 6px;
+      }
+      
+      .api-key-card {
+        padding: 10px 8px;
+        border-radius: 8px;
+        max-width: 280px;
+        max-height: calc(100vh - 12px);
+      }
+      
+      .logo {
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+      
+      .title {
+        font-size: 14px;
+        margin-bottom: 2px;
+      }
+      
+      .subtitle {
+        font-size: 9px;
+        margin-bottom: 8px;
+        line-height: 1.1;
+      }
+      
+      .input-group {
+        margin-bottom: 6px;
+      }
+      
+      input {
+        padding: 6px 8px;
+        font-size: 12px;
+      }
+      
+      .save-button {
+        padding: 6px 8px;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+      
+      .status-indicator {
+        margin-top: 6px;
+        font-size: 9px;
+      }
+      
+      .error-message {
+        padding: 4px;
+        margin-top: 4px;
+        font-size: 9px;
+      }
+    }
+    
+    /* Mobile landscape - tela extremamente pequena */
+    @media (max-width: 767px) and (orientation: landscape) and (max-height: 300px) {
+      :host {
+        padding: 2px;
+        padding-top: 4px;
+      }
+      
+      .api-key-card {
+        padding: 8px 6px;
+        border-radius: 6px;
+        max-width: 240px;
+        max-height: calc(100vh - 8px);
+      }
+      
+      .logo {
+        font-size: 18px;
+        margin-bottom: 3px;
+      }
+      
+      .title {
+        font-size: 12px;
+        margin-bottom: 1px;
+      }
+      
+      .subtitle {
+        font-size: 8px;
+        margin-bottom: 6px;
+        line-height: 1.0;
+      }
+      
+      .input-group {
+        margin-bottom: 4px;
+      }
+      
+      input {
+        padding: 5px 6px;
+        font-size: 11px;
+      }
+      
+      .save-button {
+        padding: 5px 6px;
+        font-size: 11px;
+        margin-top: 1px;
+      }
+      
+      .status-indicator {
+        margin-top: 4px;
+        font-size: 8px;
+      }
+      
+      .error-message {
+        padding: 3px;
+        margin-top: 3px;
+        font-size: 8px;
+      }
+    }
+    
     /* Small mobile */
     @media (max-width: 480px) {
       :host {
         padding: 12px;
+        overflow: hidden;
       }
       
       .api-key-card {
         padding: 20px 16px;
         border-radius: 14px;
+        max-height: calc(100vh - 24px);
+        overflow-y: auto;
       }
       
       .logo {
@@ -313,11 +555,14 @@ export class ApiKeyInput extends LitElement {
     @media (max-width: 360px) {
       :host {
         padding: 8px;
+        overflow: hidden;
       }
       
       .api-key-card {
         padding: 16px 12px;
         border-radius: 12px;
+        max-height: calc(100vh - 16px);
+        overflow-y: auto;
       }
       
       .logo {
