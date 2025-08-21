@@ -115,7 +115,7 @@ export class RandomPromptGenerator extends EventTarget {
       }
       
       // Escolher prompts aleatórios únicos
-      const selectedPrompts = themePrompts.slice(0, 16); // Pegar 16 prompts únicos
+      const selectedPrompts = themePrompts.slice(0, 18); // Pegar 18 prompts únicos
       
       // Simular delay de IA
       await new Promise(resolve => setTimeout(resolve, 1000));
