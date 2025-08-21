@@ -188,7 +188,7 @@ export class PromptDjMidi extends LitElement {
       }
       
       .controls {
-        bottom: 15px;
+        bottom: 5px;
         padding: 12px;
       }
     }
@@ -203,7 +203,7 @@ export class PromptDjMidi extends LitElement {
       }
       
       .controls {
-        bottom: 10px;
+        bottom: 0px;
         padding: 10px;
       }
     }

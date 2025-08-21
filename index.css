@@ -2,11 +2,17 @@ html, body {
   height: 100%;
   margin: 0;
   overflow: hidden;
+  background: #111;
+}
+
+html {
+  background: #111;
 }
 
 body {
   font-family: 'Google Sans', sans-serif;
   font-size: 14px;
+  background: rgba(17, 17, 17, 0.1);
 }
 
 /* Mobile scroll */
