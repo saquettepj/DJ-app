@@ -220,6 +220,8 @@ export class PromptDjMidi extends LitElement {
       .controls {
         bottom: 70px;
         padding: 6px;
+        padding-bottom: 12px;
+        gap: 0;
       }
       
       .main-buttons {
@@ -292,6 +294,8 @@ export class PromptDjMidi extends LitElement {
       .controls {
         bottom: 70px;
         padding: 6px;
+        padding-bottom: 12px;
+        gap: 0;
       }
       
       .main-buttons {
@@ -322,6 +326,7 @@ export class PromptDjMidi extends LitElement {
       .controls {
         bottom: 60px;
         padding: 4px;
+        gap: 0;
       }
       
       .main-buttons {
