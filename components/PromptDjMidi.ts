@@ -179,6 +179,32 @@ export class PromptDjMidi extends LitElement {
       }
     }
     
+    /* Desktop responsive - tela menor */
+    @media (min-width: 768px) and (max-width: 1200px) {
+      #grid {
+        width: 75vmin;
+        height: 75vmin;
+        margin-left: 10vmin;
+      }
+      
+      .controls {
+        margin-left: 10vmin;
+      }
+    }
+    
+    /* Desktop responsive - tela muito pequena */
+    @media (min-width: 768px) and (max-width: 900px) {
+      #grid {
+        width: 70vmin;
+        height: 70vmin;
+        margin-left: 8vmin;
+      }
+      
+      .controls {
+        margin-left: 8vmin;
+      }
+    }
+    
     /* Mobile landscape */
     @media (max-width: 767px) and (orientation: landscape) {
       #grid {

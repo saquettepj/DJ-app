@@ -108,6 +108,32 @@ export class Sidebar extends LitElement {
       }
     }
     
+    /* Desktop responsive - tela menor */
+    @media (min-width: 768px) and (max-width: 1200px) {
+      :host {
+        width: 160px;
+        gap: 1.5rem;
+      }
+      
+      .theme-button {
+        width: 120px;
+        height: 120px;
+      }
+    }
+    
+    /* Desktop responsive - tela muito pequena */
+    @media (min-width: 768px) and (max-width: 900px) {
+      :host {
+        width: 140px;
+        gap: 1rem;
+      }
+      
+      .theme-button {
+        width: 100px;
+        height: 100px;
+      }
+    }
+    
     /* Small mobile */
     @media (max-width: 480px) {
       :host {
