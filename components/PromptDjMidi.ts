@@ -12,6 +12,7 @@ import './PromptController';
 import './PlayPauseButton';
 import './RandomButton';
 import './ClearButton';
+import './NextButton';
 import './VolumeControl';
 import type { PlaybackState, Prompt } from '../types';
 import { RandomPromptGenerator } from '../utils/RandomPromptGenerator';
@@ -97,6 +98,11 @@ export class PromptDjMidi extends LitElement {
       height: 50px;
     }
     
+    next-button {
+      width: 50px;
+      height: 50px;
+    }
+    
     volume-control {
       width: 100%;
       max-width: 300px;
@@ -132,10 +138,12 @@ export class PromptDjMidi extends LitElement {
         backdrop-filter: none;
         border-top: none;
         margin-top: 2vmin;
+        margin-left: 11.5vmin;
       }
       
       .main-buttons {
         gap: 0;
+        align-items: center;
       }
       
       play-pause-button {
@@ -146,19 +154,28 @@ export class PromptDjMidi extends LitElement {
       random-button {
         width: 10vmin;
         height: auto;
-        margin-left: 2vmin;
+        margin-left: 1vmin;
+      }
+      
+      next-button {
+        width: 10vmin;
+        height: auto;
+        margin-left: 1vmin;
+        margin-right: 1vmin;
       }
       
       clear-button {
         width: 10vmin;
         height: auto;
-        margin-right: 2vmin;
+        margin-right: 1vmin;
       }
       
       volume-control {
         width: auto;
         max-width: none;
         margin-right: 2vmin;
+        margin-left: 2vmin;
+        margin-bottom: 1.5vmin;
       }
     }
     
@@ -185,7 +202,7 @@ export class PromptDjMidi extends LitElement {
         height: 81px;
       }
       
-      random-button, clear-button {
+      random-button, clear-button, next-button {
         width: 69px;
         height: 69px;
       }
@@ -228,7 +245,7 @@ export class PromptDjMidi extends LitElement {
         height: 82px;
       }
       
-      random-button, clear-button {
+      random-button, clear-button, next-button {
         width: 69px;
         height: 69px;
       }
@@ -257,7 +274,7 @@ export class PromptDjMidi extends LitElement {
         height: 70px;
       }
       
-      random-button, clear-button {
+      random-button, clear-button, next-button {
         width: 60px;
         height: 60px;
       }
@@ -287,7 +304,7 @@ export class PromptDjMidi extends LitElement {
         height: 64px;
       }
       
-      random-button, clear-button {
+      random-button, clear-button, next-button {
         width: 60px;
         height: 60px;
       }
@@ -300,6 +317,7 @@ export class PromptDjMidi extends LitElement {
   @property({ type: String }) public playbackState: PlaybackState = 'stopped';
   @state() public audioLevel = 0;
   @property({ type: String }) public currentTheme: 'basic' | 'rpg' = 'basic';
+  @state() private isNextGenerating = false;
 
   @property({ type: Object })
   private filteredPrompts = new Set<string>();
@@ -442,6 +460,39 @@ export class PromptDjMidi extends LitElement {
     }));
   }
 
+  private handleNextClicked() {
+    console.log('Next button clicked!');
+    
+    if (this.isNextGenerating) {
+      console.log('Already generating, ignoring click');
+      return;
+    }
+    
+    this.isNextGenerating = true;
+    console.log('Setting loading state');
+    
+    // Sempre gerar nova combinação aleatória
+    this.randomPromptGenerator.forceGenerate(this.prompts);
+    console.log('forceGenerate called');
+    
+    // Só resetar o timer se o aleatório estiver ativo
+    if (this.randomPromptGenerator.isActive()) {
+      console.log('Random is active, resetting timer');
+      // Resetar o timer para 2 minutos
+      const randomButton = this.shadowRoot?.querySelector('random-button') as any;
+      if (randomButton && randomButton.resetTimer) {
+        randomButton.resetTimer();
+        console.log('Timer reset');
+      }
+    }
+    
+    // Resetar o loading após um delay
+    setTimeout(() => {
+      this.isNextGenerating = false;
+      console.log('Loading state reset');
+    }, 2000); // 2 segundos de loading
+  }
+
   override render() {
     const bg = styleMap({
       backgroundImage: this.makeBackground(),
@@ -452,6 +503,10 @@ export class PromptDjMidi extends LitElement {
         <div class="main-buttons">
           <clear-button @click=${this.handleClearConfiguration}></clear-button>
           <play-pause-button .playbackState=${this.playbackState} @click=${this.playPause}></play-pause-button>
+          <next-button
+            .isGenerating=${this.isNextGenerating}
+            @next-clicked=${this.handleNextClicked}
+          ></next-button>
           <random-button
             @random-activated=${this.handleRandomActivated}
             @random-deactivated=${this.handleRandomDeactivated}

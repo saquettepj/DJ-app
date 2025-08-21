@@ -179,6 +179,11 @@ export class RandomPromptGenerator extends EventTarget {
     this.currentTheme = theme;
   }
 
+  public forceGenerate(prompts: Map<string, Prompt>) {
+    // Força a geração sempre, independente do estado
+    this.generateRandomPrompt(prompts);
+  }
+
   public isActive(): boolean {
     return this.intervalId !== null;
   }

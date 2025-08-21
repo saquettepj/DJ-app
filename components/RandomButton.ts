@@ -49,21 +49,6 @@ export class RandomButton extends LitElement {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.6; }
     }
-    .timer {
-      position: absolute;
-      right: -80px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 12px;
-      color: #ffffff;
-      font-weight: 600;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-      white-space: nowrap;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 4px 8px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
   `;
 
   @property({ type: Boolean }) public isActive = false;
@@ -85,7 +70,6 @@ export class RandomButton extends LitElement {
 
   private startTimer() {
     if (this.intervalId) return;
-    
     this.intervalId = window.setInterval(() => {
       if (this.isActive) {
         if (this.timeUntilNext > 0) {
@@ -113,7 +97,6 @@ export class RandomButton extends LitElement {
 
   private toggleRandom() {
     this.isActive = !this.isActive;
-    
     if (this.isActive) {
       this.timeUntilNext = 120; // 2 minutos
       this.startTimer();
@@ -123,7 +106,6 @@ export class RandomButton extends LitElement {
       this.stopTimer();
       this.dispatchEvent(new CustomEvent('random-deactivated'));
     }
-    
     this.requestUpdate();
   }
 
@@ -140,99 +122,44 @@ export class RandomButton extends LitElement {
       viewBox="0 -10 140 150"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
-      <rect
-        x="22"
-        y="6"
-        width="96"
-        height="96"
-        rx="48"
-        fill="black"
-        fill-opacity="0.05" />
-      <rect
-        x="23.5"
-        y="7.5"
-        width="93"
-        height="93"
-        rx="46.5"
-        stroke="black"
-        stroke-opacity="0.3"
-        stroke-width="3" />
+      <rect x="22" y="6" width="96" height="96" rx="48" fill="black" fill-opacity="0.05" />
+      <rect x="23.5" y="7.5" width="93" height="93" rx="46.5" stroke="black" stroke-opacity="0.3" stroke-width="3" />
       <g filter="url(#filter0_ddi_1048_7373)">
-        <rect
-          x="25"
-          y="9"
-          width="90"
-          height="90"
-          rx="45"
-          fill="white"
-          fill-opacity="0.05"
-          shape-rendering="crispEdges"
-          class="circle-bg ${this.isActive ? 'active' : ''}" />
+        <rect x="25" y="9" width="90" height="90" rx="45" fill="white" fill-opacity="0.05" shape-rendering="crispEdges" class="circle-bg ${this.isActive ? 'active' : ''}" />
       </g>
-      ${this.renderDiceIcon()}
+      ${this.isActive ? this.renderTimerText() : this.renderDiceIcon()}
       <defs>
-        <filter
-          id="filter0_ddi_1048_7373"
-          x="0"
-          y="0"
-          width="140"
-          height="140"
-          filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB">
+        <filter id="filter0_ddi_1048_7373" x="0" y="0" width="140" height="140" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
           <feFlood flood-opacity="0" result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-            result="hardAlpha" />
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
           <feOffset dy="2" />
           <feGaussianBlur stdDeviation="4" />
           <feComposite in2="hardAlpha" operator="out" />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-          <feBlend
-            mode="normal"
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_1048_7373" />
-          <feColorMatrix
-            in="SourceAlpha"
-            type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-            result="hardAlpha" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1048_7373" />
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
           <feOffset dy="16" />
           <feGaussianBlur stdDeviation="12.5" />
           <feComposite in2="hardAlpha" operator="out" />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-          <feBlend
-            mode="normal"
-            in2="effect1_dropShadow_1048_7373"
-            result="effect2_dropShadow_1048_7373" />
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="effect2_dropShadow_1048_7373"
-            result="shape" />
-          <feColorMatrix
-            in="SourceAlpha"
-            type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-            result="hardAlpha" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend mode="normal" in2="effect1_dropShadow_1048_7373" result="effect2_dropShadow_1048_7373" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_1048_7373" result="shape" />
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
           <feOffset dy="3" />
           <feGaussianBlur stdDeviation="1.5" />
           <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0" />
-          <feBlend
-            mode="normal"
-            in2="shape"
-            result="effect3_innerShadow_1048_7373" />
+          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0" />
+          <feBlend mode="normal" in2="shape" result="effect3_innerShadow_1048_7373" />
         </filter>
       </defs>
     </svg>`;
+  }
+
+  private renderTimerText() {
+    // Texto centralizado com o círculo do botão (viewBox: 0 -10 140 150)
+    // O centro do círculo está em (70, 70) relativo ao viewBox
+    const time = this.formatTime(this.timeUntilNext);
+    return svg`<text x="70" y="58" text-anchor="middle" dominant-baseline="middle" fill="#FEFEFE" font-size="18" font-weight="600">${time}</text>`;
   }
 
   private renderDiceIcon() {
@@ -243,7 +170,6 @@ export class RandomButton extends LitElement {
         <rect x="5" y="5" width="20" height="20" rx="3" fill="currentColor"/>
         <polygon points="25,5 30,0 30,20 25,25" fill="currentColor" opacity="0.7"/>
         <polygon points="5,5 25,5 30,0 10,0" fill="currentColor" opacity="0.8"/>
-        
         <!-- Pontos do dado -->
         <circle cx="12" cy="12" r="1.5" fill="white"/>
         <circle cx="18" cy="12" r="1.5" fill="white"/>
@@ -258,11 +184,6 @@ export class RandomButton extends LitElement {
     return html`
       ${this.renderSvg()}
       <div class="hitbox" @click=${this.toggleRandom}></div>
-      ${this.isActive ? html`
-        <div class="timer">
-          ${this.formatTime(this.timeUntilNext)}
-        </div>
-      ` : ''}
     `;
   }
 
