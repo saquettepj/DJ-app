@@ -71,6 +71,68 @@ export class Sidebar extends LitElement {
     .inactive:hover {
       opacity: 0.8;
     }
+    
+    /* Mobile styles */
+    @media (max-width: 767px) {
+      :host {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: 0;
+        height: auto;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 1001;
+        display: flex;
+        pointer-events: auto;
+      }
+      
+      .theme-button {
+        width: 60px;
+        height: 60px;
+        display: block;
+        pointer-events: auto;
+      }
+      
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    }
+    
+    /* Small mobile */
+    @media (max-width: 480px) {
+      :host {
+        padding: 8px;
+        gap: 0.5rem;
+      }
+      
+      .theme-button {
+        width: 50px;
+        height: 50px;
+      }
+    }
+    
+    /* Extra small mobile */
+    @media (max-width: 360px) {
+      :host {
+        padding: 6px;
+        gap: 0.25rem;
+      }
+      
+      .theme-button {
+        width: 45px;
+        height: 45px;
+      }
+    }
   `;
 
   private renderBasicButton() {

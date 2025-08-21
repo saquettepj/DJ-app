@@ -14,26 +14,30 @@ export class VolumeControl extends LitElement {
     :host {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 8px;
       background: rgba(0, 0, 0, 0.8);
-      padding: 0.8rem 1.5rem;
-      border-radius: 40px;
+      padding: 8px 12px;
+      border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(10px);
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 300px;
     }
 
     .volume-label {
       color: white;
       font-family: Arial, sans-serif;
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .volume-slider {
-      width: 120px;
+      flex: 1;
       height: 4px;
       border-radius: 2px;
       background: rgba(255, 255, 255, 0.2);
@@ -41,13 +45,14 @@ export class VolumeControl extends LitElement {
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
+      min-width: 60px;
     }
 
     .volume-slider::-webkit-slider-thumb {
       appearance: none;
       -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: #4CAF50;
       cursor: pointer;
@@ -62,8 +67,8 @@ export class VolumeControl extends LitElement {
     }
 
     .volume-slider::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: #4CAF50;
       cursor: pointer;
@@ -80,17 +85,171 @@ export class VolumeControl extends LitElement {
     .volume-value {
       color: white;
       font-family: Arial, sans-serif;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 600;
-      min-width: 40px;
+      min-width: 35px;
       text-align: center;
+      flex-shrink: 0;
     }
 
     .volume-icon {
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
       fill: white;
       opacity: 0.8;
+      flex-shrink: 0;
+    }
+    
+    /* Desktop styles */
+    @media (min-width: 768px) {
+      :host {
+        width: auto;
+        max-width: none;
+        gap: 0.8rem;
+        padding: 0.8rem 1.5rem;
+        border-radius: 40px;
+      }
+      
+      .volume-label {
+        font-size: 12px;
+        letter-spacing: 1px;
+      }
+      
+      .volume-slider {
+        width: 120px;
+        min-width: 120px;
+      }
+      
+      .volume-slider::-webkit-slider-thumb {
+        width: 16px;
+        height: 16px;
+      }
+      
+      .volume-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+      }
+      
+      .volume-value {
+        font-size: 14px;
+        min-width: 40px;
+      }
+      
+      .volume-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
+    /* Mobile landscape */
+    @media (max-width: 767px) and (orientation: landscape) {
+      :host {
+        padding: 6px 10px;
+        gap: 6px;
+      }
+      
+      .volume-label {
+        font-size: 9px;
+        letter-spacing: 0.3px;
+      }
+      
+      .volume-slider {
+        min-width: 50px;
+      }
+      
+      .volume-slider::-webkit-slider-thumb {
+        width: 12px;
+        height: 12px;
+      }
+      
+      .volume-slider::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+      }
+      
+      .volume-value {
+        font-size: 11px;
+        min-width: 30px;
+      }
+      
+      .volume-icon {
+        width: 14px;
+        height: 14px;
+      }
+    }
+    
+    /* Small mobile */
+    @media (max-width: 480px) {
+      :host {
+        padding: 6px 8px;
+        gap: 4px;
+      }
+      
+      .volume-label {
+        font-size: 8px;
+        letter-spacing: 0.2px;
+      }
+      
+      .volume-slider {
+        min-width: 40px;
+      }
+      
+      .volume-slider::-webkit-slider-thumb {
+        width: 10px;
+        height: 10px;
+      }
+      
+      .volume-slider::-moz-range-thumb {
+        width: 10px;
+        height: 10px;
+      }
+      
+      .volume-value {
+        font-size: 10px;
+        min-width: 25px;
+      }
+      
+      .volume-icon {
+        width: 12px;
+        height: 12px;
+      }
+    }
+    
+    /* Extra small mobile */
+    @media (max-width: 360px) {
+      :host {
+        padding: 4px 6px;
+        gap: 3px;
+      }
+      
+      .volume-label {
+        font-size: 7px;
+        letter-spacing: 0.1px;
+      }
+      
+      .volume-slider {
+        min-width: 35px;
+      }
+      
+      .volume-slider::-webkit-slider-thumb {
+        width: 8px;
+        height: 8px;
+      }
+      
+      .volume-slider::-moz-range-thumb {
+        width: 8px;
+        height: 8px;
+      }
+      
+      .volume-value {
+        font-size: 9px;
+        min-width: 20px;
+      }
+      
+      .volume-icon {
+        width: 10px;
+        height: 10px;
+      }
     }
   `;
 

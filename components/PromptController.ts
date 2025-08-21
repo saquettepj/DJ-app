@@ -18,45 +18,57 @@ export class PromptController extends LitElement {
   static override styles = css`
     .prompt {
       width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 8px;
+      box-sizing: border-box;
     }
+    
     weight-knob {
-      width: 70%;
+      width: 80%;
+      height: auto;
       flex-shrink: 0;
+      margin-bottom: 8px;
     }
+    
     #midi {
       font-family: monospace;
       text-align: center;
-      font-size: 1.5vmin;
-      border: 0.2vmin solid #fff;
-      border-radius: 0.5vmin;
-      padding: 2px 5px;
+      font-size: 10px;
+      border: 1px solid #fff;
+      border-radius: 4px;
+      padding: 2px 4px;
       color: #fff;
       background: #0006;
       cursor: pointer;
       visibility: hidden;
       user-select: none;
-      margin-top: 0.75vmin;
-      .learn-mode & {
-        color: orange;
-        border-color: orange;
-      }
-      .show-cc & {
-        visibility: visible;
-      }
+      margin-top: 4px;
+      min-width: 30px;
+      text-align: center;
     }
+    
+    .learn-mode & {
+      color: orange;
+      border-color: orange;
+    }
+    
+    .show-cc & {
+      visibility: visible;
+    }
+    
     #text {
       font-weight: 500;
-      font-size: 1.8vmin;
-      max-width: 17vmin;
-      min-width: 2vmin;
-      padding: 0.1em 0.3em;
-      margin-top: 0.5vmin;
+      font-size: 12px;
+      max-width: 100%;
+      min-width: 40px;
+      padding: 4px 6px;
+      margin-top: 4px;
       flex-shrink: 0;
-      border-radius: 0.25vmin;
+      border-radius: 4px;
       text-align: center;
       white-space: pre;
       overflow: hidden;
@@ -65,10 +77,14 @@ export class PromptController extends LitElement {
       -webkit-font-smoothing: antialiased;
       background: #000;
       color: #fff;
-      &:not(:focus) {
-        text-overflow: ellipsis;
-      }
+      box-sizing: border-box;
+      width: 100%;
     }
+    
+    #text:not(:focus) {
+      text-overflow: ellipsis;
+    }
+    
     :host([filtered]) {
       weight-knob { 
         opacity: 0.5;
@@ -78,12 +94,134 @@ export class PromptController extends LitElement {
         z-index: 1;
       }
     }
-    @media only screen and (max-width: 600px) {
-      #text {
-        font-size: 2.3vmin;
+    
+    /* Desktop styles */
+    @media (min-width: 768px) {
+      .prompt {
+        padding: 0;
       }
+      
       weight-knob {
-        width: 60%;
+        width: 70%;
+        margin-bottom: 0.75vmin;
+      }
+      
+      #midi {
+        font-size: 1.5vmin;
+        border: 0.2vmin solid #fff;
+        border-radius: 0.5vmin;
+        padding: 2px 5px;
+        margin-top: 0.75vmin;
+        min-width: auto;
+      }
+      
+      #text {
+        font-size: 1.8vmin;
+        max-width: 17vmin;
+        min-width: 2vmin;
+        padding: 0.1em 0.3em;
+        margin-top: 0.5vmin;
+        width: auto;
+      }
+    }
+    
+    /* Mobile landscape */
+    @media (max-width: 767px) and (orientation: landscape) {
+      .prompt {
+        padding: 6px;
+      }
+      
+      weight-knob {
+        width: 75%;
+        margin-bottom: 6px;
+      }
+      
+      #midi {
+        font-size: 9px;
+        padding: 1px 3px;
+        margin-top: 3px;
+        min-width: 25px;
+      }
+      
+      #text {
+        font-size: 11px;
+        padding: 3px 5px;
+        margin-top: 3px;
+      }
+    }
+    
+    /* Mobile portrait */
+    @media (max-width: 767px) and (orientation: portrait) {
+      .prompt {
+        padding: 8px;
+      }
+      
+      weight-knob {
+        width: 80%;
+        margin-bottom: 8px;
+      }
+      
+      #midi {
+        font-size: 10px;
+        padding: 2px 4px;
+        margin-top: 4px;
+        min-width: 30px;
+      }
+      
+      #text {
+        font-size: 12px;
+        padding: 4px 6px;
+        margin-top: 4px;
+      }
+    }
+    
+    /* Small mobile */
+    @media (max-width: 480px) {
+      .prompt {
+        padding: 6px;
+      }
+      
+      weight-knob {
+        width: 75%;
+        margin-bottom: 6px;
+      }
+      
+      #midi {
+        font-size: 9px;
+        padding: 1px 3px;
+        margin-top: 3px;
+        min-width: 25px;
+      }
+      
+      #text {
+        font-size: 11px;
+        padding: 3px 5px;
+        margin-top: 3px;
+      }
+    }
+    
+    /* Extra small mobile */
+    @media (max-width: 360px) {
+      .prompt {
+        padding: 4px;
+      }
+      
+      weight-knob {
+        width: 70%;
+        margin-bottom: 4px;
+      }
+      
+      #midi {
+        font-size: 8px;
+        padding: 1px 2px;
+        margin-top: 2px;
+        min-width: 20px;
+      }
+      
+      #text {
+        font-size: 10px;
+        padding: 2px 4px;
+        margin-top: 2px;
       }
     }
   `;

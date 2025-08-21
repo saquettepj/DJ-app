@@ -40,6 +40,8 @@ export class ApiKeyInput extends LitElement {
       justify-content: center;
       z-index: 9999;
       font-family: 'Google Sans', sans-serif;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     .api-key-card {
@@ -48,10 +50,11 @@ export class ApiKeyInput extends LitElement {
       border-radius: 20px;
       padding: 40px;
       max-width: 450px;
-      width: 90%;
+      width: 100%;
       text-align: center;
       backdrop-filter: blur(20px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      box-sizing: border-box;
     }
 
     .logo {
@@ -200,6 +203,144 @@ export class ApiKeyInput extends LitElement {
     .fade-out {
       opacity: 0;
       transition: opacity 0.5s ease;
+    }
+    
+    /* Mobile styles */
+    @media (max-width: 767px) {
+      :host {
+        padding: 16px;
+      }
+      
+      .api-key-card {
+        padding: 24px 20px;
+        border-radius: 16px;
+        max-width: none;
+        width: 100%;
+      }
+      
+      .logo {
+        font-size: 40px;
+        margin-bottom: 16px;
+      }
+      
+      .title {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+      
+      .subtitle {
+        font-size: 14px;
+        margin-bottom: 24px;
+        line-height: 1.4;
+      }
+      
+      .input-group {
+        margin-bottom: 20px;
+      }
+      
+      input {
+        padding: 14px 16px;
+        font-size: 16px;
+      }
+      
+      .save-button {
+        padding: 14px 16px;
+        font-size: 16px;
+        margin-top: 8px;
+      }
+      
+      .status-indicator {
+        margin-top: 16px;
+        font-size: 13px;
+      }
+      
+      .error-message {
+        padding: 10px;
+        margin-top: 12px;
+        font-size: 13px;
+      }
+    }
+    
+    /* Small mobile */
+    @media (max-width: 480px) {
+      :host {
+        padding: 12px;
+      }
+      
+      .api-key-card {
+        padding: 20px 16px;
+        border-radius: 14px;
+      }
+      
+      .logo {
+        font-size: 36px;
+        margin-bottom: 14px;
+      }
+      
+      .title {
+        font-size: 22px;
+        margin-bottom: 6px;
+      }
+      
+      .subtitle {
+        font-size: 13px;
+        margin-bottom: 20px;
+      }
+      
+      .input-group {
+        margin-bottom: 18px;
+      }
+      
+      input {
+        padding: 12px 14px;
+        font-size: 15px;
+      }
+      
+      .save-button {
+        padding: 12px 14px;
+        font-size: 15px;
+      }
+    }
+    
+    /* Extra small mobile */
+    @media (max-width: 360px) {
+      :host {
+        padding: 8px;
+      }
+      
+      .api-key-card {
+        padding: 16px 12px;
+        border-radius: 12px;
+      }
+      
+      .logo {
+        font-size: 32px;
+        margin-bottom: 12px;
+      }
+      
+      .title {
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+      
+      .subtitle {
+        font-size: 12px;
+        margin-bottom: 16px;
+      }
+      
+      .input-group {
+        margin-bottom: 16px;
+      }
+      
+      input {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+      
+      .save-button {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
     }
   `;
 

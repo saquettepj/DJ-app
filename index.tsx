@@ -13,6 +13,9 @@ import { AudioAnalyser } from './utils/AudioAnalyser';
 import { Sidebar, type ThemeMode } from './components/Sidebar';
 import { ApiKeyInput } from './components/ApiKeyInput';
 
+let currentTheme: ThemeMode = 'basic';
+let pdjMidi: PromptDjMidi | null = null;
+let liveMusicHelper: LiveMusicHelper | null = null;
 let ai: GoogleGenAI;
 let model = 'lyria-realtime-exp';
 
@@ -149,7 +152,6 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     const prompts = customEvent.detail;
     liveMusicHelper.setWeightedPrompts(prompts);
   }));
-
 }
 
 
@@ -218,22 +220,20 @@ const RPG_PROMPTS = [
   { color: '#DDA0DD', text: 'Choral' },
 ];
 
-let currentTheme: ThemeMode = 'basic';
-let pdjMidi: PromptDjMidi;
-let liveMusicHelper: LiveMusicHelper;
-
 function handleThemeChange(theme: ThemeMode) {
   currentTheme = theme;
   
   // Parar o modo aleatório antes de trocar o tema
-  if (pdjMidi.randomPromptGenerator) {
+  if (pdjMidi && pdjMidi.randomPromptGenerator) {
     pdjMidi.randomPromptGenerator.stopGenerating();
   }
   
   // Desativar visualmente o botão aleatório
-  const randomButton = pdjMidi.shadowRoot?.querySelector('random-button') as any;
-  if (randomButton && randomButton.forceDeactivate) {
-    randomButton.forceDeactivate();
+  if (pdjMidi && pdjMidi.shadowRoot) {
+    const randomButton = pdjMidi.shadowRoot.querySelector('random-button') as any;
+    if (randomButton && randomButton.forceDeactivate) {
+      randomButton.forceDeactivate();
+    }
   }
   
   // Limpar configuração anterior (zerar todos os pesos)
@@ -249,20 +249,26 @@ function handleThemeChange(theme: ThemeMode) {
   });
   
   // Atualizar o PromptDjMidi com os novos prompts zerados
-  pdjMidi.currentTheme = theme;
-  pdjMidi.updatePrompts(clearedPrompts);
+  if (pdjMidi) {
+    pdjMidi.currentTheme = theme;
+    pdjMidi.updatePrompts(clearedPrompts);
+  }
   
   // Atualizar o LiveMusicHelper
-  liveMusicHelper.setWeightedPrompts(clearedPrompts);
+  if (liveMusicHelper) {
+    liveMusicHelper.setWeightedPrompts(clearedPrompts);
+  }
   
   // Atualizar o tema no RandomPromptGenerator
-  if (pdjMidi.randomPromptGenerator) {
+  if (pdjMidi && pdjMidi.randomPromptGenerator) {
     pdjMidi.randomPromptGenerator.setTheme(theme);
   }
   
   // Força a atualização da UI imediatamente
   requestAnimationFrame(() => {
-    pdjMidi.requestUpdate();
+    if (pdjMidi) {
+      pdjMidi.requestUpdate();
+    }
   });
 }
 

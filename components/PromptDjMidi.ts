@@ -21,14 +21,17 @@ import { RandomPromptGenerator } from '../utils/RandomPromptGenerator';
 export class PromptDjMidi extends LitElement {
   static override styles = css`
     :host {
-      height: 100%;
+      height: 100vh;
+      width: 100vw;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       box-sizing: border-box;
       position: relative;
+      overflow: hidden;
     }
+    
     #background {
       will-change: background-image;
       position: absolute;
@@ -37,42 +40,257 @@ export class PromptDjMidi extends LitElement {
       z-index: -1;
       background: #111;
     }
+    
     #grid {
-      width: 80vmin;
-      height: 80vmin;
+      width: 100%;
+      height: auto;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2.5vmin;
-      margin-top: 8vmin;
-      margin-left: 12vmin;
+      gap: 8px;
+      padding: 16px;
+      margin-top: 0;
+      margin-left: 0;
+      box-sizing: border-box;
+      padding-bottom: 200px; /* Espaço para os controles fixos */
     }
+    
     prompt-controller {
       width: 100%;
+      height: 100%;
     }
-    play-pause-button {
-      position: relative;
-      width: 15vmin;
-    }
-    random-button {
-      position: relative;
-      width: 10vmin;
-      margin-left: 2vmin;
-    }
-    clear-button {
-      position: relative;
-      width: 10vmin;
-      margin-right: 2vmin;
-    }
-    volume-control {
-      position: relative;
-      margin-right: 2vmin;
-    }
+    
     .controls {
+      position: fixed;
+      bottom: 80px; /* Espaço para a barra de temas */
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1000;
+    }
+    
+    .main-buttons {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0;
-      position: relative;
+      gap: 16px;
+    }
+    
+    play-pause-button {
+      width: 60px;
+      height: 60px;
+    }
+    
+    random-button {
+      width: 50px;
+      height: 50px;
+    }
+    
+    clear-button {
+      width: 50px;
+      height: 50px;
+    }
+    
+    volume-control {
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    /* Desktop styles */
+    @media (min-width: 768px) {
+      :host {
+        justify-content: center;
+        overflow: hidden;
+      }
+      
+      #grid {
+        width: 80vmin;
+        height: 80vmin;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2.5vmin;
+        margin-top: 8vmin;
+        margin-left: 12vmin;
+        padding: 0;
+        padding-bottom: 0;
+      }
+      
+      .controls {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        flex-direction: row;
+        gap: 0;
+        padding: 0;
+        background: transparent;
+        backdrop-filter: none;
+        border-top: none;
+        margin-top: 2vmin;
+      }
+      
+      .main-buttons {
+        gap: 0;
+      }
+      
+      play-pause-button {
+        width: 15vmin;
+        height: auto;
+      }
+      
+      random-button {
+        width: 10vmin;
+        height: auto;
+        margin-left: 2vmin;
+      }
+      
+      clear-button {
+        width: 10vmin;
+        height: auto;
+        margin-right: 2vmin;
+      }
+      
+      volume-control {
+        width: auto;
+        max-width: none;
+        margin-right: 2vmin;
+      }
+    }
+    
+    /* Mobile landscape */
+    @media (max-width: 767px) and (orientation: landscape) {
+      #grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        padding: 12px;
+        padding-bottom: 160px;
+      }
+      
+      .controls {
+        bottom: 70px;
+        padding: 12px;
+      }
+      
+      .main-buttons {
+        gap: 12px;
+      }
+      
+      play-pause-button {
+        width: 50px;
+        height: 50px;
+      }
+      
+      random-button, clear-button {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    
+    /* Mobile portrait */
+    @media (max-width: 767px) and (orientation: portrait) {
+      :host {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: auto;
+        min-height: 100vh;
+        position: relative;
+      }
+      
+      #grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 16px;
+        margin-top: 16px;
+        padding-bottom: 200px;
+        min-height: calc(100vh - 200px);
+        position: relative;
+        z-index: 1;
+      }
+      
+      .controls {
+        bottom: 80px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1000;
+      }
+      
+      .main-buttons {
+        gap: 16px;
+      }
+      
+      play-pause-button {
+        width: 60px;
+        height: 60px;
+      }
+      
+      random-button, clear-button {
+        width: 50px;
+        height: 50px;
+      }
+    }
+    
+    /* Small mobile */
+    @media (max-width: 480px) {
+      #grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 12px;
+        padding-bottom: 180px;
+      }
+      
+      .controls {
+        bottom: 70px;
+        padding: 12px;
+      }
+      
+      .main-buttons {
+        gap: 12px;
+      }
+      
+      play-pause-button {
+        width: 50px;
+        height: 50px;
+      }
+      
+      random-button, clear-button {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    
+    /* Extra small mobile */
+    @media (max-width: 360px) {
+      #grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+        padding: 8px;
+        margin-top: 8px;
+        padding-bottom: 160px;
+      }
+      
+      .controls {
+        bottom: 60px;
+        padding: 8px;
+      }
+      
+      .main-buttons {
+        gap: 8px;
+      }
+      
+      play-pause-button {
+        width: 45px;
+        height: 45px;
+      }
+      
+      random-button, clear-button {
+        width: 35px;
+        height: 35px;
+      }
     }
   `;
 
@@ -231,13 +449,15 @@ export class PromptDjMidi extends LitElement {
     return html`<div id="background" style=${bg}></div>
       <div id="grid">${this.renderPrompts()}</div>
       <div class="controls">
+        <div class="main-buttons">
+          <clear-button @click=${this.handleClearConfiguration}></clear-button>
+          <play-pause-button .playbackState=${this.playbackState} @click=${this.playPause}></play-pause-button>
+          <random-button
+            @random-activated=${this.handleRandomActivated}
+            @random-deactivated=${this.handleRandomDeactivated}
+          ></random-button>
+        </div>
         <volume-control @volume-changed=${this.handleVolumeChange}></volume-control>
-        <clear-button @click=${this.handleClearConfiguration}></clear-button>
-        <play-pause-button .playbackState=${this.playbackState} @click=${this.playPause}></play-pause-button>
-        <random-button
-          @random-activated=${this.handleRandomActivated}
-          @random-deactivated=${this.handleRandomDeactivated}
-        ></random-button>
       </div>`;
   }
 

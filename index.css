@@ -1,15 +1,29 @@
 html, body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
 }
+
 body {
   font-family: 'Google Sans', sans-serif;
   font-size: 14px;
-  overflow: hidden;
 }
+
+/* Mobile scroll */
+@media (max-width: 767px) {
+  html, body {
+    overflow-x: hidden;
+  }
+  
+  body {
+    overflow-y: auto;
+  }
+}
+
 body.dragging {
   cursor: ns-resize;
 }
+
 body.dragging * {
   user-select: none;
   pointer-events: none;
