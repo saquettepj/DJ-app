@@ -107,6 +107,12 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     const customEvent = e as CustomEvent<LiveMusicFilteredPrompt>;
     const filteredPrompt = customEvent.detail;
     toastMessage.show(filteredPrompt.filteredReason!, 'error');
+    
+    // Esconder toast de prompt filtrado após 5 segundos
+    setTimeout(() => {
+      toastMessage.hide();
+    }, 5000);
+    
     pdjMidi.addFilteredPrompt(filteredPrompt.text!);
   }));
 
@@ -114,6 +120,11 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     const customEvent = e as CustomEvent<string>;
     const error = customEvent.detail;
     toastMessage.show(error, 'error');
+    
+    // Esconder toast de erro após 5 segundos
+    setTimeout(() => {
+      toastMessage.hide();
+    }, 5000);
   });
 
   liveMusicHelper.addEventListener('error', errorToast);
@@ -125,11 +136,21 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     const message = customEvent.detail;
     toastMessage.show(message, 'success');
     
+    // Esconder toast após 5 segundos
+    setTimeout(() => {
+      toastMessage.hide();
+    }, 5000);
+    
     // Dar play na música automaticamente se ela estava tocando antes da desconexão
     if (message.includes('Retomando a música')) {
       try {
         // Mostrar mensagem de carregamento
         toastMessage.show('Carregando música...', 'info');
+        
+        // Esconder toast de carregamento após 5 segundos
+        setTimeout(() => {
+          toastMessage.hide();
+        }, 5000);
         
         await liveMusicHelper.play();
         
@@ -143,6 +164,11 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
       } catch (error) {
         console.error('Erro ao dar play na música após reconexão:', error);
         toastMessage.show('Erro ao retomar a música após reconexão', 'error');
+        
+        // Esconder toast de erro após 5 segundos
+        setTimeout(() => {
+          toastMessage.hide();
+        }, 5000);
       }
     }
   });
