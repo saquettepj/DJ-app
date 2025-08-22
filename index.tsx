@@ -106,18 +106,25 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
   liveMusicHelper.addEventListener('filtered-prompt', ((e: Event) => {
     const customEvent = e as CustomEvent<LiveMusicFilteredPrompt>;
     const filteredPrompt = customEvent.detail;
-    toastMessage.show(filteredPrompt.filteredReason!)
+    toastMessage.show(filteredPrompt.filteredReason!, 'error');
     pdjMidi.addFilteredPrompt(filteredPrompt.text!);
   }));
 
   const errorToast = ((e: Event) => {
     const customEvent = e as CustomEvent<string>;
     const error = customEvent.detail;
-    toastMessage.show(error);
+    toastMessage.show(error, 'error');
   });
 
   liveMusicHelper.addEventListener('error', errorToast);
   pdjMidi.addEventListener('error', errorToast);
+  
+  // Listener para conexão restaurada
+  liveMusicHelper.addEventListener('connection-restored', ((e: Event) => {
+    const customEvent = e as CustomEvent<string>;
+    const message = customEvent.detail;
+    toastMessage.show(message, 'success');
+  }));
 
   // Inicializar AudioAnalyser
   const audioAnalyser = new AudioAnalyser(liveMusicHelper.audioContext);

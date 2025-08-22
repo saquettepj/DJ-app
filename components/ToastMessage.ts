@@ -30,6 +30,7 @@ export class ToastMessage extends LitElement {
       text-wrap: pretty;
       z-index: 9999;
     }
+    
     button {
       border-radius: 100px;
       aspect-ratio: 1;
@@ -37,10 +38,12 @@ export class ToastMessage extends LitElement {
       color: #000;
       cursor: pointer;
     }
+    
     .toast:not(.showing) {
       transition-duration: 1s;
       transform: translate(-50%, -200%);
     }
+    
     a {
       color: #acacac;
       text-decoration: underline;
@@ -49,6 +52,7 @@ export class ToastMessage extends LitElement {
 
   @property({ type: String }) message = '';
   @property({ type: Boolean }) showing = false;
+  @property({ type: String }) type: 'info' | 'success' | 'error' = 'info';
 
   private renderMessageWithLinks() {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -60,15 +64,21 @@ export class ToastMessage extends LitElement {
   }
 
   override render() {
-    return html`<div class=${classMap({ showing: this.showing, toast: true })}>
+    return html`<div class=${classMap({ 
+      showing: this.showing, 
+      toast: true,
+      success: this.type === 'success',
+      error: this.type === 'error'
+    })}>
       <div class="message">${this.renderMessageWithLinks()}</div>
       <button @click=${this.hide}>✕</button>
     </div>`;
   }
 
-  show(message: string) {
+  show(message: string, type: 'info' | 'success' | 'error' = 'info') {
     this.showing = true;
     this.message = message;
+    this.type = type;
   }
 
   hide() {

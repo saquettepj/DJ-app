@@ -16,6 +16,9 @@ export class LiveMusicHelper extends EventTarget {
   private sessionPromise: Promise<LiveMusicSession> | null = null;
 
   private connectionError = true;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 3;
+  private reconnectInterval: number | null = null;
 
   private filteredPrompts = new Set<string>();
   private nextStartTime = 0;
@@ -51,6 +54,11 @@ export class LiveMusicHelper extends EventTarget {
         onmessage: async (e: LiveMusicServerMessage) => {
           if (e.setupComplete) {
             this.connectionError = false;
+            this.reconnectAttempts = 0;
+            // Notificar sucesso de reconexão
+            this.dispatchEvent(new CustomEvent('connection-restored', { 
+              detail: 'Conexão restaurada com sucesso!' 
+            }));
           }
           if (e.filteredPrompt) {
             this.filteredPrompts = new Set([...this.filteredPrompts, e.filteredPrompt.text!])
@@ -63,16 +71,54 @@ export class LiveMusicHelper extends EventTarget {
         onerror: () => {
           this.connectionError = true;
           this.stop();
-          this.dispatchEvent(new CustomEvent('error', { detail: 'Connection error, please restart audio.' }));
+          this.dispatchEvent(new CustomEvent('error', { 
+            detail: 'Erro de conexão detectado. Tentando reconectar automaticamente...' 
+          }));
+          this.attemptReconnect();
         },
         onclose: () => {
           this.connectionError = true;
           this.stop();
-          this.dispatchEvent(new CustomEvent('error', { detail: 'Connection error, please restart audio.' }));
+          this.dispatchEvent(new CustomEvent('error', { 
+            detail: 'Conexão perdida. Tentando reconectar automaticamente...' 
+          }));
+          this.attemptReconnect();
         },
       },
     });
     return this.sessionPromise;
+  }
+
+  private attemptReconnect() {
+    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      this.dispatchEvent(new CustomEvent('error', { 
+        detail: 'Falha na reconexão. Por favor, reinicie o áudio manualmente.' 
+      }));
+      return;
+    }
+
+    this.reconnectAttempts++;
+    
+    if (this.reconnectInterval) {
+      clearTimeout(this.reconnectInterval);
+    }
+
+    this.reconnectInterval = window.setTimeout(async () => {
+      try {
+        this.dispatchEvent(new CustomEvent('error', { 
+          detail: `Tentativa de reconexão ${this.reconnectAttempts}/${this.maxReconnectAttempts}...` 
+        }));
+        
+        // Tentar reconectar
+        this.session = null;
+        this.sessionPromise = null;
+        await this.getSession();
+      } catch (error) {
+        if (this.reconnectAttempts < this.maxReconnectAttempts) {
+          this.attemptReconnect();
+        }
+      }
+    }, 2000); // 2 segundos entre tentativas
   }
 
   private setPlaybackState(state: PlaybackState) {
@@ -117,7 +163,9 @@ export class LiveMusicHelper extends EventTarget {
     this.prompts = prompts;
 
     if (this.activePrompts.length === 0) {
-      this.dispatchEvent(new CustomEvent('error', { detail: 'There needs to be one active prompt to play.' }));
+      this.dispatchEvent(new CustomEvent('error', { 
+        detail: 'É necessário ter pelo menos um prompt ativo para reproduzir.' 
+      }));
       this.pause();
       return;
     }
@@ -131,7 +179,9 @@ export class LiveMusicHelper extends EventTarget {
         weightedPrompts: this.activePrompts,
       });
     } catch (e: any) {
-      this.dispatchEvent(new CustomEvent('error', { detail: e.message }));
+      this.dispatchEvent(new CustomEvent('error', { 
+        detail: `Erro ao configurar prompts: ${e.message}` 
+      }));
       this.pause();
     }
   }, 200);
