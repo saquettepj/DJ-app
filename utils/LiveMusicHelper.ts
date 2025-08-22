@@ -29,6 +29,7 @@ export class LiveMusicHelper extends EventTarget {
 
   private outputNode: GainNode;
   private playbackState: PlaybackState = 'stopped';
+  private previousPlaybackState: PlaybackState = 'stopped';
   private currentVolume: number = 0.5;
 
   private prompts: Map<string, Prompt>;
@@ -55,9 +56,10 @@ export class LiveMusicHelper extends EventTarget {
           if (e.setupComplete) {
             this.connectionError = false;
             this.reconnectAttempts = 0;
-            // Notificar sucesso de reconexão
+            // Notificar sucesso de reconexão com informação sobre o estado anterior
+            const shouldResume = this.previousPlaybackState === 'playing';
             this.dispatchEvent(new CustomEvent('connection-restored', { 
-              detail: 'Conexão restaurada com sucesso!' 
+              detail: shouldResume ? 'Conexão restaurada com sucesso! Retomando a música...' : 'Conexão restaurada com sucesso!' 
             }));
           }
           if (e.filteredPrompt) {
@@ -70,6 +72,7 @@ export class LiveMusicHelper extends EventTarget {
         },
         onerror: () => {
           this.connectionError = true;
+          this.previousPlaybackState = this.playbackState;
           this.stop();
           this.dispatchEvent(new CustomEvent('error', { 
             detail: 'Erro de conexão detectado. Tentando reconectar automaticamente...' 
@@ -78,6 +81,7 @@ export class LiveMusicHelper extends EventTarget {
         },
         onclose: () => {
           this.connectionError = true;
+          this.previousPlaybackState = this.playbackState;
           this.stop();
           this.dispatchEvent(new CustomEvent('error', { 
             detail: 'Conexão perdida. Tentando reconectar automaticamente...' 
@@ -186,16 +190,65 @@ export class LiveMusicHelper extends EventTarget {
     }
   }, 200);
 
+  // Método específico para reconexão sem throttle
+  private async setWeightedPromptsForReconnection() {
+    if (this.activePrompts.length === 0) {
+      this.dispatchEvent(new CustomEvent('error', { 
+        detail: 'É necessário ter pelo menos um prompt ativo para reproduzir.' 
+      }));
+      return;
+    }
+
+    if (!this.session) return;
+
+    try {
+      await this.session.setWeightedPrompts({
+        weightedPrompts: this.activePrompts,
+      });
+    } catch (e: any) {
+      console.error('Erro ao configurar prompts para reconexão:', e);
+      this.dispatchEvent(new CustomEvent('error', { 
+        detail: `Erro ao configurar prompts: ${e.message}` 
+      }));
+      // Não chamar pause() aqui para não interferir com a reconexão
+      throw e; // Re-throw para ser capturado pelo método play()
+    }
+  }
+
   public async play() {
-    this.setPlaybackState('loading');
-    this.session = await this.getSession();
-    await this.setWeightedPrompts(this.prompts);
-    this.audioContext.resume();
-    this.session.play();
-    this.outputNode.connect(this.audioContext.destination);
-    if (this.extraDestination) this.outputNode.connect(this.extraDestination);
-    this.outputNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-    this.outputNode.gain.linearRampToValueAtTime(this.currentVolume, this.audioContext.currentTime + 0.1);
+    try {
+      this.setPlaybackState('loading');
+      this.session = await this.getSession();
+      
+      // Aguardar um pouco para garantir que a sessão esteja completamente estabelecida
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Usar método específico para reconexão se necessário
+      if (this.previousPlaybackState === 'playing') {
+        try {
+          await this.setWeightedPromptsForReconnection();
+          // Resetar o estado anterior após reconexão bem-sucedida
+          this.previousPlaybackState = 'stopped';
+        } catch (error) {
+          console.error('Erro na reconexão, tentando método padrão:', error);
+          // Se falhar, tentar método padrão
+          await this.setWeightedPrompts(this.prompts);
+        }
+      } else {
+        await this.setWeightedPrompts(this.prompts);
+      }
+      
+      this.audioContext.resume();
+      this.session.play();
+      this.outputNode.connect(this.audioContext.destination);
+      if (this.extraDestination) this.outputNode.connect(this.extraDestination);
+      this.outputNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+      this.outputNode.gain.linearRampToValueAtTime(this.currentVolume, this.audioContext.currentTime + 0.1);
+    } catch (error) {
+      console.error('Erro no método play:', error);
+      this.setPlaybackState('stopped');
+      throw error;
+    }
   }
 
   public pause() {
@@ -207,6 +260,7 @@ export class LiveMusicHelper extends EventTarget {
     this.outputNode = this.audioContext.createGain();
     // Restaurar o volume atual no novo GainNode
     this.outputNode.gain.setValueAtTime(this.currentVolume, this.audioContext.currentTime);
+    // Não resetar previousPlaybackState aqui para preservar o estado anterior
   }
 
   public stop() {
@@ -217,6 +271,7 @@ export class LiveMusicHelper extends EventTarget {
     this.nextStartTime = 0;
     this.session = null;
     this.sessionPromise = null;
+    // Não resetar previousPlaybackState aqui para preservar o estado anterior
   }
 
   public async playPause() {

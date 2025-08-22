@@ -120,11 +120,32 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
   pdjMidi.addEventListener('error', errorToast);
   
   // Listener para conexão restaurada
-  liveMusicHelper.addEventListener('connection-restored', ((e: Event) => {
+  liveMusicHelper.addEventListener('connection-restored', async (e: Event) => {
     const customEvent = e as CustomEvent<string>;
     const message = customEvent.detail;
     toastMessage.show(message, 'success');
-  }));
+    
+    // Dar play na música automaticamente se ela estava tocando antes da desconexão
+    if (message.includes('Retomando a música')) {
+      try {
+        // Mostrar mensagem de carregamento
+        toastMessage.show('Carregando música...', 'info');
+        
+        await liveMusicHelper.play();
+        
+        // Mostrar mensagem de sucesso após o play e esconder após 5 segundos
+        setTimeout(() => {
+          toastMessage.show('Música retomada com sucesso!', 'success');
+          setTimeout(() => {
+            toastMessage.hide();
+          }, 5000);
+        }, 1000);
+      } catch (error) {
+        console.error('Erro ao dar play na música após reconexão:', error);
+        toastMessage.show('Erro ao retomar a música após reconexão', 'error');
+      }
+    }
+  });
 
   // Inicializar AudioAnalyser
   const audioAnalyser = new AudioAnalyser(liveMusicHelper.audioContext);
