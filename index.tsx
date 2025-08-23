@@ -360,7 +360,7 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
         pdjMidi.updatePrompts(favorite.preset.prompts);
         
         // Aguardar a atualização dos prompts antes de continuar
-        setTimeout(() => {
+        setTimeout(async () => {
           // Forçar sincronização completa dos prompts
           pdjMidi.forceSyncPrompts();
           
@@ -384,6 +384,14 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
               const isFavorited = pdjMidi.isCurrentConfigFavorited();
               favoriteButton.setCurrentConfigFavorited(isFavorited);
             }
+          }
+          
+          // Dar play automático na música após aplicar a configuração
+          try {
+            await liveMusicHelper.play();
+            console.log('Música iniciada automaticamente após aplicar favorito');
+          } catch (error) {
+            console.error('Erro ao iniciar música automaticamente:', error);
           }
         }, 100);
       }

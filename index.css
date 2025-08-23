@@ -34,3 +34,36 @@ body.dragging * {
   user-select: none;
   pointer-events: none;
 }
+
+/* Desabilitar seleção de texto em todos os botões e elementos interativos */
+button, 
+[role="button"],
+.favorite-btn,
+.action-btn,
+.input-btn,
+.favorite-tape,
+play-pause-button,
+random-button,
+clear-button,
+next-button,
+volume-control,
+weight-knob,
+favorite-button {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Desabilitar seleção de texto em elementos específicos */
+.favorite-name,
+.favorite-actions,
+.controls,
+.main-buttons {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

@@ -65,6 +65,12 @@ export class VolumeControl extends LitElement {
       min-width: 60px;
       position: relative;
       z-index: 1;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .volume-slider::-webkit-slider-thumb {

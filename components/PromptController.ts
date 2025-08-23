@@ -25,6 +25,12 @@ export class PromptController extends LitElement {
       justify-content: center;
       padding: 8px;
       box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
     
     weight-knob {

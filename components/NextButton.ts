@@ -34,6 +34,12 @@ export class NextButton extends LitElement {
       top: 9%;
       border-radius: 50%;
       cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .next-icon {
       color: #FEFEFE;

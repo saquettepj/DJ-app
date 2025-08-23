@@ -30,6 +30,12 @@ export class FavoriteButton extends LitElement {
       pointer-events: all;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       min-height: 48px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .favorite-btn::before {
@@ -244,6 +250,56 @@ export class FavoriteButton extends LitElement {
       .input-btn {
         padding: 10px 20px;
         min-width: 80px;
+      }
+    }
+
+    /* Mobile portrait - input acima dos controles principais */
+    @media (max-width: 768px) and (orientation: portrait) {
+      .input-overlay {
+        position: fixed;
+        top: auto;
+        bottom: 200px; /* Posicionar acima dos controles principais */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 400px;
+        height: auto;
+        background: transparent;
+        z-index: 10001;
+      }
+      
+      .input-card {
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 25px;
+        transform: scale(0.9);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      }
+      
+      .input-overlay.showing .input-card {
+        transform: scale(1);
+      }
+      
+      .input-title {
+        font-size: 22px;
+        margin-bottom: 18px;
+      }
+      
+      .input-field {
+        padding: 14px 18px;
+        margin-bottom: 18px;
+        font-size: 16px;
+      }
+      
+      .input-actions {
+        gap: 15px;
+      }
+      
+      .input-btn {
+        padding: 12px 24px;
+        min-width: 100px;
+        font-size: 15px;
       }
     }
   `;

@@ -43,6 +43,12 @@ export class Sidebar extends LitElement {
       border-radius: 50%;
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .theme-button:hover {
@@ -91,6 +97,12 @@ export class Sidebar extends LitElement {
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .favorites-toggle-btn:hover {

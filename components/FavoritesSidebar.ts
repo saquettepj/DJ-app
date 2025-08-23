@@ -58,6 +58,12 @@ export class FavoritesSidebar extends LitElement {
       transition: all 0.3s ease;
       position: relative;
       height: 60px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .favorite-tape:hover {
@@ -108,11 +114,23 @@ export class FavoritesSidebar extends LitElement {
       justify-content: center;
       transition: all 0.2s ease;
       font-size: 12px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .edit-btn {
       background: rgba(255, 193, 7, 0.8);
       color: #000;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .edit-btn:hover {
@@ -123,6 +141,12 @@ export class FavoritesSidebar extends LitElement {
     .delete-btn {
       background: rgba(244, 67, 54, 0.8);
       color: white;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .delete-btn:hover {

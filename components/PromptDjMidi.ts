@@ -88,6 +88,10 @@ export class PromptDjMidi extends LitElement {
       backdrop-filter: blur(10px);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 1000;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
     
     .main-buttons {

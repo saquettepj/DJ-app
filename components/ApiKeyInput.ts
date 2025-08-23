@@ -65,6 +65,12 @@ export class ApiKeyInput extends LitElement {
       box-sizing: border-box;
       max-height: calc(100vh - 40px);
       overflow-y: auto;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .logo {
