@@ -66,8 +66,20 @@ export class FavoritesManager extends EventTarget {
     const id = `favorite-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const timestamp = Date.now();
     
+    // CORREÇÃO: Criar cópia profunda real dos prompts para evitar referências
+    const promptsCopy = new Map<string, Prompt>();
+    prompts.forEach((prompt, key) => {
+      promptsCopy.set(key, {
+        promptId: prompt.promptId,
+        text: prompt.text,
+        weight: prompt.weight,
+        cc: prompt.cc,
+        color: prompt.color
+      });
+    });
+    
     const preset: MusicPreset = {
-      prompts: new Map(prompts),
+      prompts: promptsCopy,
       volume,
       timestamp
     };
@@ -137,7 +149,19 @@ export class FavoritesManager extends EventTarget {
   public getFavoriteByPreset(prompts: Map<string, Prompt>, volume: number): Favorite | undefined {
     // Buscar favorito com configuração similar
     for (const favorite of this.favorites.values()) {
-      if (this.presetsAreSimilar(favorite.preset, { prompts, volume, timestamp: Date.now() })) {
+      // CORREÇÃO: Criar cópia profunda dos prompts atuais para comparação
+      const currentPromptsCopy = new Map<string, Prompt>();
+      prompts.forEach((prompt, key) => {
+        currentPromptsCopy.set(key, {
+          promptId: prompt.promptId,
+          text: prompt.text,
+          weight: prompt.weight,
+          cc: prompt.cc,
+          color: prompt.color
+        });
+      });
+      
+      if (this.presetsAreSimilar(favorite.preset, { prompts: currentPromptsCopy, volume, timestamp: Date.now() })) {
         return favorite;
       }
     }
@@ -156,7 +180,9 @@ export class FavoritesManager extends EventTarget {
       .map(([id, prompt]) => ({ id, weight: prompt.weight }))
       .sort((a, b) => a.id.localeCompare(b.id));
     
-    if (activePrompts1.length !== activePrompts2.length) return false;
+    if (activePrompts1.length !== activePrompts2.length) {
+      return false;
+    }
     
     // Verificar se todos os prompts ativos têm o mesmo peso
     for (let i = 0; i < activePrompts1.length; i++) {
@@ -168,7 +194,9 @@ export class FavoritesManager extends EventTarget {
     
     // Verificar se volume é similar (tolerância menor para ser mais preciso)
     const volumeDiff = Math.abs(preset1.volume - preset2.volume);
-    if (volumeDiff > 0.05) return false;
+    if (volumeDiff > 0.05) {
+      return false;
+    }
     
     return true;
   }

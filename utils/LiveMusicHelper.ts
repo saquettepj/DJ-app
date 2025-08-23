@@ -290,6 +290,10 @@ export class LiveMusicHelper extends EventTarget {
     return this.currentVolume;
   }
 
+  public getPlaybackState(): PlaybackState {
+    return this.playbackState;
+  }
+
   public setVolume(volume: number) {
     // Armazenar o volume atual
     this.currentVolume = volume;

@@ -516,6 +516,11 @@ export class PromptDjMidi extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    
+    // Listener único para mudanças de configuração
+    this.addEventListener('configuration-changed', () => {
+      this.updateFavoriteButtonState();
+    });
   }
 
   private handlePromptChanged(e: CustomEvent<Prompt>) {
@@ -536,6 +541,11 @@ export class PromptDjMidi extends LitElement {
     this.prompts = newPrompts;
     localStorage.setItem('promptDjMidi-prompts', JSON.stringify(Array.from(this.prompts.entries())));
     this.requestUpdate();
+
+    // Disparar evento único de mudança de configuração
+    this.dispatchEvent(new CustomEvent('configuration-changed', {
+      detail: { prompts: this.prompts, volume: this.currentVolume }
+    }));
 
     this.dispatchEvent(
       new CustomEvent('prompts-changed', { detail: this.prompts }),
@@ -617,16 +627,52 @@ export class PromptDjMidi extends LitElement {
     // Atualizar a interface
     this.requestUpdate();
     
+    // Disparar evento único de mudança de configuração
+    this.dispatchEvent(new CustomEvent('configuration-changed', {
+      detail: { prompts: this.prompts, volume: this.currentVolume }
+    }));
+    
     // Disparar evento de mudança de prompts
     this.dispatchEvent(
       new CustomEvent('prompts-changed', { detail: this.prompts }),
     );
+  }
+  
+  // Método dedicado para atualizar o estado do botão de favoritos
+  private updateFavoriteButtonState() {
+    if (this.shadowRoot) {
+      const favoriteButton = this.shadowRoot.querySelector('favorite-button') as any;
+      if (favoriteButton && favoriteButton.setCurrentConfigFavorited) {
+        // Verificar se a configuração atual está favoritada
+        const isFavorited = this.isCurrentConfigFavorited();
+        
+        // Forçar atualização do estado
+        favoriteButton.setCurrentConfigFavorited(isFavorited);
+        
+        // Verificação adicional: se o estado ainda estiver incorreto após um delay, forçar novamente
+        setTimeout(() => {
+          if (favoriteButton.isCurrentConfigFavorited !== isFavorited) {
+            favoriteButton.setCurrentConfigFavorited(isFavorited);
+          }
+        }, 10);
+      }
+    }
+  }
+  
+  // Método público para forçar a atualização do estado do botão de favoritos
+  public forceUpdateFavoriteButtonState() {
+    this.updateFavoriteButtonState();
   }
 
   public forceSyncPrompts() {
     // Forçar sincronização completa dos prompts
     this.requestUpdate();
     this.makeBackground();
+    
+    // Disparar evento único de mudança de configuração
+    this.dispatchEvent(new CustomEvent('configuration-changed', {
+      detail: { prompts: this.prompts, volume: this.currentVolume }
+    }));
     
     // Disparar evento de mudança de prompts novamente para garantir sincronização
     this.dispatchEvent(
@@ -646,6 +692,11 @@ export class PromptDjMidi extends LitElement {
     
     // Deselecionar qualquer fita selecionada na barra de favoritos
     this.dispatchEvent(new CustomEvent('deselect-favorites'));
+    
+    // Disparar evento único de mudança de configuração
+    this.dispatchEvent(new CustomEvent('configuration-changed', {
+      detail: { prompts: this.prompts, volume: this.currentVolume }
+    }));
   }
 
   private handleRandomDeactivated() {
@@ -690,12 +741,25 @@ export class PromptDjMidi extends LitElement {
       new CustomEvent('prompts-changed', { detail: this.prompts }),
     );
     
+    // Disparar evento único de mudança de configuração
+    this.dispatchEvent(new CustomEvent('configuration-changed', {
+      detail: { prompts: this.prompts, volume: this.currentVolume }
+    }));
+    
     // Deselecionar qualquer fita selecionada na barra de favoritos
     this.dispatchEvent(new CustomEvent('deselect-favorites'));
   }
 
   private handleVolumeChange(e: CustomEvent<{ volume: number }>) {
     const volume = e.detail.volume;
+    // Atualizar volume interno
+    this.currentVolume = volume;
+    
+    // Disparar evento único de mudança de configuração
+    this.dispatchEvent(new CustomEvent('configuration-changed', {
+      detail: { prompts: this.prompts, volume: this.currentVolume }
+    }));
+    
     // Repassar o evento para o componente pai
     this.dispatchEvent(new CustomEvent('volume-changed', {
       detail: { volume }
@@ -717,7 +781,9 @@ export class PromptDjMidi extends LitElement {
   }
 
   public isCurrentConfigFavorited(): boolean {
-    if (!this.favoritesManager) return false;
+    if (!this.favoritesManager) {
+      return false;
+    }
     
     // Verificar se a configuração atual é igual a algum favorito
     const currentPreset = {

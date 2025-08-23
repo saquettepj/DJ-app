@@ -322,7 +322,23 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     // Atualizar sidebar
     if (favoritesSidebar) {
       favoritesSidebar.favorites = favoritesManager.getFavoritesByTheme(favoritesSidebar.currentTheme);
+      
+      // Marcar o novo favorito como selecionado
+      selectedFavoriteId = favorite.id;
+      favoritesSidebar.selectedFavoriteId = selectedFavoriteId;
     }
+    
+    // CORREÇÃO: Forçar verificação do estado do botão após seleção automática
+    // Como é seleção automática, não passa pelo fluxo normal de favorite-selected
+    setTimeout(() => {
+      if (pdjMidi && pdjMidi.shadowRoot) {
+        const favoriteButton = pdjMidi.shadowRoot.querySelector('favorite-button') as any;
+        if (favoriteButton && favoriteButton.setCurrentConfigFavorited) {
+          const isFavorited = pdjMidi.isCurrentConfigFavorited();
+          favoriteButton.setCurrentConfigFavorited(isFavorited);
+        }
+      }
+    }, 100);
   });
 
   pdjMidi.addEventListener('favorite-removed', () => {
@@ -387,11 +403,13 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
           }
           
           // Dar play automático na música após aplicar a configuração
-          try {
-            await liveMusicHelper.play();
-            console.log('Música iniciada automaticamente após aplicar favorito');
-          } catch (error) {
-            console.error('Erro ao iniciar música automaticamente:', error);
+          // Só dar play se não estiver tocando
+          if (liveMusicHelper.getPlaybackState() !== 'playing') {
+            try {
+              await liveMusicHelper.play();
+            } catch (error) {
+              console.error('Erro ao iniciar música automaticamente:', error);
+            }
           }
         }, 100);
       }
@@ -453,6 +471,28 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     if (favoritesSidebar) {
       favoritesSidebar.selectedFavoriteId = null;
     }
+  });
+
+  // Listener para deseleção de favoritos
+  document.addEventListener('deselect-favorites', () => {
+    // Limpar seleção atual
+    if (selectedFavoriteId) {
+      selectedFavoriteId = null;
+      if (favoritesSidebar) {
+        favoritesSidebar.selectedFavoriteId = null;
+      }
+    }
+    
+    // Atualizar estado do FavoriteButton após deselecionar
+    setTimeout(() => {
+      if (pdjMidi && pdjMidi.shadowRoot) {
+        const favoriteButton = pdjMidi.shadowRoot.querySelector('favorite-button') as any;
+        if (favoriteButton && favoriteButton.setCurrentConfigFavorited) {
+          const isFavorited = pdjMidi.isCurrentConfigFavorited();
+          favoriteButton.setCurrentConfigFavorited(isFavorited);
+        }
+      }
+    }, 100);
   });
 }
 
