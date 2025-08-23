@@ -423,7 +423,7 @@ export class FavoritesSidebar extends LitElement {
     this.deleteProgress = 0;
     
     const startTime = Date.now();
-    const duration = 3000; // 3 segundos
+    const duration = 2000; // 2 segundos
     
     const updateProgress = () => {
       const elapsed = Date.now() - startTime;
