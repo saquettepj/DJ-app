@@ -17,3 +17,19 @@ export interface ControlChange {
 }
 
 export type PlaybackState = 'stopped' | 'playing' | 'loading' | 'paused';
+
+// Sistema de Favoritos
+export interface MusicPreset {
+  prompts: Map<string, Prompt>;
+  volume: number;
+  shuffle: boolean;
+  timestamp: number;
+}
+
+export interface Favorite {
+  readonly id: string;
+  name: string;
+  preset: MusicPreset;
+  createdAt: number;
+  updatedAt: number;
+}

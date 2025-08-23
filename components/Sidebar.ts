@@ -34,14 +34,21 @@ export class Sidebar extends LitElement {
     
     .theme-button {
       position: relative;
-      width: 160px;
-      height: 160px;
+      width: 80px;
+      height: 80px;
       pointer-events: auto;
       cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
     }
     
-    .theme-button:hover svg {
+    .theme-button:hover {
+      background: rgba(255, 255, 255, 0.2);
       transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     }
     
     svg {
@@ -71,6 +78,26 @@ export class Sidebar extends LitElement {
     .inactive:hover {
       opacity: 0.8;
     }
+
+    .favorites-toggle-btn {
+      width: 80px;
+      height: 80px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .favorites-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
     
     /* Mobile styles */
     @media (max-width: 767px) {
@@ -95,10 +122,16 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         display: block;
         pointer-events: auto;
+      }
+
+      .favorites-toggle-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
       }
       
       svg {
@@ -116,8 +149,8 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 120px;
-        height: 120px;
+        width: 80px;
+        height: 80px;
       }
     }
     
@@ -129,8 +162,8 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
       }
     }
     
@@ -142,8 +175,14 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
+      }
+
+      .favorites-toggle-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
       }
     }
     
@@ -155,8 +194,14 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .favorites-toggle-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
       }
     }
   `;
@@ -205,8 +250,8 @@ export class Sidebar extends LitElement {
         height="106"
         rx="53"
         stroke="black"
-        stroke-opacity="0.3"
-        stroke-width="6" />
+        stroke-opacity="0.1"
+        stroke-width="1" />
       <g filter="url(#filter0_ddi_basic)">
         <rect
           x="30"
@@ -291,8 +336,8 @@ export class Sidebar extends LitElement {
         height="106"
         rx="53"
         stroke="black"
-        stroke-opacity="0.3"
-        stroke-width="6" />
+        stroke-opacity="0.1"
+        stroke-width="1" />
       <g filter="url(#filter0_ddi_rpg)">
         <rect
           x="30"
@@ -365,6 +410,9 @@ export class Sidebar extends LitElement {
         composed: true
       });
       this.dispatchEvent(event);
+      
+      // Deselecionar qualquer fita selecionada na barra de favoritos
+      this.dispatchEvent(new CustomEvent('deselect-favorites'));
     }
   }
 
@@ -372,7 +420,19 @@ export class Sidebar extends LitElement {
     return html`
       ${this.renderBasicButton()}
       ${this.renderRpgButton()}
+      <button 
+        class="favorites-toggle-btn"
+        @click=${this.toggleFavorites}
+        title="Mostrar/Ocultar Favoritos"
+        aria-label="Mostrar/Ocultar Favoritos"
+      >
+        💿
+      </button>
     `;
+  }
+
+  private toggleFavorites() {
+    this.dispatchEvent(new CustomEvent('toggle-favorites'));
   }
 }
 

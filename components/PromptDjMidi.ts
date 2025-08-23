@@ -14,6 +14,7 @@ import './RandomButton';
 import './ClearButton';
 import './NextButton';
 import './VolumeControl';
+import './FavoriteButton';
 import type { PlaybackState, Prompt } from '../types';
 import { RandomPromptGenerator } from '../utils/RandomPromptGenerator';
 
@@ -115,9 +116,21 @@ export class PromptDjMidi extends LitElement {
       height: 50px;
     }
     
+    .volume-favorite-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      justify-content: center;
+    }
+
     volume-control {
       width: 100%;
       max-width: 300px;
+    }
+
+    favorite-button {
+      height: 48px;
     }
     
     /* Desktop styles */
@@ -195,11 +208,21 @@ export class PromptDjMidi extends LitElement {
         margin-right: 1vmin;
       }
       
+      .volume-favorite-row {
+        gap: 2vmin;
+        align-items: center;
+      }
+
       volume-control {
         width: auto;
         max-width: none;
         margin-right: 2vmin;
         margin-left: 2vmin;
+        margin-bottom: 1.5vmin;
+      }
+
+      favorite-button {
+        height: auto;
         margin-bottom: 1.5vmin;
       }
     }
@@ -291,6 +314,10 @@ export class PromptDjMidi extends LitElement {
         gap: 6px;
       }
       
+      .volume-favorite-row {
+        gap: 8px;
+      }
+      
       play-pause-button {
         width: 81px;
         height: 81px;
@@ -299,6 +326,10 @@ export class PromptDjMidi extends LitElement {
       random-button, clear-button, next-button {
         width: 69px;
         height: 69px;
+      }
+      
+      favorite-button {
+        height: 48px;
       }
     }
     
@@ -575,6 +606,9 @@ export class PromptDjMidi extends LitElement {
     // Usar o tema atual definido na propriedade
     this.randomPromptGenerator.setTheme(this.currentTheme);
     this.randomPromptGenerator.startGenerating(this.prompts);
+    
+    // Deselecionar qualquer fita selecionada na barra de favoritos
+    this.dispatchEvent(new CustomEvent('deselect-favorites'));
   }
 
   private handleRandomDeactivated() {
@@ -595,6 +629,9 @@ export class PromptDjMidi extends LitElement {
     this.dispatchEvent(
       new CustomEvent('prompts-changed', { detail: this.prompts }),
     );
+    
+    // Deselecionar qualquer fita selecionada na barra de favoritos
+    this.dispatchEvent(new CustomEvent('deselect-favorites'));
   }
 
   private handleVolumeChange(e: CustomEvent<{ volume: number }>) {
@@ -603,6 +640,19 @@ export class PromptDjMidi extends LitElement {
     this.dispatchEvent(new CustomEvent('volume-changed', {
       detail: { volume }
     }));
+  }
+
+  private handleFavoriteCreated(e: CustomEvent<{ name: string }>) {
+    this.dispatchEvent(new CustomEvent('favorite-created', {
+      detail: { 
+        name: e.detail.name,
+        prompts: this.prompts
+      }
+    }));
+  }
+
+  private handleFavoriteRemoved() {
+    this.dispatchEvent(new CustomEvent('favorite-removed'));
   }
 
   private handleNextClicked() {
@@ -633,6 +683,9 @@ export class PromptDjMidi extends LitElement {
     setTimeout(() => {
       this.isNextGenerating = false;
     }, 2000); // 2 segundos de loading
+    
+    // Deselecionar qualquer fita selecionada na barra de favoritos
+    this.dispatchEvent(new CustomEvent('deselect-favorites'));
   }
 
   override render() {
@@ -654,7 +707,13 @@ export class PromptDjMidi extends LitElement {
             @random-deactivated=${this.handleRandomDeactivated}
           ></random-button>
         </div>
-        <volume-control @volume-changed=${this.handleVolumeChange}></volume-control>
+        <div class="volume-favorite-row">
+          <volume-control @volume-changed=${this.handleVolumeChange}></volume-control>
+          <favorite-button
+            @favorite-created=${this.handleFavoriteCreated}
+            @favorite-removed=${this.handleFavoriteRemoved}
+          ></favorite-button>
+        </div>
       </div>`;
   }
 

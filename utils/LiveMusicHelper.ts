@@ -286,6 +286,10 @@ export class LiveMusicHelper extends EventTarget {
     }
   }
 
+  public getVolume(): number {
+    return this.currentVolume;
+  }
+
   public setVolume(volume: number) {
     // Armazenar o volume atual
     this.currentVolume = volume;

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { PlaybackState, Prompt } from './types';
+import type { PlaybackState, Prompt, Favorite } from './types';
 import { GoogleGenAI, LiveMusicFilteredPrompt } from '@google/genai';
 import { PromptDjMidi } from './components/PromptDjMidi';
 import { ToastMessage } from './components/ToastMessage';
@@ -12,12 +12,17 @@ import { LiveMusicHelper } from './utils/LiveMusicHelper';
 import { AudioAnalyser } from './utils/AudioAnalyser';
 import { Sidebar, type ThemeMode } from './components/Sidebar';
 import { ApiKeyInput } from './components/ApiKeyInput';
+import { FavoritesSidebar } from './components/FavoritesSidebar';
+import { FavoritesManager } from './utils/FavoritesManager';
 
 let currentTheme: ThemeMode = 'basic';
 let pdjMidi: PromptDjMidi | null = null;
 let liveMusicHelper: LiveMusicHelper | null = null;
 let ai: GoogleGenAI;
 let model = 'lyria-realtime-exp';
+let favoritesManager: FavoritesManager | null = null;
+let favoritesSidebar: FavoritesSidebar | null = null;
+let selectedFavoriteId: string | null = null;
 
 function initializeAI(apiKey: string) {
   if (apiKey && apiKey.trim().length > 0) {
@@ -71,6 +76,21 @@ function main() {
         const theme = customEvent.detail.theme;
         handleThemeChange(theme);
       }));
+
+      // Listener para toggle de favoritos
+      sidebar.addEventListener('toggle-favorites', () => {
+        if (favoritesSidebar) {
+          favoritesSidebar.toggle();
+        }
+      });
+
+      // Listener para deselecionar favoritos quando mudar de tema
+      sidebar.addEventListener('deselect-favorites', () => {
+        if (favoritesSidebar) {
+          favoritesSidebar.selectedFavoriteId = null;
+          selectedFavoriteId = null;
+        }
+      });
     }
   }));
 }
@@ -81,6 +101,15 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
 
   const toastMessage = new ToastMessage();
   document.body.appendChild(toastMessage);
+
+  // Inicializar sistema de favoritos
+  favoritesManager = new FavoritesManager();
+  
+  // Criar barra lateral de favoritos
+  favoritesSidebar = new FavoritesSidebar();
+  favoritesSidebar.favorites = favoritesManager.getAllFavorites();
+  favoritesSidebar.selectedFavoriteId = selectedFavoriteId;
+  document.body.appendChild(favoritesSidebar);
 
   liveMusicHelper = new LiveMusicHelper(ai, model);
   liveMusicHelper.setWeightedPrompts(initialPrompts);
@@ -95,6 +124,14 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     const volume = customEvent.detail.volume;
     handleVolumeChange(volume);
   }));
+
+  // Listener para deselecionar favoritos quando usar clear, aleatório ou next
+  pdjMidi.addEventListener('deselect-favorites', () => {
+    if (favoritesSidebar) {
+      favoritesSidebar.selectedFavoriteId = null;
+      selectedFavoriteId = null;
+    }
+  });
 
   liveMusicHelper.addEventListener('playback-state-changed', ((e: Event) => {
     const customEvent = e as CustomEvent<PlaybackState>;
@@ -194,6 +231,125 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     const prompts = customEvent.detail;
     liveMusicHelper.setWeightedPrompts(prompts);
   }));
+
+  // Listeners para eventos de favoritos
+  pdjMidi.addEventListener('favorite-created', async (e: CustomEvent<{ name: string, prompts: Map<string, Prompt> }>) => {
+    if (!favoritesManager) return;
+    
+    const { name, prompts } = e.detail;
+    const volume = liveMusicHelper?.getVolume() || 0.5;
+    const shuffle = false; // Sempre false ao criar favorito
+    
+    const favorite = favoritesManager.createFavorite(name, prompts, volume, shuffle);
+    
+    // Atualizar sidebar
+    if (favoritesSidebar) {
+      favoritesSidebar.favorites = favoritesManager.getAllFavorites();
+    }
+  });
+
+  pdjMidi.addEventListener('favorite-removed', () => {
+    // Atualizar estado do botão se necessário
+    if (pdjMidi) {
+      const favoriteButton = pdjMidi.shadowRoot?.querySelector('favorite-button') as any;
+      if (favoriteButton) {
+        favoriteButton.setFavorited(false);
+      }
+    }
+  });
+
+  // Listeners para eventos da sidebar de favoritos
+  if (favoritesSidebar) {
+    favoritesSidebar.addEventListener('favorite-selected', async (e: CustomEvent<{ favorite: Favorite }>) => {
+      const { favorite } = e.detail;
+      
+      // Aplicar preset do favorito
+      if (pdjMidi && liveMusicHelper) {
+        // Desativar shuffle primeiro
+        if (pdjMidi.randomPromptGenerator) {
+          pdjMidi.randomPromptGenerator.stopGenerating();
+        }
+        
+        // Desativar visualmente o botão aleatório
+        if (pdjMidi.shadowRoot) {
+          const randomButton = pdjMidi.shadowRoot.querySelector('random-button') as any;
+          if (randomButton && randomButton.forceDeactivate) {
+            randomButton.forceDeactivate();
+          }
+        }
+        
+        // Atualizar prompts
+        pdjMidi.updatePrompts(favorite.preset.prompts);
+        
+        // Atualizar volume
+        liveMusicHelper.setVolume(favorite.preset.volume);
+        
+        // Aplicar prompts no LiveMusicHelper
+        liveMusicHelper.setWeightedPrompts(favorite.preset.prompts);
+        
+        // Marcar como selecionado
+        selectedFavoriteId = favorite.id;
+        favoritesSidebar.selectedFavoriteId = selectedFavoriteId;
+      }
+    });
+
+    favoritesSidebar.addEventListener('favorite-updated', (e: CustomEvent<{ id: string, name: string }>) => {
+      const { id, name } = e.detail;
+      
+      if (favoritesManager) {
+        favoritesManager.updateFavorite(id, name);
+        
+        // Atualizar sidebar
+        favoritesSidebar.favorites = favoritesManager.getAllFavorites();
+        
+        // Mostrar toast
+        toastMessage.show(`Favorito renomeado para "${name}"!`, 'success');
+        setTimeout(() => {
+          toastMessage.hide();
+        }, 5000);
+      }
+    });
+
+    favoritesSidebar.addEventListener('favorite-deleted', (e: CustomEvent<{ id: string }>) => {
+      const { id } = e.detail;
+      
+      if (favoritesManager) {
+        favoritesManager.deleteFavorite(id);
+        
+        // Atualizar sidebar
+        favoritesSidebar.favorites = favoritesManager.getAllFavorites();
+        
+        // Se era o favorito selecionado, desmarcar
+        if (selectedFavoriteId === id) {
+          selectedFavoriteId = null;
+          favoritesSidebar.selectedFavoriteId = null;
+        }
+        
+        // Mostrar toast
+        toastMessage.show('Favorito excluído com sucesso!', 'success');
+        setTimeout(() => {
+          toastMessage.hide();
+        }, 5000);
+      }
+    });
+  }
+
+  // Listeners para desmarcar favoritos em outras ações
+  pdjMidi.addEventListener('random-activated', () => {
+    // Desmarcar favorito selecionado
+    selectedFavoriteId = null;
+    if (favoritesSidebar) {
+      favoritesSidebar.selectedFavoriteId = null;
+    }
+  });
+
+  pdjMidi.addEventListener('next-clicked', () => {
+    // Desmarcar favorito selecionado
+    selectedFavoriteId = null;
+    if (favoritesSidebar) {
+      favoritesSidebar.selectedFavoriteId = null;
+    }
+  });
 }
 
 

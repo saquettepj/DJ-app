@@ -15,18 +15,33 @@ export class VolumeControl extends LitElement {
       display: flex;
       align-items: center;
       gap: 8px;
-      background: rgba(0, 0, 0, 0.8);
       padding: 8px 12px;
       border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
       box-sizing: border-box;
       width: 100%;
       max-width: 300px;
+      position: relative;
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      position: relative;
     }
 
+    :host::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: -1;
+    }
+
+
+
     .volume-label {
-      color: white;
+      color: #FEFEFE !important;
       font-family: Arial, sans-serif;
       font-size: 10px;
       font-weight: 600;
@@ -34,18 +49,22 @@ export class VolumeControl extends LitElement {
       letter-spacing: 0.5px;
       white-space: nowrap;
       flex-shrink: 0;
+      position: relative;
+      z-index: 1;
     }
 
     .volume-slider {
       flex: 1;
       height: 4px;
       border-radius: 2px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.3);
       outline: none;
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
       min-width: 60px;
+      position: relative;
+      z-index: 1;
     }
 
     .volume-slider::-webkit-slider-thumb {
@@ -54,36 +73,38 @@ export class VolumeControl extends LitElement {
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      background: #4CAF50;
+      background: #FEFEFE;
       cursor: pointer;
-      border: 2px solid white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(0, 0, 0, 0.3);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       transition: all 0.2s ease;
     }
 
     .volume-slider::-webkit-slider-thumb:hover {
-      background: #45a049;
-      transform: scale(1.1);
+      background: #ffffff;
+      transform: scale(1.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .volume-slider::-moz-range-thumb {
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      background: #4CAF50;
+      background: #FEFEFE;
       cursor: pointer;
-      border: 2px solid white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(0, 0, 0, 0.3);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       transition: all 0.2s ease;
     }
 
     .volume-slider::-moz-range-thumb:hover {
-      background: #45a049;
-      transform: scale(1.1);
+      background: #ffffff;
+      transform: scale(1.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .volume-value {
-      color: white;
+      color: #FEFEFE;
       font-family: Arial, sans-serif;
       font-size: 12px;
       font-weight: 600;
@@ -95,7 +116,7 @@ export class VolumeControl extends LitElement {
     .volume-icon {
       width: 16px;
       height: 16px;
-      fill: white;
+      fill: #FEFEFE;
       opacity: 0.8;
       flex-shrink: 0;
     }
@@ -108,7 +129,14 @@ export class VolumeControl extends LitElement {
         gap: 0.8rem;
         padding: 0.8rem 1.5rem;
         border-radius: 40px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
       }
+
+      :host::before {
+        border-radius: 40px;
+      }
+
+
       
       .volume-label {
         font-size: 12px;
@@ -146,7 +174,14 @@ export class VolumeControl extends LitElement {
       :host {
         padding: 6px 10px;
         gap: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
       }
+
+      :host::before {
+        border-radius: 16px;
+      }
+
+
       
       .volume-label {
         font-size: 9px;
@@ -183,7 +218,14 @@ export class VolumeControl extends LitElement {
       :host {
         padding: 6px 8px;
         gap: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
       }
+
+      :host::before {
+        border-radius: 14px;
+      }
+
+
       
       .volume-label {
         font-size: 8px;
@@ -220,7 +262,14 @@ export class VolumeControl extends LitElement {
       :host {
         padding: 4px 6px;
         gap: 3px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
       }
+
+      :host::before {
+        border-radius: 12px;
+      }
+
+
       
       .volume-label {
         font-size: 7px;
