@@ -18,7 +18,7 @@ export class ToastMessage extends LitElement {
       background: rgba(0, 0, 0, 0.2);
       color: white;
       padding: 18px;
-      border-radius: 20px;
+      border-radius: 15px;
       display: flex;
       align-items: center;
       justify-content: space-between;
