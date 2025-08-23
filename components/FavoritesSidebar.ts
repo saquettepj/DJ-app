@@ -239,6 +239,7 @@ export class FavoritesSidebar extends LitElement {
 
   @property({ type: Array }) favorites: Favorite[] = [];
   @property({ type: String }) selectedFavoriteId: string | null = null;
+  @property({ type: String }) currentTheme: 'basic' | 'rpg' = 'basic';
   @state() editingId: string | null = null;
   @state() editingName: string = '';
   @state() deletingId: string | null = null;
@@ -254,7 +255,7 @@ export class FavoritesSidebar extends LitElement {
   override render() {
     return html`
       <div class="header">
-        <h2 class="title">💿 Favoritos</h2>
+        <h2 class="title">💿 Favoritos - ${this.currentTheme.toUpperCase()}</h2>
       </div>
       
       <div class="favorites-list">
@@ -271,7 +272,7 @@ export class FavoritesSidebar extends LitElement {
       <div class="empty-state">
         <div class="empty-icon">💿</div>
         <div class="empty-text">
-          Nenhuma música favoritada ainda.<br>
+          Nenhuma música favoritada no tema ${this.currentTheme.toUpperCase()} ainda.<br>
           Use o botão ♥ para salvar suas músicas favoritas!
         </div>
       </div>

@@ -17,6 +17,7 @@ import './VolumeControl';
 import './FavoriteButton';
 import type { PlaybackState, Prompt } from '../types';
 import { RandomPromptGenerator } from '../utils/RandomPromptGenerator';
+import { FavoritesManager } from '../utils/FavoritesManager';
 
 /** The grid of prompt inputs. */
 @customElement('prompt-dj-midi')
@@ -478,6 +479,8 @@ export class PromptDjMidi extends LitElement {
   @property({ type: String }) public playbackState: PlaybackState = 'stopped';
   @state() public audioLevel = 0;
   @property({ type: String }) public currentTheme: 'basic' | 'rpg' = 'basic';
+  @property({ type: Object }) public favoritesManager: FavoritesManager | null = null;
+  @property({ type: Number }) public currentVolume: number = 0.5;
   @state() private isNextGenerating = false;
 
   @property({ type: Object })
@@ -616,6 +619,19 @@ export class PromptDjMidi extends LitElement {
   }
 
   private handleClearConfiguration() {
+    // Parar o modo aleatório antes de limpar
+    if (this.randomPromptGenerator) {
+      this.randomPromptGenerator.stopGenerating();
+    }
+    
+    // Desativar visualmente o botão aleatório
+    if (this.shadowRoot) {
+      const randomButton = this.shadowRoot.querySelector('random-button') as any;
+      if (randomButton && randomButton.forceDeactivate) {
+        randomButton.forceDeactivate();
+      }
+    }
+    
     // Limpar todos os prompts (definir peso como 0)
     this.prompts.forEach((prompt) => {
       prompt.weight = 0;
@@ -642,10 +658,11 @@ export class PromptDjMidi extends LitElement {
     }));
   }
 
-  private handleFavoriteCreated(e: CustomEvent<{ name: string }>) {
+  private handleFavoriteCreated(e: CustomEvent<{ name: string, theme: 'basic' | 'rpg' }>) {
     this.dispatchEvent(new CustomEvent('favorite-created', {
       detail: { 
         name: e.detail.name,
+        theme: e.detail.theme,
         prompts: this.prompts
       }
     }));
@@ -653,6 +670,30 @@ export class PromptDjMidi extends LitElement {
 
   private handleFavoriteRemoved() {
     this.dispatchEvent(new CustomEvent('favorite-removed'));
+  }
+
+  public isCurrentConfigFavorited(): boolean {
+    if (!this.favoritesManager) return false;
+    
+    // Verificar se a configuração atual é igual a algum favorito
+    const currentPreset = {
+      prompts: this.prompts,
+      volume: this.getCurrentVolume(),
+      timestamp: Date.now()
+    };
+    
+    const matchingFavorite = this.favoritesManager.getFavoriteByPreset(
+      currentPreset.prompts,
+      currentPreset.volume
+    );
+    
+    return !!matchingFavorite;
+  }
+
+  private getCurrentVolume(): number {
+    // Tentar obter o volume atual do LiveMusicHelper se disponível
+    // Por enquanto, usar um valor padrão que será atualizado pelo arquivo principal
+    return this.currentVolume || 0.5;
   }
 
   private handleNextClicked() {
@@ -710,6 +751,8 @@ export class PromptDjMidi extends LitElement {
         <div class="volume-favorite-row">
           <volume-control @volume-changed=${this.handleVolumeChange}></volume-control>
           <favorite-button
+            .currentTheme=${this.currentTheme}
+            .isCurrentConfigFavorited=${this.isCurrentConfigFavorited()}
             @favorite-created=${this.handleFavoriteCreated}
             @favorite-removed=${this.handleFavoriteRemoved}
           ></favorite-button>

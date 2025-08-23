@@ -4,7 +4,7 @@ import { defineConfig, loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-      base: '/DJ-app/', // Base path para GitHub Pages
+      base: './', // Base path local para desenvolvimento
       define: {
         // Removido GEMINI_API_KEY pois agora é inserido via interface
       },

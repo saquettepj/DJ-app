@@ -22,7 +22,6 @@ export type PlaybackState = 'stopped' | 'playing' | 'loading' | 'paused';
 export interface MusicPreset {
   prompts: Map<string, Prompt>;
   volume: number;
-  shuffle: boolean;
   timestamp: number;
 }
 
@@ -30,6 +29,7 @@ export interface Favorite {
   readonly id: string;
   name: string;
   preset: MusicPreset;
+  theme: 'basic' | 'rpg';
   createdAt: number;
   updatedAt: number;
 }

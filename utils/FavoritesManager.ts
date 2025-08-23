@@ -62,14 +62,13 @@ export class FavoritesManager extends EventTarget {
     }
   }
 
-  public createFavorite(name: string, prompts: Map<string, Prompt>, volume: number, shuffle: boolean): Favorite {
+  public createFavorite(name: string, prompts: Map<string, Prompt>, volume: number, theme: 'basic' | 'rpg'): Favorite {
     const id = `favorite-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const timestamp = Date.now();
     
     const preset: MusicPreset = {
       prompts: new Map(prompts),
       volume,
-      shuffle,
       timestamp
     };
 
@@ -77,6 +76,7 @@ export class FavoritesManager extends EventTarget {
       id,
       name,
       preset,
+      theme,
       createdAt: timestamp,
       updatedAt: timestamp
     };
@@ -128,10 +128,16 @@ export class FavoritesManager extends EventTarget {
     return Array.from(this.favorites.values()).sort((a, b) => b.updatedAt - a.updatedAt);
   }
 
-  public getFavoriteByPreset(prompts: Map<string, Prompt>, volume: number, shuffle: boolean): Favorite | undefined {
+  public getFavoritesByTheme(theme: 'basic' | 'rpg'): Favorite[] {
+    return Array.from(this.favorites.values())
+      .filter(favorite => favorite.theme === theme)
+      .sort((a, b) => b.updatedAt - a.updatedAt);
+  }
+
+  public getFavoriteByPreset(prompts: Map<string, Prompt>, volume: number): Favorite | undefined {
     // Buscar favorito com configuração similar
     for (const favorite of this.favorites.values()) {
-      if (this.presetsAreSimilar(favorite.preset, { prompts, volume, shuffle, timestamp: Date.now() })) {
+      if (this.presetsAreSimilar(favorite.preset, { prompts, volume, timestamp: Date.now() })) {
         return favorite;
       }
     }
@@ -139,28 +145,30 @@ export class FavoritesManager extends EventTarget {
   }
 
   private presetsAreSimilar(preset1: MusicPreset, preset2: MusicPreset): boolean {
-    // Verificar se os prompts são similares (mesmos IDs ativos)
+    // Verificar se os prompts são similares (mesmos IDs ativos com mesmo peso)
     const activePrompts1 = Array.from(preset1.prompts.entries())
       .filter(([_, prompt]) => prompt.weight > 0)
-      .map(([id, _]) => id)
-      .sort();
+      .map(([id, prompt]) => ({ id, weight: prompt.weight }))
+      .sort((a, b) => a.id.localeCompare(b.id));
     
     const activePrompts2 = Array.from(preset2.prompts.entries())
       .filter(([_, prompt]) => prompt.weight > 0)
-      .map(([id, _]) => id)
-      .sort();
+      .map(([id, prompt]) => ({ id, weight: prompt.weight }))
+      .sort((a, b) => a.id.localeCompare(b.id));
     
     if (activePrompts1.length !== activePrompts2.length) return false;
     
+    // Verificar se todos os prompts ativos têm o mesmo peso
     for (let i = 0; i < activePrompts1.length; i++) {
-      if (activePrompts1[i] !== activePrompts2[i]) return false;
+      if (activePrompts1[i].id !== activePrompts2[i].id || 
+          Math.abs(activePrompts1[i].weight - activePrompts2[i].weight) > 0.01) {
+        return false;
+      }
     }
     
-    // Verificar se volume e shuffle são similares
+    // Verificar se volume é similar (tolerância menor para ser mais preciso)
     const volumeDiff = Math.abs(preset1.volume - preset2.volume);
-    if (volumeDiff > 0.1) return false;
-    
-    if (preset1.shuffle !== preset2.shuffle) return false;
+    if (volumeDiff > 0.05) return false;
     
     return true;
   }

@@ -24,6 +24,48 @@ let favoritesManager: FavoritesManager | null = null;
 let favoritesSidebar: FavoritesSidebar | null = null;
 let selectedFavoriteId: string | null = null;
 
+const DEFAULT_PROMPTS = [
+  { color: '#9900ff', text: 'Bossa Nova' },
+  { color: '#5200ff', text: 'Chillwave' },
+  { color: '#ff25f6', text: 'Drum and Bass' },
+  { color: '#2af6de', text: 'Post Punk' },
+  { color: '#ffdd28', text: 'Shoegaze' },
+  { color: '#2af6de', text: 'Funk' },
+  { color: '#9900ff', text: 'Chiptune' },
+  { color: '#3dffab', text: 'Lush Strings' },
+  { color: '#d8ff3e', text: 'Sparkling Arpeggios' },
+  { color: '#d9b2ff', text: 'Staccato Rhythms' },
+  { color: '#3dffab', text: 'Punchy Kick' },
+  { color: '#ffdd28', text: 'Dubstep' },
+  { color: '#ff25f6', text: 'K Pop' },
+  { color: '#d8ff3e', text: 'Neo Soul' },
+  { color: '#5200ff', text: 'Trip Hop' },
+  { color: '#d9b2ff', text: 'Thrash' },
+  { color: '#ff6b35', text: 'Ambient' },
+  { color: '#4ecdc4', text: 'Synthwave' },
+];
+
+const RPG_PROMPTS = [
+  { color: '#8B0000', text: 'Epic Battle' },
+  { color: '#4B0082', text: 'Mystical Forest' },
+  { color: '#00CED1', text: 'Dimensional Portal' },
+  { color: '#FFD700', text: 'Lost Treasure' },
+  { color: '#32CD32', text: 'Elf Village' },
+  { color: '#20B2AA', text: 'Deep Ocean' },
+  { color: '#FF8C00', text: 'Soft fire' },
+  { color: '#DC143C', text: 'Legendary Warrior' },
+  { color: '#8A2BE2', text: 'Sacred Temple' },
+  { color: '#FF1493', text: 'Mythical Beast' },
+  { color: '#2F4F4F', text: 'Cave' },
+  { color: '#8B4513', text: 'Tribal Drums' },
+  { color: '#DC143C', text: 'Horror Scream' },
+  { color: '#800080', text: 'Soul Demon' },
+  { color: '#87CEEB', text: 'Angelical Cry' },
+  { color: '#DDA0DD', text: 'Choral' },
+  { color: '#FF6347', text: 'Dragon Lair' },
+  { color: '#00FA9A', text: 'Enchanted Garden' },
+];
+
 function initializeAI(apiKey: string) {
   if (apiKey && apiKey.trim().length > 0) {
     ai = new GoogleGenAI({ apiKey: apiKey.trim(), apiVersion: 'v1alpha' });
@@ -36,8 +78,19 @@ function main() {
   // Sempre iniciar com tema 'basic' - não persistir o tema da barra
   currentTheme = 'basic';
   
-  const initialPrompts = buildDefaultPrompts(currentTheme);
+  // Aguardar o DOM estar pronto antes de executar
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      const initialPrompts = buildDefaultPrompts(currentTheme);
+      initializeApp(initialPrompts);
+    });
+  } else {
+    const initialPrompts = buildDefaultPrompts(currentTheme);
+    initializeApp(initialPrompts);
+  }
+}
 
+function initializeApp(initialPrompts: Map<string, Prompt>) {
   // Adicionar o componente de input da API Key primeiro
   const apiKeyInput = new ApiKeyInput();
   document.body.appendChild(apiKeyInput);
@@ -97,17 +150,22 @@ function main() {
 
 function initializeComponents(initialPrompts: Map<string, Prompt>) {
   pdjMidi = new PromptDjMidi(initialPrompts, ai, model);
+  
+  // Inicializar sistema de favoritos
+  favoritesManager = new FavoritesManager();
+  
+  // Passar o FavoritesManager para o PromptDjMidi
+  pdjMidi.favoritesManager = favoritesManager;
+  
   document.body.appendChild(pdjMidi);
 
   const toastMessage = new ToastMessage();
   document.body.appendChild(toastMessage);
 
-  // Inicializar sistema de favoritos
-  favoritesManager = new FavoritesManager();
-  
   // Criar barra lateral de favoritos
   favoritesSidebar = new FavoritesSidebar();
-  favoritesSidebar.favorites = favoritesManager.getAllFavorites();
+  favoritesSidebar.currentTheme = currentTheme;
+  favoritesSidebar.favorites = favoritesManager.getFavoritesByTheme(currentTheme);
   favoritesSidebar.selectedFavoriteId = selectedFavoriteId;
   document.body.appendChild(favoritesSidebar);
 
@@ -230,30 +288,39 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     const customEvent = e as CustomEvent<Map<string, Prompt>>;
     const prompts = customEvent.detail;
     liveMusicHelper.setWeightedPrompts(prompts);
+    
+    // Atualizar estado do FavoriteButton
+    if (pdjMidi && pdjMidi.shadowRoot) {
+      const favoriteButton = pdjMidi.shadowRoot.querySelector('favorite-button') as any;
+      if (favoriteButton && favoriteButton.setCurrentConfigFavorited) {
+        const isFavorited = pdjMidi.isCurrentConfigFavorited();
+        favoriteButton.setCurrentConfigFavorited(isFavorited);
+      }
+    }
   }));
 
   // Listeners para eventos de favoritos
-  pdjMidi.addEventListener('favorite-created', async (e: CustomEvent<{ name: string, prompts: Map<string, Prompt> }>) => {
+  pdjMidi.addEventListener('favorite-created', async (e: CustomEvent<{ name: string, theme: 'basic' | 'rpg', prompts: Map<string, Prompt> }>) => {
     if (!favoritesManager) return;
     
-    const { name, prompts } = e.detail;
+    const { name, theme, prompts } = e.detail;
     const volume = liveMusicHelper?.getVolume() || 0.5;
-    const shuffle = false; // Sempre false ao criar favorito
     
-    const favorite = favoritesManager.createFavorite(name, prompts, volume, shuffle);
+    const favorite = favoritesManager.createFavorite(name, prompts, volume, theme);
     
     // Atualizar sidebar
     if (favoritesSidebar) {
-      favoritesSidebar.favorites = favoritesManager.getAllFavorites();
+      favoritesSidebar.favorites = favoritesManager.getFavoritesByTheme(favoritesSidebar.currentTheme);
     }
   });
 
   pdjMidi.addEventListener('favorite-removed', () => {
     // Atualizar estado do botão se necessário
-    if (pdjMidi) {
-      const favoriteButton = pdjMidi.shadowRoot?.querySelector('favorite-button') as any;
-      if (favoriteButton) {
-        favoriteButton.setFavorited(false);
+    if (pdjMidi && pdjMidi.shadowRoot) {
+      const favoriteButton = pdjMidi.shadowRoot.querySelector('favorite-button') as any;
+      if (favoriteButton && favoriteButton.setCurrentConfigFavorited) {
+        const isFavorited = pdjMidi.isCurrentConfigFavorited();
+        favoriteButton.setCurrentConfigFavorited(isFavorited);
       }
     }
   });
@@ -300,7 +367,7 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
         favoritesManager.updateFavorite(id, name);
         
         // Atualizar sidebar
-        favoritesSidebar.favorites = favoritesManager.getAllFavorites();
+        favoritesSidebar.favorites = favoritesManager.getFavoritesByTheme(favoritesSidebar.currentTheme);
         
         // Mostrar toast
         toastMessage.show(`Favorito renomeado para "${name}"!`, 'success');
@@ -317,7 +384,7 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
         favoritesManager.deleteFavorite(id);
         
         // Atualizar sidebar
-        favoritesSidebar.favorites = favoritesManager.getAllFavorites();
+        favoritesSidebar.favorites = favoritesManager.getFavoritesByTheme(favoritesSidebar.currentTheme);
         
         // Se era o favorito selecionado, desmarcar
         if (selectedFavoriteId === id) {
@@ -380,48 +447,6 @@ function buildDefaultPrompts(theme: ThemeMode = 'basic') {
   return prompts;
 }
 
-const DEFAULT_PROMPTS = [
-  { color: '#9900ff', text: 'Bossa Nova' },
-  { color: '#5200ff', text: 'Chillwave' },
-  { color: '#ff25f6', text: 'Drum and Bass' },
-  { color: '#2af6de', text: 'Post Punk' },
-  { color: '#ffdd28', text: 'Shoegaze' },
-  { color: '#2af6de', text: 'Funk' },
-  { color: '#9900ff', text: 'Chiptune' },
-  { color: '#3dffab', text: 'Lush Strings' },
-  { color: '#d8ff3e', text: 'Sparkling Arpeggios' },
-  { color: '#d9b2ff', text: 'Staccato Rhythms' },
-  { color: '#3dffab', text: 'Punchy Kick' },
-  { color: '#ffdd28', text: 'Dubstep' },
-  { color: '#ff25f6', text: 'K Pop' },
-  { color: '#d8ff3e', text: 'Neo Soul' },
-  { color: '#5200ff', text: 'Trip Hop' },
-  { color: '#d9b2ff', text: 'Thrash' },
-  { color: '#ff6b35', text: 'Ambient' },
-  { color: '#4ecdc4', text: 'Synthwave' },
-];
-
-const RPG_PROMPTS = [
-  { color: '#8B0000', text: 'Epic Battle' },
-  { color: '#4B0082', text: 'Mystical Forest' },
-  { color: '#00CED1', text: 'Dimensional Portal' },
-  { color: '#FFD700', text: 'Lost Treasure' },
-  { color: '#32CD32', text: 'Elf Village' },
-  { color: '#20B2AA', text: 'Deep Ocean' },
-  { color: '#FF8C00', text: 'Soft fire' },
-  { color: '#DC143C', text: 'Legendary Warrior' },
-  { color: '#8A2BE2', text: 'Sacred Temple' },
-  { color: '#FF1493', text: 'Mythical Beast' },
-  { color: '#2F4F4F', text: 'Cave' },
-  { color: '#8B4513', text: 'Tribal Drums' },
-  { color: '#DC143C', text: 'Horror Scream' },
-  { color: '#800080', text: 'Soul Demon' },
-  { color: '#87CEEB', text: 'Angelical Cry' },
-  { color: '#DDA0DD', text: 'Choral' },
-  { color: '#FF6347', text: 'Dragon Lair' },
-  { color: '#00FA9A', text: 'Enchanted Garden' },
-];
-
 function handleThemeChange(theme: ThemeMode) {
   currentTheme = theme;
   
@@ -466,6 +491,14 @@ function handleThemeChange(theme: ThemeMode) {
     pdjMidi.randomPromptGenerator.setTheme(theme);
   }
   
+  // Atualizar o FavoritesSidebar com o novo tema
+  if (favoritesSidebar) {
+    favoritesSidebar.currentTheme = theme;
+    favoritesSidebar.favorites = favoritesManager!.getFavoritesByTheme(theme);
+    favoritesSidebar.selectedFavoriteId = null; // Deselecionar ao trocar de tema
+    selectedFavoriteId = null;
+  }
+  
   // Força a atualização da UI imediatamente
   requestAnimationFrame(() => {
     if (pdjMidi) {
@@ -478,7 +511,11 @@ function handleVolumeChange(volume: number) {
   // Aplicar o volume ao LiveMusicHelper
   if (liveMusicHelper) {
     liveMusicHelper.setVolume(volume);
-    
+  }
+  
+  // Atualizar o volume no PromptDjMidi para comparação de favoritos
+  if (pdjMidi) {
+    pdjMidi.currentVolume = volume;
   }
 }
 

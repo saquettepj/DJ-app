@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import { css, html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, state, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 @customElement('favorite-button')
@@ -251,19 +251,21 @@ export class FavoriteButton extends LitElement {
   @state() showingInput = false;
   @state() favoriteName = '';
   @state() isFavorited = false;
+  @property({ type: String }) currentTheme: 'basic' | 'rpg' = 'basic';
+  @property({ type: Boolean }) isCurrentConfigFavorited = false;
 
   override render() {
     return html`
       <button 
         class=${classMap({
           'favorite-btn': true,
-          'favorited': this.isFavorited
+          'favorited': this.isCurrentConfigFavorited
         })}
         @click=${this.toggleFavorite}
-        title=${this.isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
-        aria-label=${this.isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+        title=${this.isCurrentConfigFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+        aria-label=${this.isCurrentConfigFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
       >
-        <span class="heart-icon">${this.isFavorited ? '❤️' : '🤍'}</span>
+        <span class="heart-icon">${this.isCurrentConfigFavorited ? '❤️' : '🤍'}</span>
       </button>
 
       <div class=${classMap({
@@ -304,9 +306,8 @@ export class FavoriteButton extends LitElement {
   }
 
   private toggleFavorite() {
-    if (this.isFavorited) {
+    if (this.isCurrentConfigFavorited) {
       // Remover dos favoritos
-      this.isFavorited = false;
       this.dispatchEvent(new CustomEvent('favorite-removed'));
     } else {
       // Mostrar input para salvar
@@ -398,15 +399,17 @@ export class FavoriteButton extends LitElement {
   private saveFavorite() {
     if (this.favoriteName.trim()) {
       this.dispatchEvent(new CustomEvent('favorite-created', {
-        detail: { name: this.favoriteName.trim() }
+        detail: { 
+          name: this.favoriteName.trim(),
+          theme: this.currentTheme
+        }
       }));
-      this.isFavorited = true;
       this.hideInput();
     }
   }
 
-  public setFavorited(favorited: boolean) {
-    this.isFavorited = favorited;
+  public setCurrentConfigFavorited(favorited: boolean) {
+    this.isCurrentConfigFavorited = favorited;
   }
 
   override disconnectedCallback() {
