@@ -15,18 +15,18 @@ export class ToastMessage extends LitElement {
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background-color: #000;
+      background: rgba(0, 0, 0, 0.2);
       color: white;
-      padding: 15px;
-      border-radius: 5px;
+      padding: 18px;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 15px;
       width: min(450px, 80vw);
       transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-      border: 2px solid #fff;
-      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+      border: none;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
       text-wrap: pretty;
       z-index: 9999;
       -webkit-user-select: none;
@@ -43,12 +43,29 @@ export class ToastMessage extends LitElement {
       border: none;
       color: #000;
       cursor: pointer;
+      position: relative;
+      font-size: 14px;
+      font-weight: bold;
+      width: 24px;
+      height: 24px;
+      line-height: 1;
+      padding: 0;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
+    }
+    
+    button::after {
+      content: '✕';
+      position: absolute;
+      top: 50%;
+      left: calc(50% + 0.5px);
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+      font-weight: bold;
     }
     
     .toast:not(.showing) {
@@ -83,7 +100,7 @@ export class ToastMessage extends LitElement {
       error: this.type === 'error'
     })}>
       <div class="message">${this.renderMessageWithLinks()}</div>
-      <button @click=${this.hide}>✕</button>
+      <button @click=${this.hide}></button>
     </div>`;
   }
 

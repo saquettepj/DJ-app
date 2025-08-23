@@ -161,7 +161,7 @@ export class FavoritesSidebar extends LitElement {
 
     .delete-progress-container {
       position: absolute;
-      bottom: -1px;
+      bottom: 2px;
       left: 3px;
       right: 3px;
       height: 3px;
