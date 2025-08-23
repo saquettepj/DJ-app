@@ -589,12 +589,42 @@ export class PromptDjMidi extends LitElement {
   }
 
   public updatePrompts(newPrompts: Map<string, Prompt>) {
-    this.prompts = newPrompts;
-    this.requestUpdate();
+    // Criar uma cópia completamente independente dos prompts
+    const independentPrompts = new Map<string, Prompt>();
+    newPrompts.forEach((prompt, key) => {
+      independentPrompts.set(key, {
+        promptId: prompt.promptId,
+        text: prompt.text,
+        weight: prompt.weight,
+        cc: prompt.cc,
+        color: prompt.color
+      });
+    });
+    
+    // Atualizar os prompts com os objetos independentes
+    this.prompts = independentPrompts;
+    
+    // Salvar no localStorage
+    localStorage.setItem('promptDjMidi-prompts', JSON.stringify(Array.from(this.prompts.entries())));
     
     // Força a atualização imediata do background
     this.makeBackground();
     
+    // Atualizar a interface
+    this.requestUpdate();
+    
+    // Disparar evento de mudança de prompts
+    this.dispatchEvent(
+      new CustomEvent('prompts-changed', { detail: this.prompts }),
+    );
+  }
+
+  public forceSyncPrompts() {
+    // Forçar sincronização completa dos prompts
+    this.requestUpdate();
+    this.makeBackground();
+    
+    // Disparar evento de mudança de prompts novamente para garantir sincronização
     this.dispatchEvent(
       new CustomEvent('prompts-changed', { detail: this.prompts }),
     );
@@ -632,10 +662,20 @@ export class PromptDjMidi extends LitElement {
       }
     }
     
-    // Limpar todos os prompts (definir peso como 0)
-    this.prompts.forEach((prompt) => {
-      prompt.weight = 0;
+    // Criar novos prompts com peso 0 (não modificar os existentes)
+    const clearedPrompts = new Map<string, Prompt>();
+    this.prompts.forEach((prompt, key) => {
+      clearedPrompts.set(key, {
+        ...prompt,
+        weight: 0
+      });
     });
+    
+    // Atualizar os prompts com os novos objetos
+    this.prompts = clearedPrompts;
+    
+    // Resetar volume para padrão
+    this.currentVolume = 0.5;
     
     // Salvar no localStorage
     localStorage.setItem('promptDjMidi-prompts', JSON.stringify(Array.from(this.prompts.entries())));
@@ -749,7 +789,10 @@ export class PromptDjMidi extends LitElement {
           ></random-button>
         </div>
         <div class="volume-favorite-row">
-          <volume-control @volume-changed=${this.handleVolumeChange}></volume-control>
+          <volume-control 
+            .volume=${this.currentVolume}
+            @volume-changed=${this.handleVolumeChange}
+          ></volume-control>
           <favorite-button
             .currentTheme=${this.currentTheme}
             .isCurrentConfigFavorited=${this.isCurrentConfigFavorited()}

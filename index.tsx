@@ -189,6 +189,17 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
       favoritesSidebar.selectedFavoriteId = null;
       selectedFavoriteId = null;
     }
+    
+    // Atualizar estado do FavoriteButton após deselecionar
+    setTimeout(() => {
+      if (pdjMidi && pdjMidi.shadowRoot) {
+        const favoriteButton = pdjMidi.shadowRoot.querySelector('favorite-button') as any;
+        if (favoriteButton && favoriteButton.setCurrentConfigFavorited) {
+          const isFavorited = pdjMidi.isCurrentConfigFavorited();
+          favoriteButton.setCurrentConfigFavorited(isFavorited);
+        }
+      }
+    }, 100);
   });
 
   liveMusicHelper.addEventListener('playback-state-changed', ((e: Event) => {
@@ -345,18 +356,36 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
           }
         }
         
-        // Atualizar prompts
+        // Atualizar prompts primeiro
         pdjMidi.updatePrompts(favorite.preset.prompts);
         
-        // Atualizar volume
-        liveMusicHelper.setVolume(favorite.preset.volume);
-        
-        // Aplicar prompts no LiveMusicHelper
-        liveMusicHelper.setWeightedPrompts(favorite.preset.prompts);
-        
-        // Marcar como selecionado
-        selectedFavoriteId = favorite.id;
-        favoritesSidebar.selectedFavoriteId = selectedFavoriteId;
+        // Aguardar a atualização dos prompts antes de continuar
+        setTimeout(() => {
+          // Forçar sincronização completa dos prompts
+          pdjMidi.forceSyncPrompts();
+          
+          // Atualizar volume
+          liveMusicHelper.setVolume(favorite.preset.volume);
+          
+          // Atualizar volume no PromptDjMidi para comparação de favoritos
+          pdjMidi.currentVolume = favorite.preset.volume;
+          
+          // Aplicar prompts no LiveMusicHelper
+          liveMusicHelper.setWeightedPrompts(favorite.preset.prompts);
+          
+          // Marcar como selecionado
+          selectedFavoriteId = favorite.id;
+          favoritesSidebar.selectedFavoriteId = selectedFavoriteId;
+          
+          // Forçar atualização do estado do FavoriteButton
+          if (pdjMidi && pdjMidi.shadowRoot) {
+            const favoriteButton = pdjMidi.shadowRoot.querySelector('favorite-button') as any;
+            if (favoriteButton && favoriteButton.setCurrentConfigFavorited) {
+              const isFavorited = pdjMidi.isCurrentConfigFavorited();
+              favoriteButton.setCurrentConfigFavorited(isFavorited);
+            }
+          }
+        }, 100);
       }
     });
 
