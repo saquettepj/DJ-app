@@ -30,6 +30,9 @@ export class FavoriteButton extends LitElement {
       pointer-events: all;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       min-height: 48px;
+      min-width: 48px;
+      max-height: 48px;
+      max-width: 48px;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -191,6 +194,34 @@ export class FavoriteButton extends LitElement {
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
+    }
+
+    /* Desktop responsive - tela menor */
+    @media (min-width: 768px) and (max-width: 1200px) {
+      .favorite-btn {
+        min-height: 44px;
+        min-width: 44px;
+        max-height: 44px;
+        max-width: 44px;
+      }
+      
+      .heart-icon {
+        font-size: 1.1em;
+      }
+    }
+    
+    /* Desktop responsive - tela muito pequena */
+    @media (min-width: 768px) and (max-width: 900px) {
+      .favorite-btn {
+        min-height: 40px;
+        min-width: 40px;
+        max-height: 40px;
+        max-width: 40px;
+      }
+      
+      .heart-icon {
+        font-size: 1em;
+      }
     }
 
     /* Desktop - input próximo ao botão */

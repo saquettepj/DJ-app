@@ -214,20 +214,41 @@ export class PromptDjMidi extends LitElement {
       }
       
       .volume-favorite-row {
-        gap: 2vmin;
+        gap: 1.5vmin;
         align-items: center;
+        justify-content: center;
+      }
+      
+      volume-control, favorite-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      
+      volume-control {
+        align-self: stretch;
+      }
+      
+      favorite-button {
+        align-self: center;
       }
 
       volume-control {
         width: auto;
-        max-width: none;
-        margin-right: 2vmin;
-        margin-left: 2vmin;
+        min-width: 280px;
+        max-width: 320px;
+        margin-right: 1vmin;
+        margin-left: max(30px, 2vmin);
         margin-bottom: 1.5vmin;
       }
 
       favorite-button {
+        width: auto;
         height: auto;
+        aspect-ratio: 1;
+        min-width: 48px;
+        min-height: 48px;
         margin-bottom: 1.5vmin;
       }
     }
@@ -258,6 +279,22 @@ export class PromptDjMidi extends LitElement {
         bottom: 5px;
         padding: 12px;
       }
+      
+      volume-control {
+        width: auto;
+        min-width: 240px;
+        max-width: 280px;
+        margin-right: 0.5vmin;
+        margin-left: max(30px, 0.5vmin);
+      }
+      
+      favorite-button {
+        width: auto;
+        height: auto;
+        aspect-ratio: 1;
+        min-width: 44px;
+        min-height: 44px;
+      }
     }
     
     /* Desktop responsive - tela muito pequena */
@@ -285,6 +322,22 @@ export class PromptDjMidi extends LitElement {
       .controls {
         bottom: 0px;
         padding: 10px;
+      }
+      
+      volume-control {
+        width: auto;
+        min-width: 200px;
+        max-width: 240px;
+        margin-right: 0.3vmin;
+        margin-left: max(30px, 0.3vmin);
+      }
+      
+      favorite-button {
+        width: auto;
+        height: auto;
+        aspect-ratio: 1;
+        min-width: 40px;
+        min-height: 40px;
       }
     }
     
@@ -320,7 +373,7 @@ export class PromptDjMidi extends LitElement {
       }
       
       .volume-favorite-row {
-        gap: 8px;
+        gap: 6px;
       }
       
       play-pause-button {

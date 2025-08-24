@@ -92,11 +92,14 @@ export class Sidebar extends LitElement {
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.1);
       color: white;
+      font-size: 38px;
       cursor: pointer;
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -105,13 +108,9 @@ export class Sidebar extends LitElement {
       -webkit-tap-highlight-color: transparent;
     }
     
-    .favorites-toggle-btn::after {
-      content: '💿';
-      position: absolute;
-      top: calc(50% - 2.5px);
-      left: calc(50%);
-      transform: translate(-50%, -50%);
-      font-size: 40px;
+    .favorites-toggle-btn span {
+      margin-top: -4px;
+      margin-left: 0.5px;
     }
     
     .favorites-toggle-btn:hover {
@@ -131,8 +130,9 @@ export class Sidebar extends LitElement {
         height: auto;
         width: 100%;
         flex-direction: row;
+        align-items: center;
         justify-content: center;
-        gap: 1rem;
+        gap: 0.75rem;
         padding: 12px;
         background: rgba(0, 0, 0, 0.9);
         backdrop-filter: blur(10px);
@@ -143,26 +143,29 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         display: block;
         pointer-events: auto;
       }
 
       .favorites-toggle-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 22px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
       }
       
-      .favorites-toggle-btn::after {
-        font-size: 32px;
+      .favorites-toggle-btn span {
+        margin-top: -2px;
+        margin-left: 0.3px;
       }
       
       svg {
         width: 100%;
         height: 100%;
         display: block;
+        max-width: 40px;
+        max-height: 40px;
       }
     }
     
@@ -209,8 +212,9 @@ export class Sidebar extends LitElement {
         height: 45px;
       }
       
-      .favorites-toggle-btn::after {
-        font-size: 28px;
+      .favorites-toggle-btn span {
+        margin-top: -1px;
+        margin-left: 0.3px;
       }
     }
     
@@ -231,8 +235,9 @@ export class Sidebar extends LitElement {
         height: 40px;
       }
       
-      .favorites-toggle-btn::after {
-        font-size: 24px;
+      .favorites-toggle-btn span {
+        margin-top: -0.5px;
+        margin-left: 0.3px;
       }
     }
   `;
@@ -454,9 +459,9 @@ export class Sidebar extends LitElement {
       <button 
         class="favorites-toggle-btn"
         @click=${this.toggleFavorites}
-        title="Mostrar/Ocultar Favoritos"
         aria-label="Mostrar/Ocultar Favoritos"
       >
+        <span>💿</span>
       </button>
     `;
   }

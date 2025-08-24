@@ -19,7 +19,10 @@ export class VolumeControl extends LitElement {
       border-radius: 20px;
       box-sizing: border-box;
       width: 100%;
-      max-width: 300px;
+      min-width: 280px;
+      max-width: 320px;
+      min-height: 48px;
+      max-height: 48px;
       position: relative;
       background: rgba(0, 0, 0, 0.05);
       border: 1px solid rgba(0, 0, 0, 0.1);
@@ -130,7 +133,7 @@ export class VolumeControl extends LitElement {
     /* Desktop styles */
     @media (min-width: 768px) {
       :host {
-        width: auto;
+        width: 100%;
         max-width: none;
         gap: 0.8rem;
         padding: 0.8rem 1.5rem;
@@ -150,8 +153,9 @@ export class VolumeControl extends LitElement {
       }
       
       .volume-slider {
-        width: 120px;
-        min-width: 120px;
+        width: 100%;
+        min-width: 80px;
+        max-width: 140px;
       }
       
       .volume-slider::-webkit-slider-thumb {
@@ -172,6 +176,100 @@ export class VolumeControl extends LitElement {
       .volume-icon {
         width: 20px;
         height: 20px;
+      }
+    }
+    
+    /* Desktop responsive - tela menor */
+    @media (min-width: 768px) and (max-width: 1200px) {
+      :host {
+        gap: 0.6rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: 35px;
+        min-width: 240px;
+        max-width: 280px;
+        min-height: 44px;
+        max-height: 44px;
+      }
+
+      :host::before {
+        border-radius: 35px;
+      }
+      
+      .volume-label {
+        font-size: 11px;
+        letter-spacing: 0.8px;
+      }
+      
+      .volume-slider {
+        min-width: 70px;
+        max-width: 110px;
+      }
+      
+      .volume-slider::-webkit-slider-thumb {
+        width: 14px;
+        height: 14px;
+      }
+      
+      .volume-slider::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+      }
+      
+      .volume-value {
+        font-size: 13px;
+        min-width: 35px;
+      }
+      
+      .volume-icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    
+    /* Desktop responsive - tela muito pequena */
+    @media (min-width: 768px) and (max-width: 900px) {
+      :host {
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        min-width: 200px;
+        max-width: 240px;
+        min-height: 40px;
+        max-height: 40px;
+      }
+
+      :host::before {
+        border-radius: 30px;
+      }
+      
+      .volume-label {
+        font-size: 10px;
+        letter-spacing: 0.6px;
+      }
+      
+      .volume-slider {
+        min-width: 60px;
+        max-width: 90px;
+      }
+      
+      .volume-slider::-webkit-slider-thumb {
+        width: 12px;
+        height: 12px;
+      }
+      
+      .volume-slider::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+      }
+      
+      .volume-value {
+        font-size: 12px;
+        min-width: 30px;
+      }
+      
+      .volume-icon {
+        width: 16px;
+        height: 16px;
       }
     }
     
