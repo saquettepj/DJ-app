@@ -119,56 +119,6 @@ export class Sidebar extends LitElement {
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     }
     
-    /* Mobile styles */
-    @media (max-width: 767px) {
-      :host {
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: auto;
-        bottom: 0;
-        height: auto;
-        width: 100%;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-        padding: 12px;
-        background: rgba(0, 0, 0, 0.9);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        z-index: 1001;
-        display: flex;
-        pointer-events: auto;
-      }
-      
-      .theme-button {
-        width: 40px;
-        height: 40px;
-        display: block;
-        pointer-events: auto;
-      }
-
-      .favorites-toggle-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
-      }
-      
-      .favorites-toggle-btn span {
-        margin-top: -2px;
-        margin-left: 0.3px;
-      }
-      
-      svg {
-        width: 100%;
-        height: 100%;
-        display: block;
-        max-width: 40px;
-        max-height: 40px;
-      }
-    }
-    
     /* Desktop responsive - tela menor */
     @media (min-width: 768px) and (max-width: 1200px) {
       :host {
@@ -190,8 +140,148 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 80px;
-        height: 80px;
+        width: 55px;
+        height: 55px;
+      }
+      
+      .favorites-toggle-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 26px;
+      }
+    }
+    
+    /* Mobile styles - deve vir DEPOIS das regras de desktop para ter prioridade */
+    @media (max-width: 767px) {
+      :host {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: 0;
+        height: auto;
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 1001;
+        display: flex;
+        pointer-events: auto;
+        min-height: 80px;
+        box-sizing: border-box;
+        line-height: 1;
+        vertical-align: middle;
+        text-align: center;
+        flex-wrap: nowrap;
+      }
+      
+      .theme-button {
+        width: 40px !important;
+        height: 40px !important;
+        display: block;
+        pointer-events: auto;
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+        vertical-align: middle;
+        text-align: center;
+        flex: 0 0 auto;
+      }
+
+      .favorites-toggle-btn {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 20px;
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+        vertical-align: middle;
+        text-align: center;
+        flex: 0 0 auto;
+      }
+      
+      .favorites-toggle-btn span {
+        margin-top: -2px;
+        margin-left: 0.3px;
+        line-height: 1;
+        display: block;
+        vertical-align: middle;
+        text-align: center;
+      }
+      
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        max-width: 40px;
+        max-height: 40px;
+        line-height: 1;
+        vertical-align: middle;
+        text-align: center;
+      }
+    }
+    
+    /* Mobile Landscape - orientação horizontal - deve ter prioridade máxima */
+    @media (max-width: 767px) and (orientation: landscape) {
+      :host {
+        min-height: 60px;
+        padding: 8px 12px;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        vertical-align: middle;
+        text-align: center;
+        flex-wrap: nowrap;
+      }
+      
+      .theme-button {
+        width: 55px !important;
+        height: 55px !important;
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+        vertical-align: middle;
+        text-align: center;
+        flex: 0 0 auto;
+      }
+
+      .favorites-toggle-btn {
+        width: 55px !important;
+        height: 55px !important;
+        font-size: 26px;
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+        vertical-align: middle;
+        text-align: center;
+        flex: 0 0 auto;
+      }
+      
+      .favorites-toggle-btn span {
+        margin-top: -1px;
+        margin-left: 0.2px;
+        line-height: 1;
+        display: block;
+        vertical-align: middle;
+        text-align: center;
+      }
+      
+      svg {
+        max-width: 55px;
+        max-height: 55px;
+        line-height: 1;
+        vertical-align: middle;
+        text-align: center;
       }
     }
     
@@ -200,21 +290,58 @@ export class Sidebar extends LitElement {
       :host {
         padding: 8px;
         gap: 0.5rem;
+        min-height: 70px;
       }
       
       .theme-button {
-        width: 45px;
-        height: 45px;
+        width: 35px !important;
+        height: 35px !important;
       }
 
       .favorites-toggle-btn {
-        width: 45px;
-        height: 45px;
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 16px;
       }
       
       .favorites-toggle-btn span {
         margin-top: -1px;
         margin-left: 0.3px;
+      }
+      
+      svg {
+        max-width: 35px;
+        max-height: 35px;
+      }
+    }
+    
+    /* Small mobile landscape */
+    @media (max-width: 480px) and (orientation: landscape) {
+      :host {
+        min-height: 50px;
+        padding: 6px 8px;
+        gap: 0.4rem;
+      }
+      
+      .theme-button {
+        width: 30px !important;
+        height: 30px !important;
+      }
+
+      .favorites-toggle-btn {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 14px;
+      }
+      
+      .favorites-toggle-btn span {
+        margin-top: -0.5px;
+        margin-left: 0.2px;
+      }
+      
+      svg {
+        max-width: 30px;
+        max-height: 30px;
       }
     }
     
@@ -223,21 +350,58 @@ export class Sidebar extends LitElement {
       :host {
         padding: 6px;
         gap: 0.25rem;
+        min-height: 60px;
       }
       
       .theme-button {
-        width: 40px;
-        height: 40px;
+        width: 32px !important;
+        height: 32px !important;
       }
 
       .favorites-toggle-btn {
-        width: 40px;
-        height: 40px;
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 14px;
       }
       
       .favorites-toggle-btn span {
         margin-top: -0.5px;
         margin-left: 0.3px;
+      }
+      
+      svg {
+        max-width: 32px;
+        max-height: 32px;
+      }
+    }
+    
+    /* Extra small mobile landscape */
+    @media (max-width: 360px) and (orientation: landscape) {
+      :host {
+        min-height: 45px;
+        padding: 5px 6px;
+        gap: 0.2rem;
+      }
+      
+      .theme-button {
+        width: 28px !important;
+        height: 28px !important;
+      }
+
+      .favorites-toggle-btn {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 12px;
+      }
+      
+      .favorites-toggle-btn span {
+        margin-top: -0.5px;
+        margin-left: 0.2px;
+      }
+      
+      svg {
+        max-width: 28px;
+        max-height: 28px;
       }
     }
   `;
