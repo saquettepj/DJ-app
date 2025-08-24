@@ -167,6 +167,7 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
   favoritesSidebar.currentTheme = currentTheme;
   favoritesSidebar.favorites = favoritesManager.getFavoritesByTheme(currentTheme);
   favoritesSidebar.selectedFavoriteId = selectedFavoriteId;
+  favoritesSidebar.hide(); // Começar com a barra de favoritos oculta
   document.body.appendChild(favoritesSidebar);
 
   liveMusicHelper = new LiveMusicHelper(ai, model);

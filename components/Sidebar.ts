@@ -208,7 +208,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -2px;
+        margin-top: -1px;
         margin-left: 0.3px;
         line-height: 1;
         display: block;
@@ -268,7 +268,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -1px;
+        margin-top: -0.5px;
         margin-left: 0.2px;
         line-height: 1;
         display: block;
@@ -305,7 +305,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -1px;
+        margin-top: -0.5px;
         margin-left: 0.3px;
       }
       
@@ -335,7 +335,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -0.5px;
+        margin-top: 0px;
         margin-left: 0.2px;
       }
       
@@ -365,7 +365,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -0.5px;
+        margin-top: 0px;
         margin-left: 0.3px;
       }
       
@@ -395,7 +395,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -0.5px;
+        margin-top: 0px;
         margin-left: 0.2px;
       }
       

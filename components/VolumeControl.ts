@@ -16,7 +16,7 @@ export class VolumeControl extends LitElement {
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
-      border-radius: 20px;
+      border-radius: 24px;
       box-sizing: border-box;
       width: 100%;
       min-width: 280px;
@@ -36,7 +36,7 @@ export class VolumeControl extends LitElement {
       left: 0;
       right: 0;
       bottom: 0;
-      border-radius: 20px;
+      border-radius: 24px;
       background: rgba(255, 255, 255, 0.05);
       z-index: -1;
     }
@@ -137,12 +137,12 @@ export class VolumeControl extends LitElement {
         max-width: none;
         gap: 0.8rem;
         padding: 0.8rem 1.5rem;
-        border-radius: 40px;
+        border-radius: 24px;
         border: 1px solid rgba(0, 0, 0, 0.1);
       }
 
       :host::before {
-        border-radius: 40px;
+        border-radius: 24px;
       }
 
 
@@ -184,7 +184,7 @@ export class VolumeControl extends LitElement {
       :host {
         gap: 0.6rem;
         padding: 0.6rem 1.2rem;
-        border-radius: 35px;
+        border-radius: 24px;
         min-width: 240px;
         max-width: 280px;
         min-height: 44px;
@@ -192,7 +192,7 @@ export class VolumeControl extends LitElement {
       }
 
       :host::before {
-        border-radius: 35px;
+        border-radius: 24px;
       }
       
       .volume-label {
@@ -231,7 +231,7 @@ export class VolumeControl extends LitElement {
       :host {
         gap: 0.5rem;
         padding: 0.5rem 1rem;
-        border-radius: 30px;
+        border-radius: 24px;
         min-width: 200px;
         max-width: 240px;
         min-height: 40px;
@@ -239,7 +239,7 @@ export class VolumeControl extends LitElement {
       }
 
       :host::before {
-        border-radius: 30px;
+        border-radius: 24px;
       }
       
       .volume-label {
@@ -279,10 +279,11 @@ export class VolumeControl extends LitElement {
         padding: 6px 10px;
         gap: 6px;
         border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 24px;
       }
 
       :host::before {
-        border-radius: 16px;
+        border-radius: 24px;
       }
 
 
@@ -323,10 +324,11 @@ export class VolumeControl extends LitElement {
         padding: 6px 8px;
         gap: 4px;
         border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 24px;
       }
 
       :host::before {
-        border-radius: 14px;
+        border-radius: 24px;
       }
 
 
@@ -367,10 +369,11 @@ export class VolumeControl extends LitElement {
         padding: 4px 6px;
         gap: 3px;
         border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 24px;
       }
 
       :host::before {
-        border-radius: 12px;
+        border-radius: 24px;
       }
 
 

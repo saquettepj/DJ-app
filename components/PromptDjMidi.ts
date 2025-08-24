@@ -104,21 +104,25 @@ export class PromptDjMidi extends LitElement {
     play-pause-button {
       width: 60px;
       height: 60px;
+      min-height: 56px; /* Altura mínima maior que o volume-control */
     }
     
     random-button {
       width: 50px;
       height: 50px;
+      min-height: 48px; /* Altura mínima igual ao volume-control */
     }
     
     clear-button {
       width: 50px;
       height: 50px;
+      min-height: 48px; /* Altura mínima igual ao volume-control */
     }
     
     next-button {
       width: 50px;
       height: 50px;
+      min-height: 48px; /* Altura mínima igual ao volume-control */
     }
     
     .volume-favorite-row {
@@ -192,12 +196,14 @@ export class PromptDjMidi extends LitElement {
       play-pause-button {
         width: 15vmin;
         height: auto;
+        min-height: 56px; /* Altura mínima maior que o volume-control */
       }
       
       random-button {
         width: 10vmin;
         height: auto;
         margin-left: 1vmin;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
       
       next-button {
@@ -205,12 +211,14 @@ export class PromptDjMidi extends LitElement {
         height: auto;
         margin-left: 1vmin;
         margin-right: 1vmin;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
       
       clear-button {
         width: 10vmin;
         height: auto;
         margin-right: 1vmin;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
       
       .volume-favorite-row {
@@ -295,6 +303,15 @@ export class PromptDjMidi extends LitElement {
         min-width: 44px;
         min-height: 44px;
       }
+      
+      /* Garantir altura mínima dos botões principais igual ao volume-control */
+      play-pause-button {
+        min-height: 56px; /* Altura mínima maior que o volume-control */
+      }
+      
+      random-button, clear-button, next-button {
+        min-height: 44px;
+      }
     }
     
     /* Desktop responsive - tela muito pequena */
@@ -339,6 +356,15 @@ export class PromptDjMidi extends LitElement {
         min-width: 40px;
         min-height: 40px;
       }
+      
+      /* Garantir altura mínima dos botões principais igual ao volume-control */
+      play-pause-button {
+        min-height: 56px; /* Altura mínima maior que o volume-control */
+      }
+      
+      random-button, clear-button, next-button {
+        min-height: 40px;
+      }
     }
     
     /* Mobile landscape */
@@ -379,11 +405,13 @@ export class PromptDjMidi extends LitElement {
       play-pause-button {
         width: 81px;
         height: 81px;
+        min-height: 56px; /* Altura mínima maior que o volume-control */
       }
       
       random-button, clear-button, next-button {
         width: 69px;
         height: 69px;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
       
       favorite-button {
@@ -437,11 +465,13 @@ export class PromptDjMidi extends LitElement {
       play-pause-button {
         width: 82px;
         height: 82px;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
       
       random-button, clear-button, next-button {
         width: 69px;
         height: 69px;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
     }
     
@@ -479,11 +509,13 @@ export class PromptDjMidi extends LitElement {
       play-pause-button {
         width: 70px;
         height: 70px;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
       
       random-button, clear-button, next-button {
         width: 60px;
         height: 60px;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
     }
     
@@ -521,11 +553,13 @@ export class PromptDjMidi extends LitElement {
       play-pause-button {
         width: 64px;
         height: 64px;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
       
       random-button, clear-button, next-button {
         width: 60px;
         height: 60px;
+        min-height: 48px; /* Altura mínima igual ao volume-control */
       }
     }
   `;
