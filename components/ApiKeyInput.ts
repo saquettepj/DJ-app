@@ -284,8 +284,9 @@ export class ApiKeyInput extends LitElement {
     @media (max-width: 767px) and (orientation: landscape) {
       :host {
         padding: 8px;
-        align-items: flex-start;
-        padding-top: 10px;
+        align-items: center;
+        justify-content: center;
+        padding-top: 0;
         height: 100vh;
         overflow-y: auto;
       }
@@ -346,7 +347,9 @@ export class ApiKeyInput extends LitElement {
     @media (max-width: 767px) and (orientation: landscape) and (max-height: 500px) {
       :host {
         padding: 6px;
-        padding-top: 8px;
+        padding-top: 0;
+        align-items: center;
+        justify-content: center;
       }
       
       .api-key-card {

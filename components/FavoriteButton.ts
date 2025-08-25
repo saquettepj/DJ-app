@@ -259,9 +259,30 @@ export class FavoriteButton extends LitElement {
 
     /* Mobile landscape */
     @media (max-width: 768px) and (orientation: landscape) {
-      .input-card {
-        padding: 20px;
+      .input-overlay {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
         max-width: 350px;
+        height: auto;
+        background: transparent;
+        z-index: 10001;
+      }
+      
+      .input-card {
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        transform: scale(0.9);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        margin-top: -20px;
+      }
+      
+      .input-overlay.showing .input-card {
+        transform: scale(1);
       }
       
       .input-title {
