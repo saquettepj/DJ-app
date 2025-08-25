@@ -53,8 +53,10 @@ export class FavoriteButton extends LitElement {
       z-index: 1;
     }
 
-    .favorite-btn:hover::before {
+    .favorite-btn:hover {
+      background: rgba(255, 255, 255, 0.04);
       transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     }
 
     .favorite-btn:active::before {

@@ -146,7 +146,7 @@ export class ApiKeyInput extends LitElement {
 
     .save-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
     }
 
     .save-button:active {

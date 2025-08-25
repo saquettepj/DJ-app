@@ -17,6 +17,7 @@ export class ClearButton extends LitElement {
     }
     :host(:hover) svg {
       transform: scale(1.05);
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
     }
     svg {
       width: 100%;
