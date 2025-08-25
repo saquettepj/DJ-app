@@ -1,4 +1,4 @@
-# 🎵 PromptDJ MIDI
+# 🎵 DJ MIDI MOD
 
 Aplicação de IA para criação e controle de música em tempo real através de prompts de texto.
 

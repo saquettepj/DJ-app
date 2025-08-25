@@ -791,7 +791,6 @@ export class ApiKeyInput extends LitElement {
     return html`
       <div class="api-key-card">
         <div class="logo">🎵</div>
-        <h1 class="title">PromptDJ MIDI</h1>
         <p class="subtitle">
           Configure sua chave da API do Google Gemini para começar a criar música com IA
         </p>
