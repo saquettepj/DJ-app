@@ -132,16 +132,45 @@ export class RandomButton extends LitElement {
       <rect x="23.5" y="7.5" width="93" height="93" rx="46.5" stroke="black" stroke-opacity="0.1" stroke-width="1" />
       <rect x="25" y="9" width="90" height="90" rx="45" fill="white" fill-opacity="0.05" shape-rendering="crispEdges" />
       
-      ${this.isActive ? this.renderTimerText() : this.renderDiceIcon()}
+      ${this.isActive ? html`${this.renderTimerText()}${this.renderDiceIcon()}` : this.renderDiceIcon()}
 
     </svg>`;
   }
 
   private renderTimerText() {
-    // Texto centralizado com o círculo do botão (viewBox: 0 -10 140 150)
-    // O centro do círculo está em (70, 70) relativo ao viewBox
-    const time = this.formatTime(this.timeUntilNext);
-    return svg`<text x="70" y="58" text-anchor="middle" dominant-baseline="middle" fill="#FEFEFE" font-size="18" font-weight="600">${time}</text>`;
+    // Barra de progresso circular em vez de texto
+    const progress = (120 - this.timeUntilNext) / 120; // 0 a 1
+    const circumference = 2 * Math.PI * 40; // Raio 40
+    const strokeDasharray = circumference;
+    const strokeDashoffset = circumference * (1 - progress);
+    
+    return svg`
+      <g transform="translate(70, 54)">
+        <!-- Círculo de fundo (borda) -->
+        <circle 
+          cx="0" 
+          cy="0" 
+          r="40" 
+          fill="none" 
+          stroke="rgba(255,255,255,0.2)" 
+          stroke-width="4"
+        />
+        <!-- Barra de progresso -->
+        <circle 
+          cx="0" 
+          cy="0" 
+          r="40" 
+          fill="none" 
+          stroke="white" 
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-dasharray="${strokeDasharray}"
+          stroke-dashoffset="${strokeDashoffset}"
+          transform="rotate(-90)"
+          style="transition: stroke-dashoffset 0.3s ease"
+        />
+      </g>
+    `;
   }
 
   private renderDiceIcon() {
