@@ -92,7 +92,7 @@ export class VolumeControl extends LitElement {
     .volume-slider::-webkit-slider-thumb:hover {
       background: #ffffff;
       transform: scale(1.05);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.4);
     }
 
     .volume-slider::-moz-range-thumb {
@@ -109,7 +109,7 @@ export class VolumeControl extends LitElement {
     .volume-slider::-moz-range-thumb:hover {
       background: #ffffff;
       transform: scale(1.05);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.2);
     }
 
     .volume-value {
