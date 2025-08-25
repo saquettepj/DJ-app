@@ -149,6 +149,11 @@ export class Sidebar extends LitElement {
         height: 55px;
         font-size: 26px;
       }
+      
+      .favorites-toggle-btn span {
+        margin-top: -2px;
+        margin-left: 0.5px;
+      }
     }
     
     /* Mobile styles - deve vir DEPOIS das regras de desktop para ter prioridade */
@@ -208,7 +213,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -1px;
+        margin-top: -2px;
         margin-left: 0.3px;
         line-height: 1;
         display: block;
@@ -268,7 +273,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -0.5px;
+        margin-top: 0px;
         margin-left: 0.2px;
         line-height: 1;
         display: block;
@@ -305,7 +310,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -0.5px;
+        margin-top: 0px;
         margin-left: 0.3px;
       }
       

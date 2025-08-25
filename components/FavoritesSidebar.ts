@@ -45,7 +45,7 @@ export class FavoritesSidebar extends LitElement {
     .favorites-list {
       height: calc(100vh - 80px);
       overflow-y: auto;
-      padding: 20px;
+      padding: 20px 20px 35px 20px;
     }
 
     .favorite-tape {
@@ -251,7 +251,7 @@ export class FavoritesSidebar extends LitElement {
       }
       
       .favorites-list {
-        padding: 15px;
+        padding: 15px 15px 30px 15px;
       }
       
       .favorite-tape {
