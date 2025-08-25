@@ -447,7 +447,7 @@ export class PromptDjMidi extends LitElement {
         gap: 8px;
         padding: 16px 50px;
         margin-top: 16px;
-        padding-bottom: 240px;
+        padding-bottom: 265px;
         min-height: calc(100vh - 200px);
         position: relative;
         z-index: 1;
@@ -494,7 +494,7 @@ export class PromptDjMidi extends LitElement {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
         padding: 12px 35px;
-        padding-bottom: 180px;
+        padding-bottom: 205px;
       }
       
       #grid > * {
@@ -539,7 +539,7 @@ export class PromptDjMidi extends LitElement {
         gap: 4px;
         padding: 8px 16px;
         margin-top: 8px;
-        padding-bottom: 160px;
+        padding-bottom: 185px;
       }
       
       #grid > * {
