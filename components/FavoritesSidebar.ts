@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import { css, html, LitElement } from 'lit';
+import './CdIcon';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import type { Favorite, MusicPreset, Prompt } from '../types';
@@ -279,7 +280,7 @@ export class FavoritesSidebar extends LitElement {
   override render() {
     return html`
       <div class="header">
-        <h2 class="title">💿 Favoritos - ${this.currentTheme.toUpperCase()}</h2>
+        <h2 class="title"><cd-icon style="width:20px;height:20px;vertical-align:text-bottom;margin-right:6px;"></cd-icon> Favoritos - ${this.currentTheme.toUpperCase()}</h2>
       </div>
       
       <div class="favorites-list">
@@ -294,7 +295,7 @@ export class FavoritesSidebar extends LitElement {
   private renderEmptyState() {
     return html`
       <div class="empty-state">
-        <div class="empty-icon">💿</div>
+        <div class="empty-icon"><cd-icon style="width:48px;height:48px;"></cd-icon></div>
         <div class="empty-text">
           Nenhuma música favoritada no tema ${this.currentTheme.toUpperCase()} ainda.<br>
           Use o botão ♥ para salvar suas músicas favoritas!

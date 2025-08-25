@@ -4,6 +4,7 @@
 */
 import { css, html, LitElement } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
+import './CdIcon';
 import { classMap } from 'lit/directives/class-map.js';
 
 @customElement('favorite-button')
@@ -382,7 +383,7 @@ export class FavoriteButton extends LitElement {
       })} @click=${this.handleOverlayClick}>
         
         <div class="input-card">
-          <h3 class="input-title">💿 Salvar Música</h3>
+          <h3 class="input-title"><cd-icon style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"></cd-icon> Salvar Música</h3>
           
           <input 
             class="input-field"

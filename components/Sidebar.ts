@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import { svg, css, html, LitElement } from 'lit';
+import './CdIcon';
 import { customElement, property } from 'lit/decorators.js';
 
 export type ThemeMode = 'basic' | 'rpg';
@@ -108,10 +109,6 @@ export class Sidebar extends LitElement {
       -webkit-tap-highlight-color: transparent;
     }
     
-    .favorites-toggle-btn span {
-      margin-top: -4px;
-      margin-left: 0.5px;
-    }
     
     .favorites-toggle-btn:hover {
       background: rgba(255, 255, 255, 0.2);
@@ -150,10 +147,6 @@ export class Sidebar extends LitElement {
         font-size: 26px;
       }
       
-      .favorites-toggle-btn span {
-        margin-top: -2px;
-        margin-left: 0.5px;
-      }
     }
     
     /* Mobile styles - deve vir DEPOIS das regras de desktop para ter prioridade */
@@ -212,14 +205,6 @@ export class Sidebar extends LitElement {
         flex: 0 0 auto;
       }
       
-      .favorites-toggle-btn span {
-        margin-top: -0.5px;
-        margin-left: 0.3px;
-        line-height: 1;
-        display: block;
-        vertical-align: middle;
-        text-align: center;
-      }
       
       svg {
         width: 100%;
@@ -272,14 +257,6 @@ export class Sidebar extends LitElement {
         flex: 0 0 auto;
       }
       
-      .favorites-toggle-btn span {
-        margin-top: 0px;
-        margin-left: 0.2px;
-        line-height: 1;
-        display: block;
-        vertical-align: middle;
-        text-align: center;
-      }
       
       svg {
         max-width: 55px;
@@ -309,10 +286,6 @@ export class Sidebar extends LitElement {
         font-size: 16px;
       }
       
-      .favorites-toggle-btn span {
-        margin-top: 0px;
-        margin-left: 0.3px;
-      }
       
       svg {
         max-width: 35px;
@@ -339,10 +312,6 @@ export class Sidebar extends LitElement {
         font-size: 14px;
       }
       
-      .favorites-toggle-btn span {
-        margin-top: 0px;
-        margin-left: 0.2px;
-      }
       
       svg {
         max-width: 30px;
@@ -369,10 +338,6 @@ export class Sidebar extends LitElement {
         font-size: 14px;
       }
       
-      .favorites-toggle-btn span {
-        margin-top: 0px;
-        margin-left: 0.3px;
-      }
       
       svg {
         max-width: 32px;
@@ -399,10 +364,6 @@ export class Sidebar extends LitElement {
         font-size: 12px;
       }
       
-      .favorites-toggle-btn span {
-        margin-top: 0px;
-        margin-left: 0.2px;
-      }
       
       svg {
         max-width: 28px;
@@ -630,7 +591,7 @@ export class Sidebar extends LitElement {
         @click=${this.toggleFavorites}
         aria-label="Mostrar/Ocultar Favoritos"
       >
-        <span>💿</span>
+        <cd-icon></cd-icon>
       </button>
     `;
   }
