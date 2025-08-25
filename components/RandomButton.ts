@@ -146,18 +146,21 @@ export class RandomButton extends LitElement {
 
   private renderDiceIcon() {
     return svg`
-      <g class="dice-icon ${this.isActive ? 'active' : ''}" transform="translate(55, 39)">
-        <!-- Dado 3D -->
-        <rect x="0" y="10" width="20" height="20" rx="3" fill="currentColor" opacity="0.9"/>
-        <rect x="5" y="5" width="20" height="20" rx="3" fill="currentColor"/>
-        <polygon points="25,5 30,0 30,20 25,25" fill="currentColor" opacity="0.7"/>
-        <polygon points="5,5 25,5 30,0 10,0" fill="currentColor" opacity="0.8"/>
-        <!-- Pontos do dado -->
-        <circle cx="12" cy="12" r="1.5" fill="white"/>
-        <circle cx="18" cy="12" r="1.5" fill="white"/>
-        <circle cx="12" cy="18" r="1.5" fill="white"/>
-        <circle cx="18" cy="18" r="1.5" fill="white"/>
-        <circle cx="15" cy="15" r="1.5" fill="white"/>
+      <g class="dice-icon ${this.isActive ? 'active' : ''}" transform="translate(52.5, 41.5)">
+        <!-- Cubo 3D: desenhar topo e lateral atrás, depois a face frontal -->
+        <!-- Topo (levemente mais claro) -->
+        <polygon points="5,5 10,0 30,0 25,5" fill="white" opacity="0.7" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+        <!-- Lateral (sombra leve) -->
+        <polygon points="25,5 30,0 30,20 25,25" fill="white" opacity="0.6" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+
+        <!-- Face frontal (em cima) -->
+        <rect x="5" y="5" width="20" height="20" rx="3" fill="white" stroke="rgba(0,0,0,0.25)" stroke-width="1"/>
+        <!-- Pontos do dado (5) -->
+        <circle cx="12" cy="12" r="1.5" fill="black"/>
+        <circle cx="18" cy="12" r="1.5" fill="black"/>
+        <circle cx="12" cy="18" r="1.5" fill="black"/>
+        <circle cx="18" cy="18" r="1.5" fill="black"/>
+        <circle cx="15" cy="15" r="1.5" fill="black"/>
       </g>
     `;
   }

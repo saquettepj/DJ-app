@@ -82,14 +82,14 @@ export class ClearButton extends LitElement {
     return svg`
       <g class="clear-icon" transform="translate(50, 39)">
         <!-- Ícone de lixeira -->
-        <rect x="5" y="8" width="30" height="25" rx="2" fill="currentColor" opacity="0.9"/>
-        <rect x="3" y="5" width="34" height="3" rx="1" fill="currentColor"/>
-        <rect x="13" y="2" width="14" height="3" rx="1" fill="currentColor"/>
+        <rect x="7" y="8" width="26" height="25" rx="2" fill="white" opacity="0.9"/>
+        <rect x="5" y="5" width="30" height="3" rx="1" fill="white"/>
+        <rect x="14" y="2" width="12" height="3" rx="1" fill="white"/>
         
         <!-- Linhas da lixeira -->
-        <rect x="12" y="12" width="2" height="16" rx="1" fill="white"/>
-        <rect x="18" y="12" width="2" height="16" rx="1" fill="white"/>
-        <rect x="24" y="12" width="2" height="16" rx="1" fill="white"/>
+        <rect x="12" y="12" width="1.5" height="16" rx="0.75" fill="white"/>
+        <rect x="18" y="12" width="1.5" height="16" rx="0.75" fill="white"/>
+        <rect x="24" y="12" width="1.5" height="16" rx="0.75" fill="white"/>
       </g>
     `;
   }
