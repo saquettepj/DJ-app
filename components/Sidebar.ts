@@ -213,7 +213,7 @@ export class Sidebar extends LitElement {
       }
       
       .favorites-toggle-btn span {
-        margin-top: -2px;
+        margin-top: -0.5px;
         margin-left: 0.3px;
         line-height: 1;
         display: block;

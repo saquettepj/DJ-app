@@ -369,11 +369,22 @@ export class PromptDjMidi extends LitElement {
     
     /* Mobile landscape */
     @media (max-width: 767px) and (orientation: landscape) {
+      :host {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: auto;
+        min-height: 100vh;
+        position: relative;
+      }
+      
       #grid {
         grid-template-columns: repeat(6, 1fr);
         gap: 6px;
-        padding: 12px 20px;
-        padding-bottom: 160px;
+        padding: 30px 40px;
+        padding-bottom: 220px;
+        min-height: calc(100vh - 200px);
+        position: relative;
+        z-index: 1;
       }
       
       #grid > * {
@@ -392,6 +403,8 @@ export class PromptDjMidi extends LitElement {
         padding: 6px;
         padding-bottom: 12px;
         gap: 0;
+        position: fixed;
+        z-index: 1000;
       }
       
       .main-buttons {
@@ -434,7 +447,7 @@ export class PromptDjMidi extends LitElement {
         gap: 8px;
         padding: 16px 50px;
         margin-top: 16px;
-        padding-bottom: 200px;
+        padding-bottom: 240px;
         min-height: calc(100vh - 200px);
         position: relative;
         z-index: 1;
