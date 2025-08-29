@@ -600,7 +600,7 @@ export class PromptDjMidi extends LitElement {
     this.randomPromptGenerator = new RandomPromptGenerator(ai, model);
 
     // Configurar eventos do gerador de prompts aleatórios
-    this.randomPromptGenerator.addEventListener('prompt-generated', (e: CustomEvent<string>) => {
+    this.randomPromptGenerator.addEventListener('prompt-generated', async (e: CustomEvent<string>) => {
       this.requestUpdate();
       this.dispatchEvent(
         new CustomEvent('prompts-changed', { detail: this.prompts }),
@@ -610,6 +610,19 @@ export class PromptDjMidi extends LitElement {
       const randomButton = this.shadowRoot?.querySelector('random-button') as any;
       if (randomButton && randomButton.setLastGeneratedPrompt) {
         randomButton.setLastGeneratedPrompt(e.detail);
+      }
+      
+      // Aguardar o LiveMusicHelper processar os novos prompts
+      // O setWeightedPrompts tem throttle de 200ms, então aguardamos um pouco mais
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      // Aguardar um pouco mais para garantir que a configuração foi aplicada
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      // Se não estiver tocando (stopped ou paused), ativar o play automaticamente
+      // A música já foi configurada e processada pelo aleatório
+      if (this.playbackState === 'stopped' || this.playbackState === 'paused') {
+        this.dispatchEvent(new CustomEvent('play-pause'));
       }
     });
   }
@@ -780,12 +793,7 @@ export class PromptDjMidi extends LitElement {
     );
   }
 
-  private handleRandomActivated() {
-    // Se não estiver tocando (stopped ou paused), ativar o play automaticamente quando ativar o aleatório
-    if (this.playbackState === 'stopped' || this.playbackState === 'paused') {
-      this.dispatchEvent(new CustomEvent('play-pause'));
-    }
-    
+  private async handleRandomActivated() {
     // Usar o tema atual definido na propriedade
     this.randomPromptGenerator.setTheme(this.currentTheme);
     this.randomPromptGenerator.startGenerating(this.prompts);
@@ -797,6 +805,22 @@ export class PromptDjMidi extends LitElement {
     this.dispatchEvent(new CustomEvent('configuration-changed', {
       detail: { prompts: this.prompts, volume: this.currentVolume }
     }));
+    
+    // Aguardar um pouco para os prompts serem processados
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Aguardar o LiveMusicHelper processar os novos prompts
+    // O setWeightedPrompts tem throttle de 200ms, então aguardamos um pouco mais
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // Aguardar um pouco mais para garantir que a configuração foi aplicada
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    // AGORA dar play automaticamente se não estiver tocando
+    // A música já foi configurada e processada pelo aleatório
+    if (this.playbackState === 'stopped' || this.playbackState === 'paused') {
+      this.dispatchEvent(new CustomEvent('play-pause'));
+    }
   }
 
   private handleRandomDeactivated() {
@@ -925,8 +949,9 @@ export class PromptDjMidi extends LitElement {
         detail: this.prompts
       }));
       
-      // Aguardar um pouco mais para o LiveMusicHelper processar os novos prompts
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Aguardar o LiveMusicHelper processar os novos prompts
+      // O setWeightedPrompts tem throttle de 200ms, então aguardamos um pouco mais
+      await new Promise(resolve => setTimeout(resolve, 300));
       
       // Só resetar o timer se o aleatório estiver ativo
       if (this.randomPromptGenerator.isActive()) {
@@ -937,14 +962,17 @@ export class PromptDjMidi extends LitElement {
         }
       }
       
-      // Se não estiver tocando (stopped ou paused), ativar o play automaticamente
-      // AGORA a música já foi criada, então é seguro dar play
+      // Deselecionar qualquer fita selecionada na barra de favoritos
+      this.dispatchEvent(new CustomEvent('deselect-favorites'));
+      
+      // Aguardar um pouco mais para garantir que a configuração foi aplicada
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      // AGORA dar play automaticamente se não estiver tocando
+      // A música já foi configurada e processada
       if (this.playbackState === 'stopped' || this.playbackState === 'paused') {
         this.dispatchEvent(new CustomEvent('play-pause'));
       }
-      
-      // Deselecionar qualquer fita selecionada na barra de favoritos
-      this.dispatchEvent(new CustomEvent('deselect-favorites'));
       
     } catch (error) {
       console.error('Erro ao gerar nova música:', error);
