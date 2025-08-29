@@ -7,9 +7,11 @@ import type { Favorite, MusicPreset, Prompt } from '../types';
 export class FavoritesManager extends EventTarget {
   private favorites: Map<string, Favorite> = new Map();
   private storageKey = 'dj-app-favorites';
+  private sessionManager: any = null;
 
-  constructor() {
+  constructor(sessionManager?: any) {
     super();
+    this.sessionManager = sessionManager;
     this.loadFavorites();
   }
 
@@ -96,6 +98,11 @@ export class FavoritesManager extends EventTarget {
     this.favorites.set(id, favorite);
     this.saveFavorites();
     
+    // Sincronizar com o SessionManager se disponível
+    if (this.sessionManager) {
+      this.sessionManager.addFavoriteToSession(favorite);
+    }
+    
     this.dispatchEvent(new CustomEvent('favorites-changed', {
       detail: { favorites: this.getAllFavorites() }
     }));
@@ -112,6 +119,11 @@ export class FavoritesManager extends EventTarget {
     
     this.saveFavorites();
     
+    // Sincronizar com o SessionManager se disponível
+    if (this.sessionManager) {
+      this.sessionManager.updateFavoriteInSession(id, name);
+    }
+    
     this.dispatchEvent(new CustomEvent('favorites-changed', {
       detail: { favorites: this.getAllFavorites() }
     }));
@@ -123,6 +135,11 @@ export class FavoritesManager extends EventTarget {
     const deleted = this.favorites.delete(id);
     if (deleted) {
       this.saveFavorites();
+      
+      // Sincronizar com o SessionManager se disponível
+      if (this.sessionManager) {
+        this.sessionManager.removeFavoriteFromSession(id);
+      }
       
       this.dispatchEvent(new CustomEvent('favorites-changed', {
         detail: { favorites: this.getAllFavorites() }

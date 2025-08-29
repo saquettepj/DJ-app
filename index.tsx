@@ -14,12 +14,14 @@ import { Sidebar, type ThemeMode } from './components/Sidebar';
 import { ApiKeyInput } from './components/ApiKeyInput';
 import { FavoritesSidebar } from './components/FavoritesSidebar';
 import { FavoritesManager } from './utils/FavoritesManager';
+import { SessionManager } from './utils/SessionManager';
 
 let currentTheme: ThemeMode = 'basic';
 let pdjMidi: PromptDjMidi | null = null;
 let liveMusicHelper: LiveMusicHelper | null = null;
 let ai: GoogleGenAI;
 let model = 'lyria-realtime-exp';
+let sessionManager: SessionManager | null = null;
 let favoritesManager: FavoritesManager | null = null;
 let favoritesSidebar: FavoritesSidebar | null = null;
 let selectedFavoriteId: string | null = null;
@@ -75,8 +77,18 @@ function initializeAI(apiKey: string) {
 }
 
 function main() {
-  // Sempre iniciar com tema 'basic' - não persistir o tema da barra
-  currentTheme = 'basic';
+  // Inicializar o SessionManager primeiro
+  sessionManager = new SessionManager();
+  
+  // Tentar carregar sessão existente
+  const existingSession = sessionManager.getCurrentSession();
+  if (existingSession) {
+    // Se existe uma sessão, usar o tema dela
+    currentTheme = existingSession.theme;
+  } else {
+    // Sempre iniciar com tema 'basic' se não houver sessão
+    currentTheme = 'basic';
+  }
   
   // Aguardar o DOM estar pronto antes de executar
   if (document.readyState === 'loading') {
@@ -87,6 +99,32 @@ function main() {
   } else {
     const initialPrompts = buildDefaultPrompts(currentTheme);
     initializeApp(initialPrompts);
+  }
+}
+
+function restoreFavoritesFromSession(session: any) {
+  if (favoritesManager && session.favorites) {
+    // Limpar favoritos atuais
+    favoritesManager.clearAll();
+    
+    // Restaurar favoritos da sessão
+    session.favorites.forEach((favorite: any) => {
+      // Converter prompts de volta para Map
+      const promptsMap = new Map<string, any>();
+      if (favorite.preset.prompts) {
+        Object.entries(favorite.preset.prompts).forEach(([key, prompt]: [string, any]) => {
+          promptsMap.set(key, prompt);
+        });
+      }
+      
+      // Recriar o favorito
+      favoritesManager.createFavorite(
+        favorite.name,
+        promptsMap,
+        favorite.preset.volume,
+        favorite.theme
+      );
+    });
   }
 }
 
@@ -101,6 +139,18 @@ function initializeApp(initialPrompts: Map<string, Prompt>) {
     const apiKey = customEvent.detail.apiKey;
     
     if (initializeAI(apiKey)) {
+      // Criar ou trocar para nova sessão
+      if (sessionManager) {
+        sessionManager.switchSession(apiKey, currentTheme);
+        
+        // Carregar favoritos da sessão
+        const session = sessionManager.getCurrentSession();
+        if (session) {
+          // Restaurar favoritos da sessão
+          restoreFavoritesFromSession(session);
+        }
+      }
+      
       // Reinicializar componentes com nova API Key
       if (pdjMidi && liveMusicHelper) {
         // Recriar instâncias com nova API Key
@@ -151,8 +201,8 @@ function initializeApp(initialPrompts: Map<string, Prompt>) {
 function initializeComponents(initialPrompts: Map<string, Prompt>) {
   pdjMidi = new PromptDjMidi(initialPrompts, ai, model);
   
-  // Inicializar sistema de favoritos
-  favoritesManager = new FavoritesManager();
+  // Inicializar sistema de favoritos com SessionManager
+  favoritesManager = new FavoritesManager(sessionManager);
   
   // Passar o FavoritesManager para o PromptDjMidi
   pdjMidi.favoritesManager = favoritesManager;
@@ -527,6 +577,11 @@ function buildDefaultPrompts(theme: ThemeMode = 'basic') {
 
 function handleThemeChange(theme: ThemeMode) {
   currentTheme = theme;
+  
+  // Atualizar o tema na sessão atual
+  if (sessionManager) {
+    sessionManager.updateSessionTheme(theme);
+  }
   
   // Parar o modo aleatório antes de trocar o tema
   if (pdjMidi && pdjMidi.randomPromptGenerator) {

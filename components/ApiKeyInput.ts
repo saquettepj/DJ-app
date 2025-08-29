@@ -17,7 +17,31 @@ export class ApiKeyInput extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    // Carregar a última chave que funcionou
+    // Carregar a última chave que funcionou ou da sessão atual
+    this.loadApiKey();
+  }
+
+  private loadApiKey() {
+    // Primeiro, tentar carregar de uma sessão existente
+    const currentSessionId = localStorage.getItem('dj-app-current-session');
+    if (currentSessionId) {
+      const sessionsData = localStorage.getItem('dj-app-sessions');
+      if (sessionsData) {
+        try {
+          const sessions = JSON.parse(sessionsData);
+          const currentSession = sessions.find((s: any) => s.id === currentSessionId);
+          if (currentSession && currentSession.apiKey) {
+            this.inputValue = currentSession.apiKey;
+            this.requestUpdate();
+            return;
+          }
+        } catch (error) {
+          console.error('Erro ao carregar sessão:', error);
+        }
+      }
+    }
+    
+    // Se não houver sessão, carregar a última chave que funcionou
     this.loadLastWorkingKey();
   }
 
@@ -27,6 +51,19 @@ export class ApiKeyInput extends LitElement {
       this.inputValue = lastWorkingKey;
       this.requestUpdate();
     }
+  }
+
+  private checkExistingSession(apiKey: string): any | null {
+    try {
+      const sessionsData = localStorage.getItem('dj-app-sessions');
+      if (sessionsData) {
+        const sessions = JSON.parse(sessionsData);
+        return sessions.find((s: any) => s.apiKey === apiKey) || null;
+      }
+    } catch (error) {
+      console.error('Erro ao verificar sessão existente:', error);
+    }
+    return null;
   }
 
   private saveLastWorkingKey(apiKey: string) {
@@ -722,6 +759,13 @@ export class ApiKeyInput extends LitElement {
         this.saveLastWorkingKey(trimmedKey);
         this.apiKey = trimmedKey;
         this.isConfigured = true;
+        
+        // Verificar se já existe uma sessão com esta API Key
+        const existingSession = this.checkExistingSession(trimmedKey);
+        if (existingSession) {
+          console.log('Sessão existente encontrada, restaurando favoritos...');
+        }
+        
         this.dispatchApiKeyChange(trimmedKey);
         
         // Fazer fade out do card e remover completamente
