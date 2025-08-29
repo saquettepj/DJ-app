@@ -906,37 +906,54 @@ export class PromptDjMidi extends LitElement {
     return this.currentVolume || 0.5;
   }
 
-  private handleNextClicked() {
+  private async handleNextClicked() {
     if (this.isNextGenerating) {
       return;
     }
     
     this.isNextGenerating = true;
     
-    // Se não estiver tocando (stopped ou paused), ativar o play automaticamente
-    if (this.playbackState === 'stopped' || this.playbackState === 'paused') {
-      this.dispatchEvent(new CustomEvent('play-pause'));
-    }
-    
-    // Sempre gerar nova combinação aleatória
-    this.randomPromptGenerator.forceGenerate(this.prompts);
-    
-    // Só resetar o timer se o aleatório estiver ativo
-    if (this.randomPromptGenerator.isActive()) {
-      // Resetar o timer para 2 minutos
-      const randomButton = this.shadowRoot?.querySelector('random-button') as any;
-      if (randomButton && randomButton.resetTimer) {
-        randomButton.resetTimer();
+    try {
+      // Sempre gerar nova combinação aleatória primeiro
+      this.randomPromptGenerator.forceGenerate(this.prompts);
+      
+      // Aguardar um pouco para os prompts serem processados
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Disparar evento de prompts alterados para atualizar o LiveMusicHelper
+      this.dispatchEvent(new CustomEvent('prompts-changed', {
+        detail: this.prompts
+      }));
+      
+      // Aguardar um pouco mais para o LiveMusicHelper processar os novos prompts
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Só resetar o timer se o aleatório estiver ativo
+      if (this.randomPromptGenerator.isActive()) {
+        // Resetar o timer para 2 minutos
+        const randomButton = this.shadowRoot?.querySelector('random-button') as any;
+        if (randomButton && randomButton.resetTimer) {
+          randomButton.resetTimer();
+        }
       }
+      
+      // Se não estiver tocando (stopped ou paused), ativar o play automaticamente
+      // AGORA a música já foi criada, então é seguro dar play
+      if (this.playbackState === 'stopped' || this.playbackState === 'paused') {
+        this.dispatchEvent(new CustomEvent('play-pause'));
+      }
+      
+      // Deselecionar qualquer fita selecionada na barra de favoritos
+      this.dispatchEvent(new CustomEvent('deselect-favorites'));
+      
+    } catch (error) {
+      console.error('Erro ao gerar nova música:', error);
+    } finally {
+      // Resetar o loading após um delay
+      setTimeout(() => {
+        this.isNextGenerating = false;
+      }, 1000); // Reduzido para 1 segundo
     }
-    
-    // Resetar o loading após um delay
-    setTimeout(() => {
-      this.isNextGenerating = false;
-    }, 2000); // 2 segundos de loading
-    
-    // Deselecionar qualquer fita selecionada na barra de favoritos
-    this.dispatchEvent(new CustomEvent('deselect-favorites'));
   }
 
   override render() {
