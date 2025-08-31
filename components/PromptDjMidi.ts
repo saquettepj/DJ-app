@@ -18,6 +18,8 @@ import './FavoriteButton';
 import type { PlaybackState, Prompt } from '../types';
 import { RandomPromptGenerator } from '../utils/RandomPromptGenerator';
 import { FavoritesManager } from '../utils/FavoritesManager';
+import { Sidebar } from './Sidebar';
+import type { ThemeMode } from '../types';
 
 /** The grid of prompt inputs. */
 @customElement('prompt-dj-midi')
@@ -582,7 +584,7 @@ export class PromptDjMidi extends LitElement {
 
   @property({ type: String }) public playbackState: PlaybackState = 'stopped';
   @state() public audioLevel = 0;
-  @property({ type: String }) public currentTheme: 'basic' | 'rpg' = 'basic';
+  @property({ type: String }) public currentTheme: ThemeMode = 'basic';
   @property({ type: Object }) public favoritesManager: FavoritesManager | null = null;
   @property({ type: Number }) public currentVolume: number = 0.5;
   @state() private isNextGenerating = false;
@@ -890,7 +892,7 @@ export class PromptDjMidi extends LitElement {
     }));
   }
 
-  private handleFavoriteCreated(e: CustomEvent<{ name: string, theme: 'basic' | 'rpg' }>) {
+  private handleFavoriteCreated(e: CustomEvent<{ name: string, theme: ThemeMode }>) {
     this.dispatchEvent(new CustomEvent('favorite-created', {
       detail: { 
         name: e.detail.name,

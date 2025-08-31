@@ -2,16 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import type { Favorite } from '../types';
-
-export interface Session {
-  id: string;
-  apiKey: string;
-  favorites: Favorite[];
-  createdAt: number;
-  lastActive: number;
-  theme: 'basic' | 'rpg';
-}
+import type { Favorite, ThemeMode, Session } from '../types';
 
 export class SessionManager extends EventTarget {
   private currentSession: Session | null = null;
@@ -111,7 +102,7 @@ export class SessionManager extends EventTarget {
     }
   }
 
-  public createSession(apiKey: string, theme: 'basic' | 'rpg' = 'basic'): Session {
+  public createSession(apiKey: string, theme: ThemeMode = 'basic'): Session {
     // Se já existe uma sessão com esta API Key, reutilizar
     const existingSession = this.findSessionByApiKey(apiKey);
     
@@ -156,7 +147,7 @@ export class SessionManager extends EventTarget {
     return newSession;
   }
 
-  public switchSession(apiKey: string, theme: 'basic' | 'rpg' = 'basic'): Session {
+  public switchSession(apiKey: string, theme: ThemeMode = 'basic'): Session {
     // Limpar sessão anterior se existir
     if (this.currentSession) {
       this.clearCurrentSession();
@@ -178,7 +169,7 @@ export class SessionManager extends EventTarget {
     return this.currentSession?.favorites || [];
   }
 
-  public getCurrentTheme(): 'basic' | 'rpg' {
+  public getCurrentTheme(): ThemeMode {
     return this.currentSession?.theme || 'basic';
   }
 
@@ -190,7 +181,7 @@ export class SessionManager extends EventTarget {
     }
   }
 
-  public updateSessionTheme(theme: 'basic' | 'rpg') {
+  public updateSessionTheme(theme: ThemeMode) {
     if (this.currentSession) {
       this.currentSession.theme = theme;
       this.saveSessions();

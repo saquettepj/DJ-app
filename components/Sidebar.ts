@@ -5,8 +5,9 @@
 import { svg, css, html, LitElement } from 'lit';
 import './CdIcon';
 import { customElement, property } from 'lit/decorators.js';
+import type { ThemeMode } from '../types';
 
-export type ThemeMode = 'basic' | 'rpg';
+
 
 @customElement('app-sidebar')
 export class Sidebar extends LitElement {
@@ -394,6 +395,17 @@ export class Sidebar extends LitElement {
     `;
   }
 
+  private renderRelaxButton() {
+    const isActive = this.currentTheme === 'relax';
+    return html`
+      <div class="theme-button ${isActive ? 'active' : 'inactive'}"
+           @click=${() => this.switchTheme('relax')}>
+        ${this.renderRelaxSvg()}
+        <div class="hitbox" @click=${() => this.switchTheme('relax')}></div>
+      </div>
+    `;
+  }
+
   private renderBasicSvg() {
     return svg`<svg
       width="160"
@@ -566,6 +578,92 @@ export class Sidebar extends LitElement {
     </svg>`;
   }
 
+  private renderRelaxSvg() {
+    return svg`<svg
+      width="160"
+      height="160"
+      viewBox="0 0 160 160"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <rect
+        x="24"
+        y="24"
+        width="112"
+        height="112"
+        rx="56"
+        fill="black"
+        fill-opacity="0.05" />
+      <rect
+        x="27"
+        y="27"
+        width="106"
+        height="106"
+        rx="53"
+        stroke="black"
+        stroke-opacity="0.1"
+        stroke-width="1" />
+      <g filter="url(#filter0_ddi_relax)">
+        <rect
+          x="30"
+          y="30"
+          width="100"
+          height="100"
+          rx="50"
+          fill="white"
+          fill-opacity="0.05"
+          shape-rendering="crispEdges" />
+      </g>
+      <text x="80" y="90" text-anchor="middle" fill="#FEFEFE" font-family="Arial, sans-serif" font-size="24" font-weight="bold">RELAX</text>
+      <defs>
+        <filter
+          id="filter0_ddi_relax"
+          x="0"
+          y="0"
+          width="160"
+          height="160"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB">
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha" />
+          <feOffset dy="2" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha" />
+          <feOffset dy="8" />
+          <feGaussianBlur stdDeviation="6" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect2_dropShadow" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect2_dropShadow"
+            result="shape" />
+        </filter>
+      </defs>
+    </svg>`;
+  }
+
   private switchTheme(theme: ThemeMode) {
     if (theme !== this.currentTheme) {
       this.currentTheme = theme;
@@ -586,6 +684,7 @@ export class Sidebar extends LitElement {
     return html`
       ${this.renderBasicButton()}
       ${this.renderRpgButton()}
+      ${this.renderRelaxButton()}
       <button 
         class="favorites-toggle-btn"
         @click=${this.toggleFavorites}

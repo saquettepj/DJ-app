@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { PlaybackState, Prompt, Favorite } from './types';
+import type { PlaybackState, Prompt, Favorite, ThemeMode } from './types';
 import { GoogleGenAI, LiveMusicFilteredPrompt } from '@google/genai';
 import { PromptDjMidi } from './components/PromptDjMidi';
 import { ToastMessage } from './components/ToastMessage';
 import { LiveMusicHelper } from './utils/LiveMusicHelper';
 import { AudioAnalyser } from './utils/AudioAnalyser';
-import { Sidebar, type ThemeMode } from './components/Sidebar';
+import { Sidebar } from './components/Sidebar';
 import { ApiKeyInput } from './components/ApiKeyInput';
 import { FavoritesSidebar } from './components/FavoritesSidebar';
 import { FavoritesManager } from './utils/FavoritesManager';
@@ -27,45 +27,66 @@ let favoritesSidebar: FavoritesSidebar | null = null;
 let selectedFavoriteId: string | null = null;
 
 const DEFAULT_PROMPTS = [
-  { color: '#9900ff', text: 'Bossa Nova' },
-  { color: '#5200ff', text: 'Chillwave' },
-  { color: '#ff25f6', text: 'Drum and Bass' },
-  { color: '#2af6de', text: 'Post Punk' },
-  { color: '#ffdd28', text: 'Shoegaze' },
-  { color: '#2af6de', text: 'Funk' },
-  { color: '#9900ff', text: 'Chiptune' },
-  { color: '#3dffab', text: 'Lush Strings' },
-  { color: '#d8ff3e', text: 'Sparkling Arpeggios' },
-  { color: '#d9b2ff', text: 'Staccato Rhythms' },
-  { color: '#3dffab', text: 'Punchy Kick' },
-  { color: '#ffdd28', text: 'Dubstep' },
-  { color: '#ff25f6', text: 'K Pop' },
-  { color: '#d8ff3e', text: 'Neo Soul' },
-  { color: '#5200ff', text: 'Trip Hop' },
-  { color: '#d9b2ff', text: 'Thrash' },
-  { color: '#ff6b35', text: 'Ambient' },
-  { color: '#4ecdc4', text: 'Synthwave' },
+  { color: '#F4A261', text: 'Bossa Nova' },        // Cor quente e praiana, como o Rio de Janeiro
+  { color: '#E07A5F', text: 'Chillwave' },         // Tom nostálgico, de pôr do sol desbotado
+  { color: '#0029FF', text: 'Drum and Bass' },     // Azul elétrico, futurista e energético
+  { color: '#A40E4C', text: 'Post Punk' },         // Sóbrio e intenso, remetendo a capas clássicas
+  { color: '#A2D2FF', text: 'Shoegaze' },          // Azul claro e etéreo, como um sonho
+  { color: '#F77F00', text: 'Funk' },              // Laranja vibrante e "groovy", anos 70
+  { color: '#4ADE80', text: 'Chiptune' },          // Verde pixelado, de videogame 8-bit
+  { color: '#C9B464', text: 'Lush Strings' },      // Dourado sofisticado, como uma orquestra
+  { color: '#FFF8B8', text: 'Sparkling Arpeggios' }, // Amarelo pálido e brilhante, cintilante
+  { color: '#F038FF', text: 'Staccato Rhythms' },  // Magenta agudo e preciso
+  { color: '#333333', text: 'Punchy Kick' },       // Cinza escuro, sólido e impactante
+  { color: '#D8FF3E', text: 'Dubstep' },           // Verde-limão "tóxico", clássico do gênero
+  { color: '#FF70A6', text: 'K Pop' },             // Rosa vibrante, polido e energético
+  { color: '#3A506B', text: 'Neo Soul' },          // Azul "jazz", urbano e sofisticado
+  { color: '#1B4332', text: 'Trip Hop' },          // Verde escuro e atmosférico, "moody"
+  { color: '#C81D25', text: 'Thrash' },            // Vermelho agressivo e cru
+  { color: '#AEC6CF', text: 'Ambient' },           // Azul acinzentado, calmo e expansivo
+  { color: '#FF00E5', text: 'Synthwave' },         // Magenta neon, estética retrofuturista
 ];
 
 const RPG_PROMPTS = [
-  { color: '#8B0000', text: 'Epic Battle' },
-  { color: '#4B0082', text: 'Mystical Forest' },
-  { color: '#00CED1', text: 'Dimensional Portal' },
-  { color: '#FFD700', text: 'Lost Treasure' },
-  { color: '#32CD32', text: 'Elf Village' },
-  { color: '#20B2AA', text: 'Deep Ocean' },
-  { color: '#FF8C00', text: 'Soft fire' },
-  { color: '#DC143C', text: 'Legendary Warrior' },
-  { color: '#8A2BE2', text: 'Sacred Temple' },
-  { color: '#FF1493', text: 'Mythical Beast' },
-  { color: '#2F4F4F', text: 'Cave' },
-  { color: '#8B4513', text: 'Tribal Drums' },
-  { color: '#DC143C', text: 'Horror Scream' },
-  { color: '#800080', text: 'Soul Demon' },
-  { color: '#87CEEB', text: 'Angelical Cry' },
-  { color: '#DDA0DD', text: 'Choral' },
-  { color: '#FF6347', text: 'Dragon Lair' },
-  { color: '#00FA9A', text: 'Enchanted Garden' },
+  { color: '#8B0000', text: 'Epic Battle' },       // Vermelho escuro, cor de sangue e fúria
+  { color: '#004225', text: 'Mystical Forest' },   // Verde profundo e mágico
+  { color: '#9400D3', text: 'Dimensional Portal' },// Roxo vibrante e sobrenatural
+  { color: '#FFD700', text: 'Lost Treasure' },     // Dourado brilhante, a cor da recompensa
+  { color: '#2E8B57', text: 'Elf Village' },       // Verde sereno, integrado à natureza
+  { color: '#000080', text: 'Deep Ocean' },        // Azul marinho, representando a profundeza
+  { color: '#FF8C00', text: 'Soft fire' },         // Laranja escuro, de uma fogueira controlada
+  { color: '#4682B4', text: 'Legendary Warrior' }, // Azul aço, nobre e heróico
+  { color: '#8A2BE2', text: 'Sacred Temple' },     // Violeta, cor da espiritualidade e magia
+  { color: '#483D8B', text: 'Mythical Beast' },    // Roxo escuro, imponente e misterioso
+  { color: '#2F4F4F', text: 'Cave' },              // Cinza ardósia, escuro e rochoso
+  { color: '#8B4513', text: 'Tribal Drums' },      // Marrom terra, rústico e primal
+  { color: '#DC143C', text: 'Horror Scream' },     // Carmesim, a cor do pavor e do perigo
+  { color: '#4B0082', text: 'Soul Demon' },        // Índigo, escuridão profunda e maligna
+  { color: '#FFFACD', text: 'Angelical Cry' },     // Um tom de creme celestial, quase branco
+  { color: '#E6E6FA', text: 'Choral' },            // Lavanda suave, etéreo e harmonioso
+  { color: '#B22222', text: 'Dragon Lair' },       // Vermelho "tijolo", de fogo e rocha vulcânica
+  { color: '#00FA9A', text: 'Enchanted Garden' },  // Verde menta, vibrante e mágico
+];
+
+const RELAX_PROMPTS = [
+  { color: '#68A0B2', text: 'Ocean Waves' },       // Azul-petróleo suave, cor do mar calmo
+  { color: '#B0C4DE', text: 'Gentle Rain' },       // Azul acinzentado claro, como a chuva na janela
+  { color: '#DDA0DD', text: 'Silence Flowers' },   // Lilás pálido, delicado e silencioso
+  { color: '#FBC4AB', text: 'Calm Sunset' },       // Laranja rosado suave, do pôr do sol
+  { color: '#F0F8FF', text: 'Soft Clouds' },       // Quase branco, um azul muito pálido de nuvem
+  { color: '#B0E0E6', text: 'Morning Mist' },      // Azul pálido, a cor da névoa da manhã
+  { color: '#F5DEB3', text: 'Calm Piano' },        // Bege "trigo", remetendo à madeira do piano
+  { color: '#CD853F', text: 'Calm Guitar' },       // Tom de madeira clara, do violão acústico
+  { color: '#98D8C8', text: 'Slow Morning' },      // Verde menta pastel, suave e tranquilo
+  { color: '#C0D6E4', text: 'Soft Flute' },        // Um tom prateado/azulado, leve como o som
+  { color: '#556B2F', text: 'Forest Calm' },       // Verde oliva escuro, a calma da floresta densa
+  { color: '#E0B0FF', text: 'Slow Dreams' },       // Roxo claro, onírico e suave
+  { color: '#D2B48C', text: 'Peaceful Lute' },     // Tan, a cor da madeira de um alaúde
+  { color: '#87CEFA', text: 'Relaxing Sky' },      // Azul céu claro e limpo
+  { color: '#E5E4E2', text: 'Quiet Wind' },        // Cinza muito claro, a cor do ar em movimento
+  { color: '#A2D0C1', text: 'Soothing Drops' },    // Verde água, como gotas de orvalho
+  { color: '#B87333', text: 'Peaceful Ocarina' },  // Terracota, a cor da argila de uma ocarina
+  { color: '#E5A774', text: 'Warm Tea' },          // Cor de mel, quente e reconfortante
 ];
 
 function initializeAI(apiKey: string) {
@@ -102,17 +123,17 @@ function main() {
   }
 }
 
-function restoreFavoritesFromSession(session: any) {
+function restoreFavoritesFromSession(session: { favorites: Array<{ name: string; preset: { prompts: Record<string, any>; volume: number }; theme: ThemeMode }> }) {
   if (favoritesManager && session.favorites) {
     // Limpar favoritos atuais
     favoritesManager.clearAll();
     
     // Restaurar favoritos da sessão
-    session.favorites.forEach((favorite: any) => {
+    session.favorites.forEach((favorite) => {
       // Converter prompts de volta para Map
       const promptsMap = new Map<string, any>();
       if (favorite.preset.prompts) {
-        Object.entries(favorite.preset.prompts).forEach(([key, prompt]: [string, any]) => {
+        Object.entries(favorite.preset.prompts).forEach(([key, prompt]) => {
           promptsMap.set(key, prompt);
         });
       }
@@ -362,7 +383,7 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
   }));
 
   // Listeners para eventos de favoritos
-  pdjMidi.addEventListener('favorite-created', async (e: CustomEvent<{ name: string, theme: 'basic' | 'rpg', prompts: Map<string, Prompt> }>) => {
+  pdjMidi.addEventListener('favorite-created', async (e: CustomEvent<{ name: string, theme: ThemeMode, prompts: Map<string, Prompt> }>) => {
     if (!favoritesManager) return;
     
     const { name, theme, prompts } = e.detail;
@@ -370,9 +391,9 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
     
     const favorite = favoritesManager.createFavorite(name, prompts, volume, theme);
     
-    // Atualizar sidebar
-    if (favoritesSidebar) {
-      favoritesSidebar.favorites = favoritesManager.getFavoritesByTheme(favoritesSidebar.currentTheme);
+            // Atualizar sidebar
+        if (favoritesSidebar) {
+          favoritesSidebar.favorites = favoritesManager.getFavoritesByTheme(favoritesSidebar.currentTheme);
       
       // Marcar o novo favorito como selecionado
       selectedFavoriteId = favorite.id;
@@ -550,7 +571,20 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
 
 
 function buildDefaultPrompts(theme: ThemeMode = 'basic') {
-  const promptsList = theme === 'basic' ? DEFAULT_PROMPTS : RPG_PROMPTS;
+  let promptsList;
+  switch (theme) {
+    case 'basic':
+      promptsList = DEFAULT_PROMPTS;
+      break;
+    case 'rpg':
+      promptsList = RPG_PROMPTS;
+      break;
+    case 'relax':
+      promptsList = RELAX_PROMPTS;
+      break;
+    default:
+      promptsList = DEFAULT_PROMPTS;
+  }
   
   // Pick 3 random prompts to start at weight = 1
   const startOnIndices = [...Array(promptsList.length).keys()]

@@ -6,6 +6,8 @@ import { css, html, LitElement } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
 import './CdIcon';
 import { classMap } from 'lit/directives/class-map.js';
+import { Sidebar } from './Sidebar';
+import type { ThemeMode } from '../types';
 
 @customElement('favorite-button')
 export class FavoriteButton extends LitElement {
@@ -362,7 +364,7 @@ export class FavoriteButton extends LitElement {
   @state() showingInput = false;
   @state() favoriteName = '';
   @state() isFavorited = false;
-  @property({ type: String }) currentTheme: 'basic' | 'rpg' = 'basic';
+  @property({ type: String }) currentTheme: ThemeMode = 'basic';
   @property({ type: Boolean }) isCurrentConfigFavorited = false;
 
   override render() {

@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import type { Favorite, MusicPreset, Prompt } from '../types';
+import type { Favorite, MusicPreset, Prompt, ThemeMode } from '../types';
 
 export class FavoritesManager extends EventTarget {
   private favorites: Map<string, Favorite> = new Map();
@@ -64,7 +64,7 @@ export class FavoritesManager extends EventTarget {
     }
   }
 
-  public createFavorite(name: string, prompts: Map<string, Prompt>, volume: number, theme: 'basic' | 'rpg'): Favorite {
+  public createFavorite(name: string, prompts: Map<string, Prompt>, volume: number, theme: ThemeMode): Favorite {
     const id = `favorite-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const timestamp = Date.now();
     
@@ -157,7 +157,7 @@ export class FavoritesManager extends EventTarget {
     return Array.from(this.favorites.values()).sort((a, b) => b.updatedAt - a.updatedAt);
   }
 
-  public getFavoritesByTheme(theme: 'basic' | 'rpg'): Favorite[] {
+  public getFavoritesByTheme(theme: ThemeMode): Favorite[] {
     return Array.from(this.favorites.values())
       .filter(favorite => favorite.theme === theme)
       .sort((a, b) => b.updatedAt - a.updatedAt);

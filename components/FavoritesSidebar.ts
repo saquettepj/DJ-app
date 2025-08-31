@@ -7,6 +7,8 @@ import './CdIcon';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import type { Favorite, MusicPreset, Prompt } from '../types';
+import { Sidebar } from './Sidebar';
+import type { ThemeMode } from '../types';
 
 @customElement('favorites-sidebar')
 export class FavoritesSidebar extends LitElement {
@@ -264,7 +266,7 @@ export class FavoritesSidebar extends LitElement {
 
   @property({ type: Array }) favorites: Favorite[] = [];
   @property({ type: String }) selectedFavoriteId: string | null = null;
-  @property({ type: String }) currentTheme: 'basic' | 'rpg' = 'basic';
+  @property({ type: String }) currentTheme: ThemeMode = 'basic';
   @state() editingId: string | null = null;
   @state() editingName: string = '';
   @state() deletingId: string | null = null;
