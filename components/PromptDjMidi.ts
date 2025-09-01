@@ -684,8 +684,8 @@ export class PromptDjMidi extends LitElement {
           .padStart(2, '0');
 
         const stop = p.weight / 2;
-        const x = (i % 4) / 3;
-        const y = Math.floor(i / 4) / 3;
+        const x = (i % 6) / 5;
+        const y = Math.floor(i / 6) / 3;
         const s = `radial-gradient(circle at ${x * 100}% ${y * 100}%, ${p.color}${alpha} 0px, ${p.color}00 ${stop * 100}%)`;
 
         bg.push(s);
