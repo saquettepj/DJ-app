@@ -76,6 +76,18 @@ export class VolumeControl extends LitElement {
       -webkit-tap-highlight-color: transparent;
     }
 
+    .volume-slider::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: calc(var(--volume-percentage, 0) * 100%);
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 2px;
+      z-index: -1;
+    }
+
     .volume-slider::-webkit-slider-thumb {
       appearance: none;
       -webkit-appearance: none;
@@ -413,6 +425,9 @@ export class VolumeControl extends LitElement {
     const target = e.target as HTMLInputElement;
     this.volume = parseFloat(target.value);
     
+    // Atualizar a variável CSS para o progresso visual
+    target.style.setProperty('--volume-percentage', this.volume.toString());
+    
     // Disparar evento para o componente pai
     this.dispatchEvent(new CustomEvent('volume-changed', {
       detail: { volume: this.volume }
@@ -435,6 +450,7 @@ export class VolumeControl extends LitElement {
         step="0.01" 
         .value=${this.volume}
         @input=${this.handleVolumeChange}
+        style="--volume-percentage: ${this.volume}"
       />
       
       <span class="volume-value">${Math.round(this.volume * 100)}%</span>
