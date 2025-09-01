@@ -1,6 +1,6 @@
 # 🎵 DJ MIDI MOD - Enhanced Version
 
-**Fork modificado e aprimorado** da aplicação original [PromptDJ MIDI](https://ai.studio/apps/bundled/promptdj-midi) com recursos adicionais, melhorias de performance, interface aprimorada e responsividade otimizada.
+**Fork modificado e aprimorado** da aplicação original [PromptDJ MIDI](https://aistudio.google.com/apps/bundled/promptdj-midi) com recursos adicionais, melhorias de performance, interface aprimorada e responsividade otimizada.
 
 ## 🆕 **Melhorias Implementadas**
 
@@ -32,7 +32,7 @@
 **Acesse:** [https://saquettepj.github.io/DJ-app/](https://saquettepj.github.io/DJ-app/)
 
 ## 📚 **Aplicação Original**
-Baseado em: [https://ai.studio/apps/bundled/promptdj-midi](https://ai.studio/apps/bundled/promptdj-midi)
+Baseado em: [https://ai.studio/apps/bundled/promptdj-midi](https://aistudio.google.com/apps/bundled/promptdj-midi)
 
 ## ⚡ Início Rápido
 
