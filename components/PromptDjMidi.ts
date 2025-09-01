@@ -6,7 +6,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { throttle } from '../utils/throttle';
+import { throttle, debounce } from '../utils/throttle';
 
 import './PromptController';
 import './PlayPauseButton';
@@ -634,7 +634,13 @@ export class PromptDjMidi extends LitElement {
     
     // Listener único para mudanças de configuração
     this.addEventListener('configuration-changed', () => {
-      this.updateFavoriteButtonState();
+      // Usar debounce no mobile para verificação de favoritos
+      const isMobile = window.innerWidth <= 767;
+      if (isMobile) {
+        this.debouncedUpdateFavoriteButtonState();
+      } else {
+        this.updateFavoriteButtonState();
+      }
     });
   }
 
@@ -655,7 +661,15 @@ export class PromptDjMidi extends LitElement {
 
     this.prompts = newPrompts;
     localStorage.setItem('promptDjMidi-prompts', JSON.stringify(Array.from(this.prompts.entries())));
-    this.requestUpdate();
+    
+    // Usar debounce no mobile para mudanças de peso, throttle no desktop
+    const isMobile = window.innerWidth <= 767;
+    if (isMobile) {
+      this.debouncedMakeBackground();
+    } else {
+      this.makeBackground();
+      this.requestUpdate();
+    }
 
     // Disparar evento único de mudança de configuração
     this.dispatchEvent(new CustomEvent('configuration-changed', {
@@ -672,21 +686,23 @@ export class PromptDjMidi extends LitElement {
     () => {
       const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
 
-      const MAX_WEIGHT = 0.5;
-      const MAX_ALPHA = 0.6;
-
-      const bg: string[] = [];
-
       // Detectar se é mobile portrait (2 colunas)
       const isMobilePortrait = window.innerWidth <= 767 && window.innerHeight > window.innerWidth;
       
+      // Configurações otimizadas para mobile
+      const MAX_WEIGHT = isMobilePortrait ? 0.4 : 0.5;
+      const MAX_ALPHA = isMobilePortrait ? 0.4 : 0.6;
+
+      const bg: string[] = [];
+
       [...this.prompts.values()].forEach((p, i) => {
         const alphaPct = clamp01(p.weight / MAX_WEIGHT) * MAX_ALPHA;
         const alpha = Math.round(alphaPct * 0xff)
           .toString(16)
           .padStart(2, '0');
 
-        const stop = p.weight / 2;
+        // Reduzir complexidade no mobile
+        const stop = isMobilePortrait ? p.weight / 3 : p.weight / 2;
         
         let x, y;
         if (isMobilePortrait) {
@@ -706,8 +722,20 @@ export class PromptDjMidi extends LitElement {
 
       return bg.join(', ');
     },
-    30, // don't re-render more than once every XXms
+    // Throttle mais agressivo no mobile
+    window.innerWidth <= 30 ? 30 : 50,
   );
+
+  /** Debounced version for weight changes - especially useful on mobile */
+  private readonly debouncedMakeBackground = debounce(() => {
+    this.makeBackground();
+    this.requestUpdate();
+  }, window.innerWidth <= 767 ? 1000 : 800);
+
+  /** Debounced version for favorite button state updates */
+  private readonly debouncedUpdateFavoriteButtonState = debounce(() => {
+    this.updateFavoriteButtonState();
+  }, window.innerWidth <= 767 ? 1000 : 800);
 
 
 
