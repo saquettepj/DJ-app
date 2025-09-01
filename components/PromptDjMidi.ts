@@ -6,7 +6,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { throttle, debounce } from '../utils/throttle';
+import { throttle } from '../utils/throttle';
 
 import './PromptController';
 import './PlayPauseButton';
@@ -634,13 +634,8 @@ export class PromptDjMidi extends LitElement {
     
     // Listener único para mudanças de configuração
     this.addEventListener('configuration-changed', () => {
-      // Usar debounce no mobile para verificação de favoritos
-      const isMobile = window.innerWidth <= 767;
-      if (isMobile) {
-        this.debouncedUpdateFavoriteButtonState();
-      } else {
-        this.updateFavoriteButtonState();
-      }
+      // Atualizar estado do botão de favoritos
+      this.updateFavoriteButtonState();
     });
   }
 
@@ -662,14 +657,9 @@ export class PromptDjMidi extends LitElement {
     this.prompts = newPrompts;
     localStorage.setItem('promptDjMidi-prompts', JSON.stringify(Array.from(this.prompts.entries())));
     
-    // Usar debounce no mobile para mudanças de peso, throttle no desktop
-    const isMobile = window.innerWidth <= 767;
-    if (isMobile) {
-      this.debouncedMakeBackground();
-    } else {
-      this.makeBackground();
-      this.requestUpdate();
-    }
+    // Usar throttle para mudanças de peso
+    this.makeBackground();
+    this.requestUpdate();
 
     // Disparar evento único de mudança de configuração
     this.dispatchEvent(new CustomEvent('configuration-changed', {
@@ -723,19 +713,10 @@ export class PromptDjMidi extends LitElement {
       return bg.join(', ');
     },
     // Throttle mais agressivo no mobile
-    window.innerWidth <= 30 ? 30 : 50,
+    window.innerWidth <= 767 ? 30 : 50,
   );
 
-  /** Debounced version for weight changes - especially useful on mobile */
-  private readonly debouncedMakeBackground = debounce(() => {
-    this.makeBackground();
-    this.requestUpdate();
-  }, window.innerWidth <= 767 ? 1000 : 800);
 
-  /** Debounced version for favorite button state updates */
-  private readonly debouncedUpdateFavoriteButtonState = debounce(() => {
-    this.updateFavoriteButtonState();
-  }, window.innerWidth <= 767 ? 1000 : 800);
 
 
 

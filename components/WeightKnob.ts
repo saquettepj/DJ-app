@@ -5,6 +5,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import { throttle } from '../utils/throttle';
 
 /** Maps prompt weight to halo size. */
 const MIN_HALO_SCALE = 1;
@@ -58,12 +59,18 @@ export class WeightKnob extends LitElement {
 
   private dragStartPos = 0;
   private dragStartValue = 0;
+  private throttledUpdateHalo: () => void;
 
   constructor() {
     super();
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerMove = this.handlePointerMove.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
+    
+    // Throttle para o halo no mobile
+    this.throttledUpdateHalo = throttle(() => {
+      this.requestUpdate();
+    }, window.innerWidth <= 767 ? 30 : 100);
   }
 
   private handlePointerDown(e: PointerEvent) {
@@ -80,6 +87,13 @@ export class WeightKnob extends LitElement {
     this.value = this.dragStartValue + delta * 0.01;
     this.value = Math.max(0, Math.min(2, this.value));
     this.dispatchEvent(new CustomEvent<number>('input', { detail: this.value }));
+    
+    // Throttle para o halo no mobile
+    if (window.innerWidth <= 767) {
+      this.throttledUpdateHalo();
+    } else {
+      this.requestUpdate();
+    }
   }
 
   private handlePointerUp() {
@@ -93,6 +107,13 @@ export class WeightKnob extends LitElement {
     this.value = this.value + delta * -0.0025;
     this.value = Math.max(0, Math.min(2, this.value));
     this.dispatchEvent(new CustomEvent<number>('input', { detail: this.value }));
+    
+    // Throttle para o halo no mobile
+    if (window.innerWidth <= 767) {
+      this.throttledUpdateHalo();
+    } else {
+      this.requestUpdate();
+    }
   }
 
   private describeArc(
