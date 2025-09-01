@@ -65,10 +65,6 @@ export class FavoriteButton extends LitElement {
       transform: scale(0.95);
     }
 
-    .favorite-btn.favorited::before {
-      background: rgba(244, 67, 54, 0.1);
-    }
-
     .favorite-btn .heart-icon {
       font-size: 1.2em;
       color: white;
