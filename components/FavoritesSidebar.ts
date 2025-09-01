@@ -74,7 +74,11 @@ export class FavoritesSidebar extends LitElement {
 
     .favorite-tape.selected {
       background: rgba(0, 0, 0, 0.4);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .favorite-tape.deleting.selected {
+      box-shadow: 0 0 10px rgba(244, 67, 54, 0.2);
     }
 
     .favorite-name {
@@ -162,25 +166,24 @@ export class FavoritesSidebar extends LitElement {
 
     .delete-progress-container {
       position: absolute;
-      bottom: 2px;
-      left: 3px;
-      right: 3px;
-      height: 3px;
-      border-radius: 0 0 17px 17px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 20px;
       overflow: hidden;
       z-index: 1;
     }
 
     .delete-progress {
       position: absolute;
-      bottom: 0;
-      left: 8px;
+      top: 0;
+      left: 0;
       height: 100%;
-      width: 95%;
-      background: rgba(244, 67, 54, 0.8);
-      border-radius: 0 0 17px 17px;
+      width: 100%;
+      background: rgba(244, 67, 54, 0.15);
+      border-radius: 20px 0 0 20px;
       transition: width 0.1s linear;
-      box-shadow: 0 0 8px rgba(244, 67, 54, 0.3);
       transform-origin: left;
     }
 

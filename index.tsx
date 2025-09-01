@@ -222,6 +222,9 @@ function initializeApp(initialPrompts: Map<string, Prompt>) {
 function initializeComponents(initialPrompts: Map<string, Prompt>) {
   pdjMidi = new PromptDjMidi(initialPrompts, ai, model);
   
+  // Definir o tema atual no PromptDjMidi (importante para sessões carregadas)
+  pdjMidi.currentTheme = currentTheme;
+  
   // Inicializar sistema de favoritos com SessionManager
   favoritesManager = new FavoritesManager(sessionManager);
   
@@ -517,6 +520,15 @@ function initializeComponents(initialPrompts: Map<string, Prompt>) {
         if (selectedFavoriteId === id) {
           selectedFavoriteId = null;
           favoritesSidebar.selectedFavoriteId = null;
+        }
+        
+        // Atualizar estado do FavoriteButton após deletar favorito
+        if (pdjMidi && pdjMidi.shadowRoot) {
+          const favoriteButton = pdjMidi.shadowRoot.querySelector('favorite-button') as any;
+          if (favoriteButton && favoriteButton.setCurrentConfigFavorited) {
+            const isFavorited = pdjMidi.isCurrentConfigFavorited();
+            favoriteButton.setCurrentConfigFavorited(isFavorited);
+          }
         }
         
         // Mostrar toast
