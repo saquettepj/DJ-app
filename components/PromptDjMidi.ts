@@ -677,6 +677,9 @@ export class PromptDjMidi extends LitElement {
 
       const bg: string[] = [];
 
+      // Detectar se é mobile portrait (2 colunas)
+      const isMobilePortrait = window.innerWidth <= 767 && window.innerHeight > window.innerWidth;
+      
       [...this.prompts.values()].forEach((p, i) => {
         const alphaPct = clamp01(p.weight / MAX_WEIGHT) * MAX_ALPHA;
         const alpha = Math.round(alphaPct * 0xff)
@@ -684,8 +687,18 @@ export class PromptDjMidi extends LitElement {
           .padStart(2, '0');
 
         const stop = p.weight / 2;
-        const x = (i % 6) / 5;
-        const y = Math.floor(i / 6) / 3;
+        
+        let x, y;
+        if (isMobilePortrait) {
+          // Mobile portrait: 2 colunas, 9 linhas
+          x = (i % 2) / 1;
+          y = Math.floor(i / 2) / 8;
+        } else {
+          // Desktop: 6 colunas, 3 linhas
+          x = (i % 6) / 5;
+          y = Math.floor(i / 6) / 2;
+        }
+        
         const s = `radial-gradient(circle at ${x * 100}% ${y * 100}%, ${p.color}${alpha} 0px, ${p.color}00 ${stop * 100}%)`;
 
         bg.push(s);
