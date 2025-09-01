@@ -674,18 +674,15 @@ export class PromptDjMidi extends LitElement {
   /** Generates radial gradients for each prompt based on weight and color. */
   private readonly makeBackground = throttle(
     () => {
-      // ===== MODIFICAÇÃO TEMPORÁRIA PARA PERFORMANCE =====
-      // TODO: REMOVER ESTA MODIFICAÇÃO QUANDO QUISER REATIVAR O BACKGROUND NO MOBILE
-      // Para desfazer: remover as 4 linhas abaixo e restaurar o código original comentado
+      // Desativar background colorido no mobile para melhorar performance
       const isMobile = window.innerWidth <= 767;
       if (isMobile) {
-        return ''; // Background desativado no mobile para performance
+        return '';
       }
-      // ===== FIM DA MODIFICAÇÃO TEMPORÁRIA =====
 
       const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
       
-      // Configurações para desktop (originalmente era dinâmico mobile/desktop)
+      // Configurações para desktop
       const MAX_WEIGHT = 0.5;
       const MAX_ALPHA = 0.6;
 
@@ -699,7 +696,7 @@ export class PromptDjMidi extends LitElement {
 
         const stop = p.weight / 2;
         
-        // Desktop: 6 colunas, 3 linhas (originalmente era dinâmico mobile/desktop)
+        // Desktop: 6 colunas, 3 linhas
         const x = (i % 6) / 5;
         const y = Math.floor(i / 6) / 2;
         
@@ -713,58 +710,6 @@ export class PromptDjMidi extends LitElement {
     // Throttle mais agressivo no mobile
     window.innerWidth <= 767 ? 30 : 50,
   );
-
-  /* ===== CÓDIGO ORIGINAL COMENTADO PARA REFERÊNCIA =====
-  // Para restaurar o background no mobile, substitua o código acima por este:
-  
-  private readonly makeBackground = throttle(
-    () => {
-      const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
-
-      // Detectar se é mobile portrait (2 colunas)
-      const isMobilePortrait = window.innerWidth <= 767 && window.innerHeight > window.innerWidth;
-      
-      // Configurações otimizadas para mobile
-      const MAX_WEIGHT = isMobilePortrait ? 0.4 : 0.5;
-      const MAX_ALPHA = isMobilePortrait ? 0.4 : 0.6;
-
-      const bg: string[] = [];
-
-      [...this.prompts.values()].forEach((p, i) => {
-        const alphaPct = clamp01(p.weight / MAX_WEIGHT) * MAX_ALPHA;
-        const alpha = Math.round(alphaPct * 0xff)
-          .toString(16)
-          .padStart(2, '0');
-
-        // Reduzir complexidade no mobile
-        const stop = isMobilePortrait ? p.weight / 3 : p.weight / 2;
-        
-        let x, y;
-        if (isMobilePortrait) {
-          // Mobile portrait: 2 colunas, 9 linhas
-          x = (i % 2) / 1;
-          y = Math.floor(i / 2) / 8;
-        } else {
-          // Desktop: 6 colunas, 3 linhas
-          x = (i % 6) / 5;
-          y = Math.floor(i / 6) / 2;
-        }
-        
-        const s = `radial-gradient(circle at ${x * 100}% ${y * 100}%, ${p.color}${alpha} 0px, ${p.color}00 ${stop * 100}%)`;
-
-        bg.push(s);
-      });
-
-      return bg.join(', ');
-    },
-    // Throttle mais agressivo no mobile
-    window.innerWidth <= 767 ? 30 : 50,
-  );
-  ===== FIM DO CÓDIGO ORIGINAL ===== */
-
-
-
-
 
   private playPause() {
     // Se estiver pausando, parar também o modo aleatório
