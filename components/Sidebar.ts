@@ -41,7 +41,7 @@ export class Sidebar extends LitElement {
       width: 100%;
       align-items: center;
       justify-content: space-between;
-      padding: 2rem 0rem 4.2rem 0rem;
+      padding: 1.5rem 0 5rem 0;
       box-sizing: border-box;
     }
     
@@ -82,8 +82,8 @@ export class Sidebar extends LitElement {
     
     .theme-button {
       position: relative;
-      width: 80px;
-      height: 80px;
+      width: clamp(3.5rem, 8vh, 5rem);
+      height: clamp(3.5rem, 8vh, 5rem);
       pointer-events: auto;
       cursor: pointer;
       background: rgba(255, 255, 255, 0.1);
@@ -135,13 +135,13 @@ export class Sidebar extends LitElement {
     }
 
     .favorites-toggle-btn {
-      width: 80px;
-      height: 80px;
+      width: clamp(3.5rem, 8vh, 5rem);
+      height: clamp(3.5rem, 8vh, 5rem);
       border: none;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.1);
       color: white;
-      font-size: 38px;
+      font-size: clamp(1.6rem, 3.8vh, 2.4rem);
       cursor: pointer;
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
@@ -159,10 +159,10 @@ export class Sidebar extends LitElement {
       position: relative;
       z-index: 10;
       /* Garantir que o botão não se deforme */
-      min-width: 80px;
-      min-height: 80px;
-      max-width: 80px;
-      max-height: 80px;
+      min-width: clamp(3.5rem, 8vh, 5rem);
+      min-height: clamp(3.5rem, 8vh, 5rem);
+      max-width: clamp(3.5rem, 8vh, 5rem);
+      max-height: clamp(3.5rem, 8vh, 5rem);
     }
     
     
@@ -179,7 +179,7 @@ export class Sidebar extends LitElement {
       }
       
       .sidebar-container {
-        padding: 1.5rem 0rem 4.2rem 0rem;
+        padding: 1.25rem 0 2.5rem 0;
       }
       
       .theme-buttons-container {
@@ -188,8 +188,18 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 80px;
-        height: 80px;
+        width: clamp(3.5rem, 8vh, 5rem);
+        height: clamp(3.5rem, 8vh, 5rem);
+      }
+      
+      .favorites-toggle-btn {
+        width: clamp(3.5rem, 8vh, 5rem);
+        height: clamp(3.5rem, 8vh, 5rem);
+        font-size: clamp(1.6rem, 3.8vh, 2.4rem);
+        min-width: clamp(3.5rem, 8vh, 5rem);
+        min-height: clamp(3.5rem, 8vh, 5rem);
+        max-width: clamp(3.5rem, 8vh, 5rem);
+        max-height: clamp(3.5rem, 8vh, 5rem);
       }
     }
     
@@ -200,7 +210,7 @@ export class Sidebar extends LitElement {
       }
       
       .sidebar-container {
-        padding: 2rem 0rem 3.3rem 0rem;
+        padding: 1rem 0 2rem 0;
       }
       
       .theme-buttons-container {
@@ -209,22 +219,22 @@ export class Sidebar extends LitElement {
       }
       
       .theme-button {
-        width: 55px;
-        height: 55px;
-        min-width: 55px;
-        min-height: 55px;
-        max-width: 55px;
-        max-height: 55px;
+        width: clamp(3.5rem, 8vh, 5rem);
+        height: clamp(3.5rem, 8vh, 5rem);
+        min-width: clamp(3.5rem, 8vh, 5rem);
+        min-height: clamp(3.5rem, 8vh, 5rem);
+        max-width: clamp(3.5rem, 8vh, 5rem);
+        max-height: clamp(3.5rem, 8vh, 5rem);
       }
       
       .favorites-toggle-btn {
-        width: 55px;
-        height: 55px;
-        font-size: 26px;
-        min-width: 55px;
-        min-height: 55px;
-        max-width: 55px;
-        max-height: 55px;
+        width: clamp(3.5rem, 8vh, 5rem);
+        height: clamp(3.5rem, 8vh, 5rem);
+        font-size: clamp(1.6rem, 3.8vh, 2.4rem);
+        min-width: clamp(3.5rem, 8vh, 5rem);
+        min-height: clamp(3.5rem, 8vh, 5rem);
+        max-width: clamp(3.5rem, 8vh, 5rem);
+        max-height: clamp(3.5rem, 8vh, 5rem);
       }
     }
     
