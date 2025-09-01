@@ -28,10 +28,56 @@ export class Sidebar extends LitElement {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 2rem;
       z-index: 1000;
       pointer-events: auto;
+      background: rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    
+    .sidebar-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem 0rem 4.2rem 0rem;
+      box-sizing: border-box;
+    }
+    
+    .theme-buttons-container {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 4rem 1rem 2rem 1rem;
+      margin-bottom: 2rem;
+      /* Ocultar barra de rolagem mas manter funcionalidade */
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+      /* Efeito de fade nas bordas */
+      mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+      );
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+      );
+    }
+    
+    .theme-buttons-container::-webkit-scrollbar {
+      display: none; /* Chrome, Safari and Opera */
     }
     
     .theme-button {
@@ -51,6 +97,7 @@ export class Sidebar extends LitElement {
       user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
     }
     
     .theme-button:hover {
@@ -108,6 +155,14 @@ export class Sidebar extends LitElement {
       user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+      /* Garantir que o botão não se deforme */
+      min-width: 80px;
+      min-height: 80px;
+      max-width: 80px;
+      max-height: 80px;
     }
     
     
@@ -121,7 +176,15 @@ export class Sidebar extends LitElement {
     @media (min-width: 768px) and (max-width: 1200px) {
       :host {
         width: 160px;
+      }
+      
+      .sidebar-container {
+        padding: 1.5rem 0rem 4.2rem 0rem;
+      }
+      
+      .theme-buttons-container {
         gap: 1.5rem;
+        margin-bottom: 1.5rem;
       }
       
       .theme-button {
@@ -134,20 +197,35 @@ export class Sidebar extends LitElement {
     @media (min-width: 768px) and (max-width: 900px) {
       :host {
         width: 140px;
+      }
+      
+      .sidebar-container {
+        padding: 2rem 0rem 3.3rem 0rem;
+      }
+      
+      .theme-buttons-container {
         gap: 1rem;
+        margin-bottom: 1rem;
       }
       
       .theme-button {
         width: 55px;
         height: 55px;
+        min-width: 55px;
+        min-height: 55px;
+        max-width: 55px;
+        max-height: 55px;
       }
       
       .favorites-toggle-btn {
         width: 55px;
         height: 55px;
         font-size: 26px;
+        min-width: 55px;
+        min-height: 55px;
+        max-width: 55px;
+        max-height: 55px;
       }
-      
     }
     
     /* Mobile styles - deve vir DEPOIS das regras de desktop para ter prioridade */
@@ -179,6 +257,33 @@ export class Sidebar extends LitElement {
         flex-wrap: nowrap;
       }
       
+      .sidebar-container {
+        display: flex;
+        flex-direction: row;
+        height: auto;
+        width: auto;
+        padding: 0;
+        margin: 0;
+        gap: 0.75rem;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .theme-buttons-container {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        overflow: visible;
+        padding: 0;
+        margin: 0;
+        gap: 0.75rem;
+        justify-content: center;
+        align-items: center;
+        /* Remover efeito de fade no mobile */
+        mask-image: none;
+        -webkit-mask-image: none;
+      }
+      
       .theme-button {
         width: 40px !important;
         height: 40px !important;
@@ -191,6 +296,10 @@ export class Sidebar extends LitElement {
         vertical-align: middle;
         text-align: center;
         flex: 0 0 auto;
+        min-width: 40px;
+        min-height: 40px;
+        max-width: 40px;
+        max-height: 40px;
       }
 
       .favorites-toggle-btn {
@@ -204,6 +313,10 @@ export class Sidebar extends LitElement {
         vertical-align: middle;
         text-align: center;
         flex: 0 0 auto;
+        min-width: 40px;
+        min-height: 40px;
+        max-width: 40px;
+        max-height: 40px;
       }
       
       
@@ -243,6 +356,10 @@ export class Sidebar extends LitElement {
         vertical-align: middle;
         text-align: center;
         flex: 0 0 auto;
+        min-width: 55px;
+        min-height: 55px;
+        max-width: 55px;
+        max-height: 55px;
       }
 
       .favorites-toggle-btn {
@@ -256,6 +373,10 @@ export class Sidebar extends LitElement {
         vertical-align: middle;
         text-align: center;
         flex: 0 0 auto;
+        min-width: 55px;
+        min-height: 55px;
+        max-width: 55px;
+        max-height: 55px;
       }
       
       
@@ -279,12 +400,20 @@ export class Sidebar extends LitElement {
       .theme-button {
         width: 35px !important;
         height: 35px !important;
+        min-width: 35px;
+        min-height: 35px;
+        max-width: 35px;
+        max-height: 35px;
       }
 
       .favorites-toggle-btn {
         width: 35px !important;
         height: 35px !important;
         font-size: 16px;
+        min-width: 35px;
+        min-height: 35px;
+        max-width: 35px;
+        max-height: 35px;
       }
       
       
@@ -305,12 +434,20 @@ export class Sidebar extends LitElement {
       .theme-button {
         width: 30px !important;
         height: 30px !important;
+        min-width: 30px;
+        min-height: 30px;
+        max-width: 30px;
+        max-height: 30px;
       }
 
       .favorites-toggle-btn {
         width: 30px !important;
         height: 30px !important;
         font-size: 14px;
+        min-width: 30px;
+        min-height: 30px;
+        max-width: 30px;
+        max-height: 30px;
       }
       
       
@@ -331,12 +468,20 @@ export class Sidebar extends LitElement {
       .theme-button {
         width: 32px !important;
         height: 32px !important;
+        min-width: 32px;
+        min-height: 32px;
+        max-width: 32px;
+        max-height: 32px;
       }
 
       .favorites-toggle-btn {
         width: 32px !important;
         height: 32px !important;
         font-size: 14px;
+        min-width: 32px;
+        min-height: 32px;
+        max-width: 32px;
+        max-height: 32px;
       }
       
       
@@ -357,12 +502,20 @@ export class Sidebar extends LitElement {
       .theme-button {
         width: 28px !important;
         height: 28px !important;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 28px;
+        max-height: 28px;
       }
 
       .favorites-toggle-btn {
         width: 28px !important;
         height: 28px !important;
         font-size: 12px;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 28px;
+        max-height: 28px;
       }
       
       
@@ -682,16 +835,20 @@ export class Sidebar extends LitElement {
 
   override render() {
     return html`
-      ${this.renderBasicButton()}
-      ${this.renderRpgButton()}
-      ${this.renderRelaxButton()}
-      <button 
-        class="favorites-toggle-btn"
-        @click=${this.toggleFavorites}
-        aria-label="Mostrar/Ocultar Favoritos"
-      >
-        <cd-icon></cd-icon>
-      </button>
+      <div class="sidebar-container">
+        <div class="theme-buttons-container">
+          ${this.renderBasicButton()}
+          ${this.renderRpgButton()}
+          ${this.renderRelaxButton()}
+        </div>
+        <button 
+          class="favorites-toggle-btn"
+          @click=${this.toggleFavorites}
+          aria-label="Mostrar/Ocultar Favoritos"
+        >
+          <cd-icon></cd-icon>
+        </button>
+      </div>
     `;
   }
 

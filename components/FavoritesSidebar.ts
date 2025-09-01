@@ -21,7 +21,6 @@ export class FavoritesSidebar extends LitElement {
       height: 100vh;
       background: rgba(0, 0, 0, 0.1);
       backdrop-filter: blur(10px);
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 1000;
       overflow: hidden;
       transition: transform 0.3s ease;
@@ -33,7 +32,6 @@ export class FavoritesSidebar extends LitElement {
 
     .header {
       padding: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(0, 0, 0, 0.2);
     }
 
@@ -338,7 +336,10 @@ export class FavoritesSidebar extends LitElement {
         <div class="favorite-actions" @click=${(e: Event) => e.stopPropagation()}>
           <button 
             class="action-btn edit-btn"
-            @click=${() => this.startEdit(favorite)}
+            @click=${(e: Event) => {
+              e.stopPropagation();
+              this.startEdit(favorite);
+            }}
             title="Editar nome"
             aria-label="Editar nome do favorito"
           >
@@ -350,11 +351,26 @@ export class FavoritesSidebar extends LitElement {
               'delete-btn': true,
               'deleting': isDeleting
             })}
-            @mousedown=${() => this.startDelete(favorite)}
-            @mouseup=${() => this.cancelDelete()}
-            @mouseleave=${() => this.cancelDelete()}
-            @touchstart=${() => this.startDelete(favorite)}
-            @touchend=${() => this.cancelDelete()}
+            @mousedown=${(e: Event) => {
+              e.stopPropagation();
+              this.startDelete(favorite);
+            }}
+            @mouseup=${(e: Event) => {
+              e.stopPropagation();
+              this.cancelDelete();
+            }}
+            @mouseleave=${(e: Event) => {
+              e.stopPropagation();
+              this.cancelDelete();
+            }}
+            @touchstart=${(e: Event) => {
+              e.stopPropagation();
+              this.startDelete(favorite);
+            }}
+            @touchend=${(e: Event) => {
+              e.stopPropagation();
+              this.cancelDelete();
+            }}
             title="Pressione e segure por 3s para excluir"
             aria-label="Excluir favorito"
           >
