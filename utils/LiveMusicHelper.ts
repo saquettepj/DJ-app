@@ -43,6 +43,8 @@ export class LiveMusicHelper extends EventTarget {
     this.outputNode = this.audioContext.createGain();
   }
 
+
+
   private getSession(): Promise<LiveMusicSession> {
     if (!this.sessionPromise) this.sessionPromise = this.connect();
     return this.sessionPromise;
@@ -254,7 +256,8 @@ export class LiveMusicHelper extends EventTarget {
   public pause() {
     if (this.session) this.session.pause();
     this.setPlaybackState('paused');
-    this.outputNode.gain.setValueAtTime(1, this.audioContext.currentTime);
+    // Manter o volume atual durante o pause para evitar picos de volume
+    this.outputNode.gain.setValueAtTime(this.currentVolume, this.audioContext.currentTime);
     this.outputNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.1);
     this.nextStartTime = 0;
     this.outputNode = this.audioContext.createGain();
@@ -266,8 +269,9 @@ export class LiveMusicHelper extends EventTarget {
   public stop() {
     if (this.session) this.session.stop();
     this.setPlaybackState('stopped');
-    this.outputNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-    this.outputNode.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.1);
+    // Manter o volume atual durante o stop para evitar picos de volume
+    this.outputNode.gain.setValueAtTime(this.currentVolume, this.audioContext.currentTime);
+    this.outputNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.1);
     this.nextStartTime = 0;
     this.session = null;
     this.sessionPromise = null;
