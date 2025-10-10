@@ -189,8 +189,8 @@ export class RandomPromptGenerator extends EventTarget {
         color = defaultColors[index] || '#9900ff'; // fallback
       }
       
-      // Gerar peso aleatório com 70% - 95% de chance de estar desativado
-      const randomWeight = Math.random() < (this.currentTheme === 'rpg' ? 0.85 : this.currentTheme === 'relax' ? 0.95 : 0.80) ? 0 : Math.random();
+      // Gerar peso aleatório com 70% - 90% de chance de estar desativado
+      const randomWeight = Math.random() < (this.currentTheme === 'rpg' ? 0.85 : this.currentTheme === 'relax' ? 0.90 : 0.80) ? 0 : Math.random();
       
       // Usar o CC original do index.tsx (0 a 15)
       const randomCC = index;
