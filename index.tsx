@@ -629,6 +629,11 @@ function handleThemeChange(theme: ThemeMode) {
     sessionManager.updateSessionTheme(theme);
   }
   
+  // Parar a música que está tocando antes de trocar o tema
+  if (liveMusicHelper) {
+    liveMusicHelper.stop();
+  }
+  
   // Parar o modo aleatório antes de trocar o tema
   if (pdjMidi && pdjMidi.randomPromptGenerator) {
     pdjMidi.randomPromptGenerator.stopGenerating();
