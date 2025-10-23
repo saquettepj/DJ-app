@@ -862,7 +862,7 @@ export class ApiKeyInput extends LitElement {
         
         ${this.validationError ? html`
           <div class="error-message">
-            ❌ ${this.validationError}
+            ${this.validationError}
           </div>
         ` : ''}
         
