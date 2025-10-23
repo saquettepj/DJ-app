@@ -49,8 +49,6 @@ npm install
 npm run dev
 ```
 
-Acesse: **http://localhost:5173**
-
 ## 🔑 Configuração
 
 1. **Obtenha uma API Key** do Google Gemini
